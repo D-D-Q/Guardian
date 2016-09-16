@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="54" height="65" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tankbrigade" tilewidth="32" tileheight="32" spacing="1">
+  <image source="tankbrigade.png" width="800" height="600"/>
+ </tileset>
+ <layer name="0" width="54" height="65">
+  <data encoding="base64" compression="zlib">
+   eJztz9ENgCAQBbCbVg2zOaQzSCA+oR8doK2q2oIuAOB37hCjX2cIL68EXl4JvLwSeHkl8PJK4OWVwMsrgZdXgq9eRycvLy8vLy8vLy8vLy+vd6/ZvPZ+AQD0egA9tZT4
+  </data>
+ </layer>
+</map>

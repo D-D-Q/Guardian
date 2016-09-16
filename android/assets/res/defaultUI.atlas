@@ -1,0 +1,83 @@
+
+defaultUI.png
+size: 256,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+button0
+  rotate: false
+  xy: 146, 82
+  size: 66, 62
+  orig: 70, 70
+  offset: 1, 2
+  index: -1
+button1
+  rotate: false
+  xy: 146, 82
+  size: 66, 62
+  orig: 70, 70
+  offset: 1, 2
+  index: -1
+button2
+  rotate: false
+  xy: 146, 82
+  size: 66, 62
+  orig: 70, 70
+  offset: 1, 2
+  index: -1
+item1
+  rotate: false
+  xy: 146, 82
+  size: 66, 62
+  orig: 70, 70
+  offset: 1, 2
+  index: -1
+equipped1
+  rotate: false
+  xy: 2, 146
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+equipped2
+  rotate: false
+  xy: 2, 74
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+equipped3
+  rotate: false
+  xy: 74, 146
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+equipped4
+  rotate: false
+  xy: 2, 2
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+equipped5
+  rotate: false
+  xy: 74, 74
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+equipped6
+  rotate: false
+  xy: 146, 146
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
+item0
+  rotate: false
+  xy: 74, 2
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: -1
