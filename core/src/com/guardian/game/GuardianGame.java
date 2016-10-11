@@ -4,17 +4,21 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.game.core.Assets;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.CameraComponent;
+import com.guardian.game.entity.dao.DataTemplateDao;
 import com.guardian.game.entity.dao.EntityDao;
 import com.guardian.game.logs.Log;
 import com.guardian.game.screen.GameScreen;
 import com.guardian.game.systems.AnimationSystem;
+import com.guardian.game.systems.CombatSystem;
 import com.guardian.game.systems.EquippedSystem;
 import com.guardian.game.systems.ItemsSystem;
+import com.guardian.game.systems.MessageHandlingSystem;
 import com.guardian.game.systems.RenderingSystem;
 
 /**
@@ -42,10 +46,16 @@ public class GuardianGame extends Game {
 	
 	public EntityDao entityDao;
 	
+	/**
+	 * 在控制台输出fps
+	 */
+	FPSLogger fpsLog;
+	
 	@Override
 	public void create () {
 		
 		Log.setLogLevel(Application.LOG_INFO); // 日志级别
+		fpsLog = new FPSLogger();
 		Log.info(this, "create begin");
 		
 		assets = new Assets();
@@ -57,6 +67,9 @@ public class GuardianGame extends Game {
 			e.printStackTrace();
 		}
 		
+		DataTemplateDao dataTemplateDao = new DataTemplateDao();
+		dataTemplateDao.load(GameScreenAssets.charactersTemplate);
+		
 		batch = new SpriteBatch();
 
 		engine = new PooledEngine(1, 10, 1, 10);
@@ -66,8 +79,10 @@ public class GuardianGame extends Game {
 		
 		engine.addSystem((GAME.itemsSystem = new ItemsSystem(this)));
 		engine.addSystem((GAME.equippedSystem = new EquippedSystem(this)));
-		engine.addSystem(new AnimationSystem());
-		engine.addSystem(new RenderingSystem(this));
+		engine.addSystem(new AnimationSystem(0));
+		engine.addSystem(new RenderingSystem(this, 1));
+		engine.addSystem(new CombatSystem(2));
+		engine.addSystem(new MessageHandlingSystem(3));
 		
 		assets.assetManager.finishLoading();
 		
@@ -83,6 +98,8 @@ public class GuardianGame extends Game {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		super.render();
+		
+//		fpsLog.log();
 	}
 	
 	/**

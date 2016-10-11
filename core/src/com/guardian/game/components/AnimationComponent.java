@@ -1,10 +1,10 @@
 package com.guardian.game.components;
 
-import java.util.HashMap;
-
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.guardian.game.components.StateComponent.Orientation;
+import com.guardian.game.components.StateComponent.State;
 
 /**
  * 实体的动画集合组件
@@ -14,15 +14,27 @@ import com.badlogic.gdx.utils.Pool.Poolable;
  */
 public class AnimationComponent implements Component, Poolable {
 
-	private HashMap<Integer, Animation> animations = new HashMap<>(8, 1);
+	private Animation[][] animations;
 	
-	public AnimationComponent addAnimation(Integer stateName, Animation animation){
-        this.animations.put(stateName, animation);
+	public AnimationComponent addAnimation(State state, Animation[] animations){
+
+		this.animations[state.value] = animations;
         return this;
 	}
 	
-	public Animation getAnimation(Integer stateName){
-		return animations.get(stateName);
+	public AnimationComponent() {
+		animations = new Animation[State.values().length][8];
+	}
+	
+	/**
+	 * 获得动画
+	 * 
+	 * @param state 状态
+	 * @param direction 方向
+	 * @returncombat system
+	 */
+	public Animation getAnimation(State state, Orientation direction){
+		return animations[state.value][direction.value];
 	}
 	
 	/* 
@@ -31,6 +43,6 @@ public class AnimationComponent implements Component, Poolable {
 	 */
 	@Override
 	public void reset() {
-		
+		animations = null;
 	}
 }

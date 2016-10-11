@@ -1,7 +1,9 @@
 package com.guardian.game;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Array;
 import com.guardian.game.components.CameraComponent;
+import com.guardian.game.data.template.CharactersTemplate;
 import com.guardian.game.systems.EquippedSystem;
 import com.guardian.game.systems.ItemsSystem;
 
@@ -42,4 +44,10 @@ public class GAME {
 	 * 当前UI皮肤
 	 */
 //	public static Skin skin;
+	
+	
+	/**
+	 * 角色数据模板
+	 */
+	public static Array<CharactersTemplate> charactersTemplate = new Array<>();
 }

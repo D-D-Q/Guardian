@@ -1,61 +1,64 @@
 package com.guardian.game.util;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.guardian.game.components.TransformComponent;
-import com.guardian.game.logs.Log;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
+import com.badlogic.gdx.utils.Array;
+import com.guardian.game.components.StateComponent.Orientation;
 
 public class AtlasUtil {
 
+	
 	/**
-	 * 因为Texture packer打包造成的旋转和位移，进行变换修正
+	 * 翻转所有精灵，返回新的精灵数组，不改变原来的数组中的精灵
 	 * 
-	 * @param atlasRegion
+	 * @param array
+	 * @return
 	 */
-	public static TransformComponent correct(AtlasRegion atlasRegion, TransformComponent transformComponent){
-		Log.debug("AtlasUtil", "correct");
+	public static Sprite[] flipAll(Sprite[] prites){
 		
-		// 是否被旋转了
-		if(atlasRegion.rotate){
-			transformComponent.rotation -= 90f;
+		Sprite[] spritesTemp = new Sprite[prites.length];
+		
+		int i = 0;
+		for(Sprite sprite : prites){
+			
+			Sprite spriteTemp;
+			if(sprite instanceof AtlasSprite)
+				spriteTemp = new AtlasSprite((AtlasSprite)sprite);
+			else
+				spriteTemp = new Sprite(sprite);
+			spriteTemp.flip(true, false);
+			spritesTemp[i++] = spriteTemp;
 		}
 		
-		// 正面站立动画
-		if(atlasRegion.name.startsWith("1")){
-			
-			// 保证动画所有帧对齐的位置是原图的左下角。帧绘制位置不同，但保证所有帧的锚点在屏幕上的位置一致（重合），这样才能保证统一旋转不错位。
-			if(atlasRegion.rotate){
-				
-				// 因为打包逆时针旋转了90度过，所以原左下角现在是右下角位置。先左移动，值是旋转后的宽度（原高度）
-				transformComponent.position.x -= atlasRegion.packedWidth;
-				
-				// 移动锚点到原位置，现在右下角位置。因为绘制位置变，锚点就会跟着移动，要保证锚点在屏幕上的位置不变			
-				transformComponent.origin.x = atlasRegion.packedWidth;
-				
-				// 所有帧加上底部被去掉的空白，这样底部就对齐了，然后减去固定51空白。保证渲染的时候底部是对齐的				
-				transformComponent.position.y += (atlasRegion.offsetY - 51f);
-				
-				// 绘制位置变了  但是该帧的锚点在屏幕上的位置不能变，这样旋转之后所有帧才能继续对齐。
-				transformComponent.origin.y -= (atlasRegion.offsetY - 51f);
-			}
-			else{
-				// 所有帧加上底部被去掉的空白，这样底部就对齐了，然后减去固定51空白。保证渲染的时候底部是对齐的
-				transformComponent.position.y += (atlasRegion.offsetY - 51f);
-				transformComponent.origin.y -= (atlasRegion.offsetY - 51f);  // 锚点保持原屏幕位置
-			}
-			
-			// 帧有点偏了 修正下
-			if(atlasRegion.name.equals("100.png.pvr")){
-				transformComponent.position.x += -2.3f;
-				transformComponent.origin.x -= -2.3f; // 锚点保持原屏幕位置
-			}
-
-			// 帧有点偏了 修正下			
-			if(atlasRegion.name.equals("102.png.pvr") || atlasRegion.name.equals("103.png.pvr") || atlasRegion.name.equals("104.png.pvr")){
-				transformComponent.position.y += -1f;
-				transformComponent.origin.y -= -1f; // 锚点保持原屏幕位置
-			}
-		}
+		return spritesTemp;
+	}
+	
+	/**
+	 * 获得8个方向的动画帧，帧数组要按Direction定义的顺序组合
+	 * 
+	 * @param frames 帧数组
+	 * @param index 开始的数组索引
+	 * @param length 帧数
+	 * @return
+	 */
+	public static Animation[] stateAnimation(Array<Sprite> frames, int index, int length){
 		
-		return transformComponent;
+		float zs = 0.15f; // 动画一帧时间
+		
+		Animation[] animation = new Animation[8];
+		for(Orientation direction : Orientation.values()){
+			if(direction == Orientation.d9) // 只遍历前5个方向就可以了。到9方位 就是都完成赋值了
+				break;
+			
+			Sprite[] sprites = new Sprite[length];
+			System.arraycopy(frames.items, index, sprites, 0, length);
+			animation[direction.value] = new Animation(zs, sprites);
+			if(direction.reverse != 0){
+				animation[direction.reverse] = new Animation(zs, AtlasUtil.flipAll(sprites));
+			}
+			index += length;
+		}
+		return animation;
 	}
 }

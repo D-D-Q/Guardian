@@ -40,8 +40,8 @@ public class MapComponent implements Component, Poolable{
 		this.renderer = new OrthogonalTiledMapRenderer(map, 1f, batch); // 地图绘制，第二个参数缩放，比如要游戏1像素=地图16像素，就是缩小地图16倍，可以传1/16f
 		
 		TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get(0);
-		width = mapLayer.getWidth() * GameConfig.tile;
-		height = mapLayer.getHeight() * GameConfig.tile;
+		width = mapLayer.getWidth() * GameConfig.tileSize;
+		height = mapLayer.getHeight() * GameConfig.tileSize;
 	};
 	
 	/**

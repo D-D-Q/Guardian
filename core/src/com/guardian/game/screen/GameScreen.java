@@ -16,6 +16,8 @@ import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.CameraComponent;
 import com.guardian.game.components.ItemComponent;
 import com.guardian.game.components.MapComponent;
+import com.guardian.game.components.StateComponent.Orientation;
+import com.guardian.game.components.StateComponent.State;
 import com.guardian.game.components.TextureComponent;
 import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
@@ -39,12 +41,6 @@ public class GameScreen extends ScreenAdapter {
 	
 	private Skin skin;
 	
-	// 相机移动不能超过地图显示,
-	public int minGameCameraPositionX;
-	public int maxGameCameraPositionX;
-	public int minGameCameraPositionY;
-	public int maxGameCameraPositionY;
-
 	public GameScreen(GuardianGame game) {
 		Log.info(this, "create begin");
 		
@@ -56,29 +52,38 @@ public class GameScreen extends ScreenAdapter {
 		GAME.screenEntity = game.engine.createEntity(); // 表示当前Screen的实体
 		game.engine.addEntity(GAME.screenEntity);
 		
-		CameraComponent gameCameraComponent = game.engine.createComponent(CameraComponent.class); // 添加相机组件
-		GAME.screenEntity.add(gameCameraComponent);
 		MapComponent mapComponent = game.engine.createComponent(MapComponent.class); // 添加地图组件
 		GAME.screenEntity.add(mapComponent);
-		
 		mapComponent.init(game.assets.getMap(GameScreenAssets.map), game.batch); // 初始化地图
 		
-		// 相机移动不能超过地图显示,
-		minGameCameraPositionX = 0 + GameConfig.width/2; // 地图左边边界是x坐标= 0 + 相机在屏幕中间
-		maxGameCameraPositionX = mapComponent.width - GameConfig.width/2; // 地图右边边界x坐标=地图宽 - 相机在屏幕中间
-		minGameCameraPositionY = 0 + GameConfig.hieght/2; // 地图下边边界是y坐标=0
-		maxGameCameraPositionY = mapComponent.height - GameConfig.hieght/2; // 地图上边边界x坐标=地图高 - 相机在屏幕中间
+		CameraComponent gameCameraComponent = game.engine.createComponent(CameraComponent.class); // 添加相机组件
+		GAME.screenEntity.add(gameCameraComponent);
+		gameCameraComponent.camera.position.set(mapComponent.width/2, mapComponent.height/2, 0); // 初始化相机位置
 		
-		gameCameraComponent.camera.position.set(maxGameCameraPositionX/2, maxGameCameraPositionY/2, 0);
-		
-		GAME.hero = game.entityDao.hero(maxGameCameraPositionX/2, maxGameCameraPositionY/2); // 创建英雄
+		GAME.hero = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(0), 10, 10); // 创建英雄
 		game.engine.addEntity(GAME.hero);
+		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
+		MapperTools.stateCM.get(GAME.hero).state = State.attack;
+		
+		Entity hbws = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 10, 10 + 1);
+		game.engine.addEntity(hbws);
+		MapperTools.stateCM.get(hbws).orientation = Orientation.d2;
+		MapperTools.stateCM.get(hbws).state = State.idle;
+		
+		
+		MapperTools.combatCM.get(GAME.hero).entity = hbws; // 临时设置攻击目标
+		
 		
 		initUI();
 		
 		InputMultiplexer multiplexer = new InputMultiplexer(); //事件处理链
 		multiplexer.addProcessor(UIstage); // UI事件
 		multiplexer.addProcessor(new InputAdapter() { // 拖动屏幕
+			
+			private int minGameCameraPositionX = 0 + GameConfig.width/2; // 地图左边边界是x坐标= 0 + 相机在屏幕中间
+			private int maxGameCameraPositionX = mapComponent.width - GameConfig.width/2; // 地图右边边界x坐标=地图宽 - 相机在屏幕中间
+			private int minGameCameraPositionY = 0 + GameConfig.hieght/2; // 地图下边边界是y坐标=0
+			private int maxGameCameraPositionY = mapComponent.height - GameConfig.hieght/2; // 地图上边边界x坐标=地图高 - 相机在屏幕中间
 			
 			private int screenX, screenY;
 			
@@ -112,7 +117,6 @@ public class GameScreen extends ScreenAdapter {
 				
 				return true;
 			}
-			
 		});
 		Gdx.input.setInputProcessor(multiplexer);
 	}

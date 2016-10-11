@@ -12,6 +12,11 @@ import com.guardian.game.tools.AttributesEnum;
  * @date 2016年9月8日 下午8:57:33
  */
 public class AttributesComponent implements Component, Poolable{
+	
+	/**
+	 * 名称
+	 */
+	public String name;
 
 	/**
 	 * 等级

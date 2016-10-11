@@ -1,0 +1,32 @@
+[
+	{
+		fileName: res/yx.atlas,
+		idleFrames: 6,
+		runFrames: 6,
+		attackFrames: 6,
+		offsetX: 128,
+		offsetY: 128,
+		name: 英雄,
+		Lv: 60,
+		ATK: 1,
+		DEF: 1,
+		HIT: 1,
+		AVD: 1,
+		VIT: 1
+	},
+	{
+		fileName: res/hbws.atlas,
+		idleFrames: 6,
+		runFrames: 6,
+		attackFrames: 7,
+		offsetX: 128,
+		offsetY: 128,
+		name: 寒冰卫士,
+		Lv: 2,
+		ATK: 2,
+		DEF: 2,
+		HIT: 2,
+		AVD: 2,
+		VIT: 2
+	}
+]

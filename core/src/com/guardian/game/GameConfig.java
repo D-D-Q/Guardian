@@ -16,7 +16,12 @@ public class GameConfig {
 	/**
 	 * 地图图块大小
 	 */
-	public final static byte tile = 32; 
+	public final static byte tileSize = 32; 
+	
+	/**
+	 * 角色占用大小，4个图块
+	 */
+	public final static byte characterTileSize = 64; 
 	
 	/**
 	 * UI的debug模式

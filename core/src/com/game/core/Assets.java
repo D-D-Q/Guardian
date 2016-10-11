@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -34,6 +35,11 @@ import com.guardian.game.logs.Log;
 public class Assets{
 	
 	public AssetManager assetManager;
+	
+	/**
+	 * 动画帧缓存
+	 */
+	public ObjectMap<String, Array<Sprite>>  framesCache = new ObjectMap<String, Array<Sprite>>();
 	
 	/**
 	 * 资源管理器和皮肤管理器中重复的资源
@@ -133,7 +139,7 @@ public class Assets{
 	public TextureRegion getTextureRegion(String fileName){
 		return new TextureRegion(assetManager.get(fileName, Texture.class));
 	}
-	
+		 
 	/**
 	 * 获取帧数组
 	 * 
@@ -141,17 +147,16 @@ public class Assets{
 	 * @param endIndex
 	 * @return
 	 */
-	public AtlasRegion[] getFrames(String fileName, int beginIndex, int endIndex){
+	public Array<Sprite> getFrames(String fileName){
 		
-		TextureAtlas textureAtlas = assetManager.get(fileName, TextureAtlas.class);
-		
-		AtlasRegion[] frames =  new TextureAtlas.AtlasRegion[endIndex - beginIndex + 1];
-		for(int i = 0; i < frames.length; ++i){
-			AtlasRegion atlasRegion = textureAtlas.findRegion((i + beginIndex) + ".png.pvr");
-			frames[i] = atlasRegion;
+		Array<Sprite> sprites = framesCache.get(fileName);
+		if(sprites == null){
+			TextureAtlas textureAtlas = assetManager.get(fileName, TextureAtlas.class);
+			sprites = textureAtlas.createSprites(fileName.substring(fileName.lastIndexOf("/") + 1, fileName.lastIndexOf("."))); // 这步很慢，如果频繁使用要缓存
+			framesCache.put(fileName, sprites);
 		}
 		
-		return frames;
+		return sprites;
 	}
 	
 	/**
