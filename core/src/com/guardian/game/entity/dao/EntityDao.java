@@ -62,7 +62,8 @@ public class EntityDao {
 		
 		TransformComponent transformComponent = game.engine.createComponent(TransformComponent.class);
 		transformComponent.init(frames.get(0).getWidth(), frames.get(0).getHeight(), template.offsetX, template.offsetY, 100); // 初始化画布大小和锚点
-		transformComponent.setMapPosition(positionX, positionY); // 初始化位置, z是绘制优先级
+//		transformComponent.setMapPosition(positionX, positionY); // 初始化位置, z是绘制优先级
+		transformComponent.position.set(positionX, positionY, transformComponent.position.z); // 初始化位置, z是绘制优先级
 		
 		AttributesComponent attributesComponent = game.engine.createComponent(AttributesComponent.class); // 变量属性信息
 		attributesComponent.name = template.name;
@@ -80,8 +81,9 @@ public class EntityDao {
 		MessageHandlingSystem.getMessageManager().addListener(messageComponent, MessageHandlingSystem.MSG_ATTACK);
 		
 		PhysicsComponent physicsComponent = game.engine.createComponent(PhysicsComponent.class);
-		physicsComponent.bodyType = BodyType.KinematicBody;
-		physicsComponent.radius = 75;
+//		physicsComponent.bodyType = BodyType.KinematicBody;
+		physicsComponent.bodyType = BodyType.DynamicBody;
+		physicsComponent.radius = 35;
 		
 		CollisionComponent collisionComponent = game.engine.createComponent(CollisionComponent.class);
 		collisionComponent.radius = 75;

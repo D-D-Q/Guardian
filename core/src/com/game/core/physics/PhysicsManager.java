@@ -45,7 +45,7 @@ public class PhysicsManager {
 	 * @param entity
 	 * @return
 	 */
-	public static Body createBody(Entity entity){
+	public static Body createRigidBody(Entity entity){
 		
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
@@ -122,5 +122,16 @@ public class PhysicsManager {
 			fixture.getShape().dispose(); // 图形需要销毁
 		
 		world.destroyBody(body);
+	}
+	
+	/**
+	 * 销毁
+	 */
+	public static void dispose(){
+		
+		while(!world.isLocked()){ // 物理世界锁的时候不能操作。step的时候会
+			world.dispose();
+			break;
+		}
 	}
 }

@@ -13,10 +13,12 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.game.core.physics.PhysicsManager;
 import com.guardian.game.GAME;
+import com.guardian.game.GameConfig;
 import com.guardian.game.components.CameraComponent;
 import com.guardian.game.components.CollisionComponent;
 import com.guardian.game.components.PhysicsComponent;
 import com.guardian.game.components.TransformComponent;
+import com.guardian.game.logs.Log;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
 
@@ -26,7 +28,7 @@ import com.guardian.game.tools.MapperTools;
  * @author Administrator
  * @date 2016年10月12日
  */
-public class PhysicsSystem extends IteratingSystem implements ContactListener, EntityListener{
+public class PhysicsSystem extends IteratingSystem implements EntityListener, ContactListener{
 	
 	/**
 	 * 更新物理引擎的时间量
@@ -42,6 +44,9 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener, E
 		super(FamilyTools.physicsF, priority);
 		
 		PhysicsManager.world.setContactListener(this); // 碰撞监听
+		
+		if(GameConfig.physicsdebug)
+			debugRenderer = new Box2DDebugRenderer();
 	}
 	
 	/**
@@ -61,7 +66,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener, E
 	}
 
 	/**
-	 * 根据刚体组件创建刚体
+	 * 给包含物理组件的实体创建刚体
 	 * 
 	 * @param entity
 	 */
@@ -71,12 +76,12 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener, E
 		// 创建物理刚体
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		if(physicsComponent != null)
-			physicsComponent.body = PhysicsManager.createBody(entity);
+			physicsComponent.rigidBody = PhysicsManager.createRigidBody(entity);
 		
 		// 创建碰撞检测刚体
 		CollisionComponent collisionComponent = MapperTools.collisionCM.get(entity);
 		if(collisionComponent != null)
-			collisionComponent.body = PhysicsManager.createCollision(entity);
+			collisionComponent.rigidBody = PhysicsManager.createCollision(entity);
 	}
 
 	@Override
@@ -94,15 +99,17 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener, E
 	    accumulator += frameTime;
 	    
 	    while (accumulator >= PhysicsManager.TIME_STEP) {
-	    	
 	    	PhysicsManager.world.step(PhysicsManager.TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
-	    	super.update(deltaTime);
-	    	
 	        accumulator -= PhysicsManager.TIME_STEP;
 	    }
+	    
+	    super.update(deltaTime); // 更新精灵实体
 		
-		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-		debugRenderer.render(PhysicsManager.world, cameraComponent.camera.combined);
+	    if(GameConfig.physicsdebug){
+	    	CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
+	    	cameraComponent.camera.update();
+	    	debugRenderer.render(PhysicsManager.world, cameraComponent.camera.combined);
+	    }
 	}
 	
 	/**
@@ -116,7 +123,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener, E
 		// 获得刚体位置，更新精灵位置
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		if(physicsComponent != null){
-			Vector2 position = physicsComponent.body.getPosition();
+			Vector2 position = physicsComponent.rigidBody.getPosition();
 			transformComponent.position.x = position.x;
 			transformComponent.position.y = position.y;
 		}
@@ -124,27 +131,27 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener, E
 		// 获得精灵位置，更新碰撞检测位置
 		CollisionComponent collisionComponent = MapperTools.collisionCM.get(entity);
 		if(collisionComponent != null)
-			collisionComponent.body.setTransform(transformComponent.position.x, transformComponent.position.y, 
-					collisionComponent.body.getAngle());
+			collisionComponent.rigidBody.setTransform(transformComponent.position.x, transformComponent.position.y, 
+					collisionComponent.rigidBody.getAngle());
 	}
 	
 	@Override
 	public void beginContact(Contact contact) {
-		
+		Log.info(this, "beginContact");
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-		
+		Log.info(this, "endContact");
 	}
 
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
-		
+		Log.info(this, "preSolve");
 	}
 
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
-		
+		Log.info(this, "postSolve");
 	}
 }

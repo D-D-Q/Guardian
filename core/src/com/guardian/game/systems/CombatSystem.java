@@ -52,11 +52,11 @@ public class CombatSystem extends IteratingSystem  {
 //				return;
 			}
 		}
-		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-		
-		MessageComponent messageComponent = MapperTools.messageCM.get(entity);
-		MessageComponent targetMessageComponent = MapperTools.messageCM.get(combatComponent.entity);
-		
-		MessageHandlingSystem.getMessageManager().dispatchMessage(messageComponent, targetMessageComponent, MessageHandlingSystem.MSG_ATTACK, entity);
+//		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+//		
+//		MessageComponent messageComponent = MapperTools.messageCM.get(entity);
+//		MessageComponent targetMessageComponent = MapperTools.messageCM.get(combatComponent.entity);
+//		
+//		MessageHandlingSystem.getMessageManager().dispatchMessage(messageComponent, targetMessageComponent, MessageHandlingSystem.MSG_ATTACK, entity);
 	}
 }

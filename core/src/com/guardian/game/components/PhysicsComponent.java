@@ -19,7 +19,7 @@ public class PhysicsComponent  implements Component, Poolable {
 	/**
 	 * 刚体，系统赋值
 	 */
-	public Body body;
+	public Body rigidBody;
 	
 	/**
 	 * 刚体类型
@@ -37,7 +37,7 @@ public class PhysicsComponent  implements Component, Poolable {
 	 */
 	@Override
 	public void reset() {
-		PhysicsManager.disposeBody(body);
+		PhysicsManager.disposeBody(rigidBody);
 		bodyType = null;
 		radius = 0f;
 	}

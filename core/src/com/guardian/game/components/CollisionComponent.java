@@ -18,7 +18,7 @@ public class CollisionComponent implements Component, Poolable{
 	/**
 	 * 刚体，系统赋值
 	 */
-	public Body body;
+	public Body rigidBody;
 	
 	/**
 	 * 半径
@@ -31,7 +31,7 @@ public class CollisionComponent implements Component, Poolable{
 	 */
 	@Override
 	public void reset() {
-		PhysicsManager.disposeBody(body);
+		PhysicsManager.disposeBody(rigidBody);
 		radius = 0f;
 	}
 }

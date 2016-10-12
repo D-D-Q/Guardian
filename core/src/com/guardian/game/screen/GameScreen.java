@@ -2,10 +2,12 @@ package com.guardian.game.screen;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -16,6 +18,7 @@ import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.CameraComponent;
 import com.guardian.game.components.ItemComponent;
 import com.guardian.game.components.MapComponent;
+import com.guardian.game.components.PhysicsComponent;
 import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.components.StateComponent.State;
 import com.guardian.game.components.TextureComponent;
@@ -58,14 +61,16 @@ public class GameScreen extends ScreenAdapter {
 		
 		CameraComponent gameCameraComponent = game.engine.createComponent(CameraComponent.class); // 添加相机组件
 		GAME.screenEntity.add(gameCameraComponent);
-		gameCameraComponent.camera.position.set(mapComponent.width/2, mapComponent.height/2, 0); // 初始化相机位置
+		gameCameraComponent.camera.position.set(mapComponent.width/2, mapComponent.height/2, 0); // 初始化相机位置, 该位置会在屏幕中心
 		
-		GAME.hero = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(0), 10, 10); // 创建英雄
+//		GAME.hero = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(0), 10, 10); // 创建英雄
+		GAME.hero = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(0), mapComponent.width/2, mapComponent.height/2); // 创建英雄
 		game.engine.addEntity(GAME.hero);
 		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
 		MapperTools.stateCM.get(GAME.hero).state = State.attack;
 		
-		Entity hbws = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 10, 10 + 1);
+//		Entity hbws = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 10, 10 + 1);
+		Entity hbws = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), mapComponent.width/2, mapComponent.height/2 + 75);
 		game.engine.addEntity(hbws);
 		MapperTools.stateCM.get(hbws).orientation = Orientation.d2;
 		MapperTools.stateCM.get(hbws).state = State.idle;
@@ -114,6 +119,57 @@ public class GameScreen extends ScreenAdapter {
 				
 				this.screenX = screenX;
 				this.screenY = screenY;
+				
+				return true;
+			}
+			
+			public boolean keyDown (int keycode) {
+				
+				Body body = MapperTools.physicsCM.get(GAME.hero).rigidBody;
+				
+				float x = 0, y = 0;
+				
+				if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
+					y = 0;
+				else if(Gdx.input.isKeyPressed(Keys.W))
+					y = 10;
+				else if(Gdx.input.isKeyPressed(Keys.S))
+					y = -10;
+				
+				if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
+					x = 0;
+				else if(Gdx.input.isKeyPressed(Keys.A))
+					x = -10;
+				else if(Gdx.input.isKeyPressed(Keys.D))
+					x = 10;
+				
+				body.setLinearVelocity(x, y);
+				
+				return true;
+			}
+			
+			@Override
+			public boolean keyUp(int keycode) {
+				
+				Body body = MapperTools.physicsCM.get(GAME.hero).rigidBody;
+				
+				float x = 0, y = 0;
+				
+				if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
+					y = 0;
+				else if(Gdx.input.isKeyPressed(Keys.W))
+					y = 10;
+				else if(Gdx.input.isKeyPressed(Keys.S))
+					y = -10;
+				
+				if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
+					x = 0;
+				else if(Gdx.input.isKeyPressed(Keys.A))
+					x = -10;
+				else if(Gdx.input.isKeyPressed(Keys.D))
+					x = 10;
+				
+				body.setLinearVelocity(x, y);
 				
 				return true;
 			}
