@@ -1,7 +1,6 @@
 package com.guardian.game.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -26,7 +25,7 @@ public class TransformComponent implements Component, Poolable  {
 	 * x轴和y轴 屏幕左下为原点
 	 * z抽、深度、绘制优先级、数越小越先绘制（先绘制会被覆盖）
 	 */
-	private final Vector3 position = new Vector3();
+	public final Vector3 position = new Vector3();
 	
 	/**
 	 * 精灵画布大小，非图像大小
@@ -99,10 +98,6 @@ public class TransformComponent implements Component, Poolable  {
 		return mapPosition;
 	}
 	
-	public Vector3 getPosition() {
-		return position;
-	}
-
 	/**
 	 * 获得绘制位置X
 	 * @return

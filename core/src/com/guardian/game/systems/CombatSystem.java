@@ -23,7 +23,7 @@ import com.guardian.game.tools.MapperTools;
  * @author D
  * @date 2016年9月18日 下午9:59:11
  */
-public class CombatSystem extends IteratingSystem implements ContactListener {
+public class CombatSystem extends IteratingSystem  {
 
 	/**
 	 * @param priority 系统调用优先级
@@ -59,28 +59,4 @@ public class CombatSystem extends IteratingSystem implements ContactListener {
 		
 		MessageHandlingSystem.getMessageManager().dispatchMessage(messageComponent, targetMessageComponent, MessageHandlingSystem.MSG_ATTACK, entity);
 	}
-
-	@Override
-	public void beginContact(Contact contact) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void endContact(Contact contact) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void preSolve(Contact contact, Manifold oldManifold) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

@@ -27,13 +27,13 @@ public class RenderingSystem extends SortedIteratingSystem {
 	public final GuardianGame game;
 	
 	public RenderingSystem(GuardianGame guardianGame, int priority) {
-		// TODO 系统调用优先级写死了
+		
 		super(FamilyTools.renderingF, new Comparator<Entity>(){
 			@Override
 	        public int compare(Entity e1, Entity e2) {// 降序排列，后面的后绘制在上层。 返回正数后绘制e1,返回负数后绘制e2
-				int y = (int)Math.signum(MapperTools.transformCM.get(e2).getPosition().y - MapperTools.transformCM.get(e1).getPosition().y); // 先按y轴算
+				int y = (int)Math.signum(MapperTools.transformCM.get(e2).position.y - MapperTools.transformCM.get(e1).position.y); // 先按y轴算
 				if(y == 0)
-					return (int)Math.signum(MapperTools.transformCM.get(e1).getPosition().z - MapperTools.transformCM.get(e2).getPosition().z); // 再按z抽算
+					return (int)Math.signum(MapperTools.transformCM.get(e1).position.z - MapperTools.transformCM.get(e2).position.z); // 再按z抽算
 				return y;
 	        }
 		}, priority);

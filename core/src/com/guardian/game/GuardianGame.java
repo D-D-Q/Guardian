@@ -19,6 +19,7 @@ import com.guardian.game.systems.CombatSystem;
 import com.guardian.game.systems.EquippedSystem;
 import com.guardian.game.systems.ItemsSystem;
 import com.guardian.game.systems.MessageHandlingSystem;
+import com.guardian.game.systems.PhysicsSystem;
 import com.guardian.game.systems.RenderingSystem;
 
 /**
@@ -77,12 +78,16 @@ public class GuardianGame extends Game {
 		
 		GAME.UICameraComponent = engine.createComponent(CameraComponent.class);
 		
-		engine.addSystem((GAME.itemsSystem = new ItemsSystem(this)));
-		engine.addSystem((GAME.equippedSystem = new EquippedSystem(this)));
-		engine.addSystem(new AnimationSystem(0));
-		engine.addSystem(new RenderingSystem(this, 1));
-		engine.addSystem(new CombatSystem(2));
-		engine.addSystem(new MessageHandlingSystem(3));
+//		engine.addSystem((GAME.itemsSystem = new ItemsSystem(this)));
+//		engine.addSystem((GAME.equippedSystem = new EquippedSystem(this)));
+		GAME.itemsSystem = new ItemsSystem(this);
+		GAME.equippedSystem = new EquippedSystem(this);
+		
+		engine.addSystem(new PhysicsSystem(0));
+		engine.addSystem(new CombatSystem(1));
+		engine.addSystem(new MessageHandlingSystem(2));
+		engine.addSystem(new AnimationSystem(3));
+		engine.addSystem(new RenderingSystem(this, 4));
 		
 		assets.assetManager.finishLoading();
 		
