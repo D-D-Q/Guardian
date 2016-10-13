@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.game.core.Assets;
+import com.game.core.physics.PhysicsManager;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.CameraComponent;
 import com.guardian.game.entity.dao.DataTemplateDao;
@@ -125,6 +126,7 @@ public class GuardianGame extends Game {
 		super.dispose();
 		
 		engine.clearPools();
+		PhysicsManager.dispose();
 		
 		batch.dispose();
 		assets.dispose();

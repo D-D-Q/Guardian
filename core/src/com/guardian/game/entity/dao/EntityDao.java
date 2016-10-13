@@ -2,7 +2,6 @@ package com.guardian.game.entity.dao;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.guardian.game.GuardianGame;
 import com.guardian.game.components.AnimationComponent;
@@ -81,8 +80,6 @@ public class EntityDao {
 		MessageHandlingSystem.getMessageManager().addListener(messageComponent, MessageHandlingSystem.MSG_ATTACK);
 		
 		PhysicsComponent physicsComponent = game.engine.createComponent(PhysicsComponent.class);
-//		physicsComponent.bodyType = BodyType.KinematicBody;
-		physicsComponent.bodyType = BodyType.DynamicBody;
 		physicsComponent.radius = 35;
 		
 		CollisionComponent collisionComponent = game.engine.createComponent(CollisionComponent.class);

@@ -18,7 +18,6 @@ import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.CameraComponent;
 import com.guardian.game.components.ItemComponent;
 import com.guardian.game.components.MapComponent;
-import com.guardian.game.components.PhysicsComponent;
 import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.components.StateComponent.State;
 import com.guardian.game.components.TextureComponent;
@@ -123,25 +122,27 @@ public class GameScreen extends ScreenAdapter {
 				return true;
 			}
 			
+			float speed = 100;
+			
 			public boolean keyDown (int keycode) {
 				
-				Body body = MapperTools.physicsCM.get(GAME.hero).rigidBody;
+				Body body = MapperTools.physicsCM.get(GAME.hero).dynamicBody;
 				
 				float x = 0, y = 0;
 				
 				if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
 					y = 0;
 				else if(Gdx.input.isKeyPressed(Keys.W))
-					y = 10;
+					y = speed;
 				else if(Gdx.input.isKeyPressed(Keys.S))
-					y = -10;
+					y = -speed;
 				
 				if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
 					x = 0;
 				else if(Gdx.input.isKeyPressed(Keys.A))
-					x = -10;
+					x = -speed;
 				else if(Gdx.input.isKeyPressed(Keys.D))
-					x = 10;
+					x = speed;
 				
 				body.setLinearVelocity(x, y);
 				
@@ -151,23 +152,23 @@ public class GameScreen extends ScreenAdapter {
 			@Override
 			public boolean keyUp(int keycode) {
 				
-				Body body = MapperTools.physicsCM.get(GAME.hero).rigidBody;
+				Body body = MapperTools.physicsCM.get(GAME.hero).dynamicBody;
 				
 				float x = 0, y = 0;
 				
 				if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
 					y = 0;
 				else if(Gdx.input.isKeyPressed(Keys.W))
-					y = 10;
+					y = speed;
 				else if(Gdx.input.isKeyPressed(Keys.S))
-					y = -10;
+					y = -speed;
 				
 				if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
 					x = 0;
 				else if(Gdx.input.isKeyPressed(Keys.A))
-					x = -10;
+					x = -speed;
 				else if(Gdx.input.isKeyPressed(Keys.D))
-					x = 10;
+					x = speed;
 				
 				body.setLinearVelocity(x, y);
 				

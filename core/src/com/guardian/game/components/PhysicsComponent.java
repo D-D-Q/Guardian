@@ -2,13 +2,15 @@ package com.guardian.game.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.physics.PhysicsManager;
 
 /**
  * 物理刚体。
  * 精灵本身的刚体，通常和精灵一样大小
+ * 
+ * 包含一个动态刚体和一个静态刚体，为了防止精灵互相碰撞的物理效果产生力的传导而改变精灵位置
+ * 
  * 暂时只支持圆形吧
  * 
  * @author D
@@ -17,14 +19,18 @@ import com.game.core.physics.PhysicsManager;
 public class PhysicsComponent  implements Component, Poolable {
 	
 	/**
-	 * 刚体，系统赋值
+	 * 精灵的动态刚体，系统赋值
+	 * 用于精灵的移动，和CollisionComponent的碰撞检测，和staticBody的碰撞
+	 * dynamicBody保证了精灵的物理移动能力和碰撞监测功能
 	 */
-	public Body rigidBody;
+	public Body dynamicBody;
 	
 	/**
-	 * 刚体类型
+	 * 精灵的静态刚体，系统赋值
+	 * 用于精力的固定，和dynamicBody的碰撞
+	 * staticBody保证了精灵不会被其他精灵撞动
 	 */
-	public BodyType bodyType;
+	public Body staticBody;
 	
 	/**
 	 * 半径
@@ -37,8 +43,8 @@ public class PhysicsComponent  implements Component, Poolable {
 	 */
 	@Override
 	public void reset() {
-		PhysicsManager.disposeBody(rigidBody);
-		bodyType = null;
+		PhysicsManager.disposeBody(dynamicBody);
+		PhysicsManager.disposeBody(staticBody);
 		radius = 0f;
 	}
 }

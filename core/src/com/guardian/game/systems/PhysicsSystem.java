@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -44,7 +43,6 @@ public class PhysicsSystem extends IteratingSystem implements EntityListener, Co
 		super(FamilyTools.physicsF, priority);
 		
 		PhysicsManager.world.setContactListener(this); // 碰撞监听
-		
 		if(GameConfig.physicsdebug)
 			debugRenderer = new Box2DDebugRenderer();
 	}
@@ -73,15 +71,13 @@ public class PhysicsSystem extends IteratingSystem implements EntityListener, Co
 	@Override
 	public void entityAdded(Entity entity) {
 		
-		// 创建物理刚体
-		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
-		if(physicsComponent != null)
-			physicsComponent.rigidBody = PhysicsManager.createRigidBody(entity);
+		// 添加物理刚体
+		if(MapperTools.physicsCM.get(entity) != null)
+			PhysicsManager.addCharacterRigidBody(entity);
 		
-		// 创建碰撞检测刚体
-		CollisionComponent collisionComponent = MapperTools.collisionCM.get(entity);
-		if(collisionComponent != null)
-			collisionComponent.rigidBody = PhysicsManager.createCollision(entity);
+		// 添加碰撞检测
+		if(MapperTools.collisionCM.get(entity) != null)
+			PhysicsManager.addCollision(entity);
 	}
 
 	@Override
@@ -100,7 +96,7 @@ public class PhysicsSystem extends IteratingSystem implements EntityListener, Co
 	    
 	    while (accumulator >= PhysicsManager.TIME_STEP) {
 	    	PhysicsManager.world.step(PhysicsManager.TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
-	        accumulator -= PhysicsManager.TIME_STEP;
+	    	accumulator -= PhysicsManager.TIME_STEP;
 	    }
 	    
 	    super.update(deltaTime); // 更新精灵实体
@@ -123,9 +119,15 @@ public class PhysicsSystem extends IteratingSystem implements EntityListener, Co
 		// 获得刚体位置，更新精灵位置
 		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		if(physicsComponent != null){
-			Vector2 position = physicsComponent.rigidBody.getPosition();
+			Vector2 position = physicsComponent.dynamicBody.getPosition();
 			transformComponent.position.x = position.x;
 			transformComponent.position.y = position.y;
+			
+			// 更新静态刚体位置
+			if(physicsComponent.staticBody != null){
+				physicsComponent.staticBody.setTransform(position.x, position.y, 
+						physicsComponent.staticBody.getAngle());
+			}
 		}
 		
 		// 获得精灵位置，更新碰撞检测位置
@@ -147,11 +149,11 @@ public class PhysicsSystem extends IteratingSystem implements EntityListener, Co
 
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
-		Log.info(this, "preSolve");
+//		Log.info(this, "preSolve");
 	}
 
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
-		Log.info(this, "postSolve");
+//		Log.info(this, "postSolve");
 	}
 }
