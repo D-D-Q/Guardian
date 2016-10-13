@@ -10,13 +10,14 @@ import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.CollisionComponent;
 import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.MessageComponent;
-import com.guardian.game.components.PhysicsComponent;
+import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.components.StateComponent.State;
 import com.guardian.game.components.TextureComponent;
 import com.guardian.game.components.TransformComponent;
 import com.guardian.game.data.template.CharactersTemplate;
+import com.guardian.game.entityscript.HbwsScript;
 import com.guardian.game.systems.MessageHandlingSystem;
 import com.guardian.game.util.AtlasUtil;
 
@@ -78,14 +79,14 @@ public class EntityDao {
 		}
 		
 		MessageComponent messageComponent = game.engine.createComponent(MessageComponent.class);
-		messageComponent.entity = entity;
-		MessageHandlingSystem.getMessageManager().addListener(messageComponent, MessageHandlingSystem.MSG_ATTACK);
 		
-		PhysicsComponent physicsComponent = game.engine.createComponent(PhysicsComponent.class);
+		CharacterComponent physicsComponent = game.engine.createComponent(CharacterComponent.class);
 		physicsComponent.radius = template.physicsRadius;
 		
 		CollisionComponent collisionComponent = game.engine.createComponent(CollisionComponent.class);
 		collisionComponent.radius = template.collisionRadius;
+		
+		HbwsScript script = game.engine.createComponent(HbwsScript.class);
 		
 		entity.add(transformComponent);
 		entity.add(stateComponent);
@@ -96,6 +97,8 @@ public class EntityDao {
 		entity.add(messageComponent);
 		entity.add(physicsComponent);
 		entity.add(collisionComponent);
+		
+		entity.add(script);
 		
 		return entity;
 	}

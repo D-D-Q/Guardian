@@ -3,7 +3,7 @@ package com.guardian.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.physics.PhysicsManager;
+import com.game.core.manager.PhysicsManager;
 
 /**
  * 碰撞检测, 不包含物理属性。

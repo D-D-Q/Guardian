@@ -1,8 +1,6 @@
 package com.guardian.game.systems;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -10,12 +8,12 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.game.core.physics.PhysicsManager;
+import com.game.core.manager.PhysicsManager;
 import com.guardian.game.GAME;
 import com.guardian.game.GameConfig;
 import com.guardian.game.components.CameraComponent;
+import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.CollisionComponent;
-import com.guardian.game.components.PhysicsComponent;
 import com.guardian.game.components.TransformComponent;
 import com.guardian.game.logs.Log;
 import com.guardian.game.tools.FamilyTools;
@@ -27,7 +25,7 @@ import com.guardian.game.tools.MapperTools;
  * @author Administrator
  * @date 2016年10月12日
  */
-public class PhysicsSystem extends IteratingSystem implements EntityListener, ContactListener{
+public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	
 	/**
 	 * 更新物理引擎的时间量
@@ -47,43 +45,6 @@ public class PhysicsSystem extends IteratingSystem implements EntityListener, Co
 			debugRenderer = new Box2DDebugRenderer();
 	}
 	
-	/**
-	 * 比父类额外添加监听含有物理组件的实体添加到实体组件引擎，好做出初始化
-	 * @param engine
-	 */
-	@Override
-	public void addedToEngine (Engine engine) {
-		super.addedToEngine(engine);
-		engine.addEntityListener(FamilyTools.physicsF, this);
-	}
-
-	@Override
-	public void removedFromEngine (Engine engine) {
-		super.removedFromEngine(engine);
-		engine.removeEntityListener(this);
-	}
-
-	/**
-	 * 给包含物理组件的实体创建刚体
-	 * 
-	 * @param entity
-	 */
-	@Override
-	public void entityAdded(Entity entity) {
-		
-		// 添加物理刚体
-		if(MapperTools.physicsCM.get(entity) != null)
-			PhysicsManager.addCharacterRigidBody(entity);
-		
-		// 添加碰撞检测
-		if(MapperTools.collisionCM.get(entity) != null)
-			PhysicsManager.addCollision(entity);
-	}
-
-	@Override
-	public void entityRemoved(Entity entity) {
-	}
-
 	/**
 	 * 更新物理世界
 	 * 物理引擎需要固定时间更新，不能跟随帧数，因为帧数不稳定
@@ -117,7 +78,7 @@ public class PhysicsSystem extends IteratingSystem implements EntityListener, Co
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
 		// 获得刚体位置，更新精灵位置
-		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		CharacterComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		if(physicsComponent != null){
 			Vector2 position = physicsComponent.dynamicBody.getPosition();
 			transformComponent.position.x = position.x;

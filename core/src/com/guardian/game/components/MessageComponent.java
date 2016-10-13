@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.guardian.game.logs.Log;
+import com.game.core.component.ScriptComponent;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -29,9 +29,9 @@ public class MessageComponent implements Component, Poolable, Telegraph  {
 	@Override
 	public boolean handleMessage(Telegram msg) {
 		
-		AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
-		
-		Log.info(this, attributesComponent.name + ": 我被攻击");
+		ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
+		if(scriptComponent != null)
+			return scriptComponent.handleMessage(msg);
 		
 		return true;
 	}

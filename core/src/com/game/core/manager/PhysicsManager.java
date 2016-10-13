@@ -1,4 +1,4 @@
-package com.game.core.physics;
+package com.game.core.manager;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.guardian.game.components.CollisionComponent;
-import com.guardian.game.components.PhysicsComponent;
+import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.TransformComponent;
 import com.guardian.game.tools.MapperTools;
 
@@ -62,7 +62,7 @@ public class PhysicsManager {
 	 */
 	public static void addCharacterRigidBody(Entity entity){
 		
-		PhysicsComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		CharacterComponent physicsComponent = MapperTools.physicsCM.get(entity);
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
 		// 获得组号，如果已占用继续获取
@@ -183,6 +183,9 @@ public class PhysicsManager {
 	 * @param body
 	 */
 	public static void disposeBody(Body body){
+		
+		if(body == null)
+			return;
 		
 		// 销毁前 移出已占用组号
 		Array<Fixture> fixtureList = body.getFixtureList();
