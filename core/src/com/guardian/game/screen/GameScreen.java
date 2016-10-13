@@ -75,7 +75,7 @@ public class GameScreen extends ScreenAdapter {
 		MapperTools.stateCM.get(hbws).state = State.idle;
 		
 		
-		MapperTools.combatCM.get(GAME.hero).entity = hbws; // 临时设置攻击目标
+		MapperTools.combatCM.get(GAME.hero).targetEntity = hbws; // 临时设置攻击目标
 		
 		
 		initUI();

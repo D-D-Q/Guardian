@@ -21,7 +21,6 @@ import com.guardian.game.systems.EquippedSystem;
 import com.guardian.game.systems.ItemsSystem;
 import com.guardian.game.systems.MessageHandlingSystem;
 import com.guardian.game.systems.PhysicsSystem;
-import com.guardian.game.systems.RenderingSystem;
 
 /**
  * 游戏主运行类
@@ -85,9 +84,9 @@ public class GuardianGame extends Game {
 		GAME.equippedSystem = new EquippedSystem(this);
 		
 		engine.addSystem(new PhysicsSystem(0));
-		engine.addSystem(new CombatSystem(1));
-		engine.addSystem(new MessageHandlingSystem(2));
-		engine.addSystem(new AnimationSystem(3));
+		engine.addSystem(new AnimationSystem(1));
+		engine.addSystem(new CombatSystem(2));
+		engine.addSystem(new MessageHandlingSystem(3));
 //		engine.addSystem(new RenderingSystem(this, 4));
 		
 		assets.assetManager.finishLoading();

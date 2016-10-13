@@ -2,6 +2,7 @@ package com.guardian.game.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 /**
@@ -13,9 +14,19 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 public class CombatComponent implements Component, Poolable{
 	
 	/**
+	 * 8个方向的攻击帧
+	 */
+	public TextureRegion[] attackTextureRegion = new TextureRegion[8];
+	
+	/**
 	 * 目标
 	 */
-	public Entity entity;
+	public Entity targetEntity;
+	
+	/**
+	 * 标记本次动画是否已经发送过攻击消息
+	 */
+	public boolean isSendAttackMessage = false;
 	
 	// 警戒范围
 	
@@ -23,6 +34,10 @@ public class CombatComponent implements Component, Poolable{
 
 	@Override
 	public void reset() {
-		entity = null;
+		
+		for(TextureRegion textureRegion: attackTextureRegion)
+			textureRegion = null;
+		
+		targetEntity = null;
 	}
 }

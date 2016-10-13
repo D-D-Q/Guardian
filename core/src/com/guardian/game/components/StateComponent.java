@@ -82,14 +82,14 @@ public class StateComponent implements Component, Poolable  {
 	}
 	
 	/**
-	 * 方向
-	 */
-	public Orientation orientation;
-
-	/**
 	 * 状态
 	 */
 	public State state;
+	
+	/**
+	 * 方向
+	 */
+	public Orientation orientation;
 	
 	/**
 	 * 动画帧时间
@@ -109,5 +109,6 @@ public class StateComponent implements Component, Poolable  {
 	public void reset() {
 		state = null;
 		orientation = null;
+		stateTime = 0;
 	}
 }

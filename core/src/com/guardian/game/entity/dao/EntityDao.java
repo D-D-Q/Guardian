@@ -1,6 +1,7 @@
 package com.guardian.game.entity.dao;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.guardian.game.GuardianGame;
@@ -11,6 +12,7 @@ import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.MessageComponent;
 import com.guardian.game.components.PhysicsComponent;
 import com.guardian.game.components.StateComponent;
+import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.components.StateComponent.State;
 import com.guardian.game.components.TextureComponent;
 import com.guardian.game.components.TransformComponent;
@@ -53,15 +55,12 @@ public class EntityDao {
 		index += 5 * template.idleFrames;
 		animationComponent.addAnimation(State.run, AtlasUtil.stateAnimation(frames, index, template.runFrames));
 		index += 5 * template.runFrames;
-		animationComponent.addAnimation(State.attack, AtlasUtil.stateAnimation(frames, index, template.attackFrames));
-		
-		// TODO 触发攻击的帧
-		
-		
+		Animation[] animations = AtlasUtil.stateAnimation(frames, index, template.attackFrames);
+		animationComponent.addAnimation(State.attack, animations);
 		
 		TransformComponent transformComponent = game.engine.createComponent(TransformComponent.class);
 		transformComponent.init(frames.get(0).getWidth(), frames.get(0).getHeight(), template.offsetX, template.offsetY, 100); // 初始化画布大小和锚点
-//		transformComponent.setMapPosition(positionX, positionY); // 初始化位置, z是绘制优先级
+//		transformComponent.setMapPosition(positionX, positionY); // 初始化tile位置, z是绘制优先级
 		transformComponent.position.set(positionX, positionY, transformComponent.position.z); // 初始化位置, z是绘制优先级
 		
 		AttributesComponent attributesComponent = game.engine.createComponent(AttributesComponent.class); // 变量属性信息
@@ -74,16 +73,19 @@ public class EntityDao {
 		attributesComponent.VIT = template.VIT;
 		
 		CombatComponent combatComponent = game.engine.createComponent(CombatComponent.class);
+		for(Orientation direction : Orientation.values()){
+			combatComponent.attackTextureRegion[direction.value] = animations[direction.value].getKeyFrames()[template.attackFrameIndex]; // 攻击事件的关键帧
+		}
 		
 		MessageComponent messageComponent = game.engine.createComponent(MessageComponent.class);
 		messageComponent.entity = entity;
 		MessageHandlingSystem.getMessageManager().addListener(messageComponent, MessageHandlingSystem.MSG_ATTACK);
 		
 		PhysicsComponent physicsComponent = game.engine.createComponent(PhysicsComponent.class);
-		physicsComponent.radius = 35;
+		physicsComponent.radius = template.physicsRadius;
 		
 		CollisionComponent collisionComponent = game.engine.createComponent(CollisionComponent.class);
-		collisionComponent.radius = 75;
+		collisionComponent.radius = template.collisionRadius;
 		
 		entity.add(transformComponent);
 		entity.add(stateComponent);

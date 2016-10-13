@@ -29,11 +29,26 @@ public class CharactersTemplate {
 	public int attackFrames;
 	
 	/**
+	 * 触发攻击事件的攻击帧
+	 */
+	public int attackFrameIndex;
+	
+	/**
 	 * 角色站立点x,y偏移
 	 * 精灵定位锚点，绘制显示时，会把该点显示在系统所指的位置上
 	 */
 	public float offsetX = 128;
 	public float offsetY = 128;
+	
+	/**
+	 * 精灵刚体大小
+	 */
+	public float physicsRadius;
+	
+	/**
+	 * 精灵碰撞大小
+	 */
+	public float collisionRadius;
 	
 	/**
 	 * 名称
