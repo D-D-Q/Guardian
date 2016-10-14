@@ -84,4 +84,14 @@ public class CharactersTemplate {
 	 * 体力
 	 */
 	public int VIT;
+	
+	/**
+	 * 需要接受的消息
+	 */
+	public int[] message;
+	
+	/**
+	 * 脚本类名。包名.类名
+	 */
+	public String script;
 }

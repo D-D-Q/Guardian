@@ -21,48 +21,48 @@ public class EntityManager implements EntityListener{
 	@Override
 	public void entityAdded(Entity entity) {
 		
-		for(Component component : entity.getComponents()){
-			
-			// 添加角色刚体
-			if(component instanceof CharacterComponent){
-				PhysicsManager.addCharacterRigidBody(entity);
-			}
-			// 添加碰撞检测
-			else if(component instanceof CollisionComponent){
-				PhysicsManager.addCollision(entity);
-			}
-			// 消息组件添加监听
-			else if(component instanceof MessageComponent){
-				MessageComponent messageComponent = (MessageComponent)component;
-				messageComponent.entity = entity;
-				MsgManager.messageManager.addListener(messageComponent, MessageHandlingSystem.MSG_ATTACK);
-			}
-			// 脚本组件赋值实体
-			else if(component instanceof ScriptComponent){
-				ScriptComponent scriptComponent = (ScriptComponent)component;
-				scriptComponent.entity = entity;
-			}
+//		for(Component component : entity.getComponents()){
+//			
+//			// 添加角色刚体
+//			if(component instanceof CharacterComponent){
+//				PhysicsManager.addCharacterRigidBody(entity);
+//			}
+//			// 添加碰撞检测
+//			else if(component instanceof CollisionComponent){
+//				PhysicsManager.addCollision(entity);
+//			}
+//			// 消息组件添加监听
+//			else if(component instanceof MessageComponent){
+//				MessageComponent messageComponent = (MessageComponent)component;
+//				messageComponent.entity = entity;
+//				MsgManager.messageManager.addListener(messageComponent, MessageHandlingSystem.MSG_ATTACK);
+//			}
+//			// 脚本组件赋值实体
+//			else if(component instanceof ScriptComponent){
+//				ScriptComponent scriptComponent = (ScriptComponent)component;
+//				scriptComponent.script.entity = entity;
+//			}
+//		}
+		
+		// 添加角色刚体
+		if(MapperTools.physicsCM.get(entity) != null)
+			PhysicsManager.addCharacterRigidBody(entity);
+		
+		// 添加碰撞检测
+		if(MapperTools.collisionCM.get(entity) != null)
+			PhysicsManager.addCollision(entity);
+		
+		// 消息组件添加监听
+		MessageComponent messageComponent = MapperTools.messageCM.get(entity);
+		if(messageComponent != null){
+			messageComponent.entity = entity;
+			MsgManager.messageManager.addListeners(messageComponent, messageComponent.message);
 		}
 		
-//		// 添加角色刚体
-//		if(MapperTools.physicsCM.get(entity) != null)
-//			PhysicsManager.addCharacterRigidBody(entity);
-//		
-//		// 添加碰撞检测
-//		if(MapperTools.collisionCM.get(entity) != null)
-//			PhysicsManager.addCollision(entity);
-//		
-//		// 消息组件添加监听
-//		MessageComponent messageComponent = MapperTools.messageCM.get(entity);
-//		if(messageComponent != null){
-//			messageComponent.entity = entity;
-//			MsgManager.messageManager.addListener(messageComponent, MessageHandlingSystem.MSG_ATTACK);
-//		}
-//		
-//		// 脚本组件赋值实体
-//		ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
-//		if(scriptComponent != null)
-//			scriptComponent.entity = entity;
+		// 脚本组件脚本赋值实体
+		ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
+		if(scriptComponent != null)
+			scriptComponent.script.entity = entity;
 	}
 
 	@Override

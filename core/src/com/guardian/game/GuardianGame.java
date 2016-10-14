@@ -91,7 +91,7 @@ public class GuardianGame extends Game {
 		engine.addSystem(new AnimationSystem(1));
 		engine.addSystem(new CombatSystem(2));
 		engine.addSystem(new MessageHandlingSystem(3));
-		engine.addSystem(new RenderingSystem(this, 4));
+//		engine.addSystem(new RenderingSystem(this, 4));
 		
 		assets.assetManager.finishLoading();
 		

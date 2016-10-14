@@ -12,8 +12,6 @@ import com.game.core.manager.MsgManager;
  */
 public class MessageHandlingSystem extends EntitySystem{
 	
-	public static final int MSG_ATTACK = 0;
-	
 	/**
 	 * @param priority 系统调用优先级
 	 */

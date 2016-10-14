@@ -15,7 +15,9 @@
 		DEF: 1,
 		HIT: 1,
 		AVD: 1,
-		VIT: 1
+		VIT: 1,
+		message: [0],
+		script: com.guardian.game.entityscript.HeroScript
 	},
 	{
 		fileName: res/hbws.atlas,
@@ -33,6 +35,8 @@
 		DEF: 2,
 		HIT: 2,
 		AVD: 2,
-		VIT: 2
+		VIT: 2,
+		message: [0],
+		script: com.guardian.game.entityscript.HbwsScript
 	}
 ]

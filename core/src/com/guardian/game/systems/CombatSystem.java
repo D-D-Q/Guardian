@@ -10,6 +10,7 @@ import com.guardian.game.components.StateComponent.State;
 import com.guardian.game.components.TextureComponent;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
+import com.guardian.game.tools.MessageType;
 
 /**
  * 战斗系统
@@ -64,6 +65,6 @@ public class CombatSystem extends IteratingSystem  {
 		// 发送攻击消息
 		MessageComponent messageComponent = MapperTools.messageCM.get(entity);
 		MessageComponent targetMessageComponent = MapperTools.messageCM.get(combatComponent.targetEntity);
-		MsgManager.messageManager.dispatchMessage(messageComponent, targetMessageComponent, MessageHandlingSystem.MSG_ATTACK, entity);
+		MsgManager.messageManager.dispatchMessage(messageComponent, targetMessageComponent, MessageType.MSG_ATTACK, entity);
 	}
 }

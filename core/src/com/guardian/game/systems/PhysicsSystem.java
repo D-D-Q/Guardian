@@ -98,23 +98,37 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 					collisionComponent.rigidBody.getAngle());
 	}
 	
+	/**
+	 * 进入碰撞
+	 * @see com.badlogic.gdx.physics.box2d.ContactListener#beginContact(com.badlogic.gdx.physics.box2d.Contact)
+	 */
 	@Override
 	public void beginContact(Contact contact) {
 		Log.info(this, "beginContact");
 	}
 
+	/**
+	 * 离开碰撞
+	 * @see com.badlogic.gdx.physics.box2d.ContactListener#endContact(com.badlogic.gdx.physics.box2d.Contact)
+	 */
 	@Override
 	public void endContact(Contact contact) {
 		Log.info(this, "endContact");
 	}
 
+	/**
+	 * 新碰撞点
+	 * @see com.badlogic.gdx.physics.box2d.ContactListener#preSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.Manifold)
+	 */
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
-//		Log.info(this, "preSolve");
 	}
 
+	/**
+	 * 碰撞点产生力
+	 * @see com.badlogic.gdx.physics.box2d.ContactListener#postSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.ContactImpulse)
+	 */
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
-//		Log.info(this, "postSolve");
 	}
 }

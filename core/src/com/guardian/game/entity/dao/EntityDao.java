@@ -1,24 +1,27 @@
 package com.guardian.game.entity.dao;
 
+import java.lang.reflect.Constructor;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.game.core.component.ScriptComponent;
+import com.game.core.script.EntityScript;
 import com.guardian.game.GuardianGame;
 import com.guardian.game.components.AnimationComponent;
 import com.guardian.game.components.AttributesComponent;
+import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.CollisionComponent;
 import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.MessageComponent;
-import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.components.StateComponent.State;
 import com.guardian.game.components.TextureComponent;
 import com.guardian.game.components.TransformComponent;
 import com.guardian.game.data.template.CharactersTemplate;
-import com.guardian.game.entityscript.HbwsScript;
-import com.guardian.game.systems.MessageHandlingSystem;
 import com.guardian.game.util.AtlasUtil;
 
 /**
@@ -79,6 +82,7 @@ public class EntityDao {
 		}
 		
 		MessageComponent messageComponent = game.engine.createComponent(MessageComponent.class);
+		messageComponent.message = template.message;
 		
 		CharacterComponent physicsComponent = game.engine.createComponent(CharacterComponent.class);
 		physicsComponent.radius = template.physicsRadius;
@@ -86,7 +90,14 @@ public class EntityDao {
 		CollisionComponent collisionComponent = game.engine.createComponent(CollisionComponent.class);
 		collisionComponent.radius = template.collisionRadius;
 		
-		HbwsScript script = game.engine.createComponent(HbwsScript.class);
+		ScriptComponent scriptComponent = game.engine.createComponent(ScriptComponent.class);
+		try {
+			Class<?> scriptClass = ClassReflection.forName(template.script);
+			Constructor<?> constructor = scriptClass.getConstructor();
+			scriptComponent.script =  (EntityScript) constructor.newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		entity.add(transformComponent);
 		entity.add(stateComponent);
@@ -97,8 +108,7 @@ public class EntityDao {
 		entity.add(messageComponent);
 		entity.add(physicsComponent);
 		entity.add(collisionComponent);
-		
-		entity.add(script);
+		entity.add(scriptComponent);
 		
 		return entity;
 	}

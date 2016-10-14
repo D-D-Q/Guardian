@@ -6,6 +6,8 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.component.ScriptComponent;
+import com.game.core.manager.MsgManager;
+import com.guardian.game.systems.MessageHandlingSystem;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -23,15 +25,23 @@ public class MessageComponent implements Component, Poolable, Telegraph  {
 	public Entity entity;
 	
 	/**
+	 * 可以接受的消息类型
+	 */
+	public int[] message;
+	
+	/**
 	 * 接受消息
 	 * @see com.badlogic.gdx.ai.msg.Telegraph#handleMessage(com.badlogic.gdx.ai.msg.Telegram)
 	 */
 	@Override
 	public boolean handleMessage(Telegram msg) {
 		
+		// 转发消息到脚本
 		ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
-		if(scriptComponent != null)
-			return scriptComponent.handleMessage(msg);
+		if(scriptComponent != null){
+			MessageComponent senderMessageComponent = (MessageComponent)msg.sender;
+			return scriptComponent.script.message(msg.message, senderMessageComponent.entity, msg.extraInfo);
+		}
 		
 		return true;
 	}
@@ -43,5 +53,6 @@ public class MessageComponent implements Component, Poolable, Telegraph  {
 	@Override
 	public void reset() {
 		entity = null;
+		MsgManager.messageManager.removeListener(this, message);
 	}
 }
