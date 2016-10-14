@@ -11,8 +11,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.guardian.game.components.CollisionComponent;
 import com.guardian.game.components.CharacterComponent;
+import com.guardian.game.components.CollisionComponent;
 import com.guardian.game.components.TransformComponent;
 import com.guardian.game.tools.MapperTools;
 
@@ -54,15 +54,14 @@ public class PhysicsManager {
 	
 	/**
 	 * 添加精灵刚体
-	 * 保证精灵和精灵有碰撞检测，但不被力推动
-	 * 保证精灵和其他刚体的正常物理效果
+	 * 保证精灵有碰撞检测，但不被力推动
 	 * 
 	 * @param entity
 	 * @return
 	 */
 	public static void addCharacterRigidBody(Entity entity){
 		
-		CharacterComponent physicsComponent = MapperTools.physicsCM.get(entity);
+		CharacterComponent physicsComponent = MapperTools.characterCM.get(entity);
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 		
 		// 获得组号，如果已占用继续获取
@@ -75,11 +74,13 @@ public class PhysicsManager {
 		CircleShape circle = new CircleShape(); // 圆形
 		circle.setRadius(physicsComponent.radius);
 		
-		Body dynamicBody = create(BodyType.DynamicBody, circle, groupIndex_temp, (short)0x0010, (short)0x1101, // (0x1000)是其他刚体
+		// 不与其他角色的DynamicBody碰撞。和其他刚体(0x0001)正常碰撞。
+		Body dynamicBody = create(BodyType.DynamicBody, circle, groupIndex_temp, (short)0x0010, (short)0x0001,
 				new Vector2(transformComponent.position.x, transformComponent.position.y));
 		dynamicBody.setUserData(entity); // 刚体携带实体
 		
-		Body staticBody = create(BodyType.StaticBody, circle, groupIndex_temp, (short)0x0100, (short)0x0010,
+		// 不与自身角色的DynamicBody碰撞
+		Body staticBody = create(BodyType.StaticBody, circle, groupIndex_temp, 
 				new Vector2(transformComponent.position.x, transformComponent.position.y));
 		staticBody.setUserData(entity); // 刚体携带实体
 		
@@ -104,7 +105,7 @@ public class PhysicsManager {
 		CircleShape circle = new CircleShape(); // 圆形
 		circle.setRadius(collisionComponent.radius);
 		
-		Body body = create(BodyType.KinematicBody, circle,
+		Body body = createSensor(BodyType.KinematicBody, circle,
 				new Vector2(transformComponent.position.x, transformComponent.position.y));
 		body.setUserData(entity); // 刚体携带实体
 		
@@ -118,8 +119,34 @@ public class PhysicsManager {
 	 * 
 	 * @param bodyType 刚体类型
 	 * @param shape 图形
-	 * @param categoryBits isSensor是false时生效。组号，必须是2的指数位值。1 2 4 8...
-	 * @param maskBits isSensor是false时生效。可以发生碰撞的组号，可以多个。2|4|8...。-1表示所有都碰撞
+	 * @param position 生成位置
+	 * @return
+	 */
+	private static Body create(BodyType bodyType, Shape shape, Vector2 position){
+		return create(bodyType, shape, false, (short)0, (short)1, (short)-1, position);
+	}
+	
+	/**
+	 * 生成正常刚体
+	 * 
+	 * @param bodyType 刚体类型
+	 * @param shape 图形
+	 * @param groupIndex isSensor是false时生效。 同组的正数的碰撞,负数不碰撞。0或不同组正常碰撞
+	 * @param position 生成位置
+	 * @return
+	 */
+	private static Body create(BodyType bodyType, Shape shape, short groupIndex, Vector2 position){
+		return create(bodyType, shape, false, groupIndex, (short)1, (short)-1, position);
+	}
+	
+	/**
+	 * 生成正常刚体
+	 * 
+	 * @param bodyType 刚体类型
+	 * @param shape 图形
+	 * @param groupIndex isSensor是false时生效。 同组的正数的碰撞,负数不碰撞。0或不同组使用categoryBits和maskBits判断
+	 * @param categoryBits isSensor是false时生效。组号，必须是2的指数位值。1 2 4 8...。默认所有刚体都是1
+	 * @param maskBits isSensor是false时生效。可以发生碰撞的组号，可以多个。2|4|8...。默认-1表示跟所有都碰撞
 	 * @param position 生成位置
 	 * @return
 	 */
@@ -135,7 +162,7 @@ public class PhysicsManager {
 	 * @param position 生成位置
 	 * @return
 	 */
-	private static Body create(BodyType bodyType, Shape shape, Vector2 position){
+	private static Body createSensor(BodyType bodyType, Shape shape, Vector2 position){
 		return create(bodyType, shape, true, (short)0, (short)1, (short)-1, position);
 	}
 	
@@ -145,8 +172,9 @@ public class PhysicsManager {
 	 * @param bodyType 刚体类型
 	 * @param shape 图形
 	 * @param isSensor true 不做物理反应，只是检测碰撞
-	 * @param categoryBits isSensor是false时生效。组号，必须是2的指数位值。1 2 4 8...
-	 * @param maskBits isSensor是false时生效。可以发生碰撞的组号，可以多个。2|4|8...。-1表示所有都碰撞
+	 * @param groupIndex isSensor是false时生效。 同组的正数的碰撞,负数不碰撞。0或不同组使用categoryBits和maskBits判断
+	 * @param categoryBits isSensor是false时生效。碰撞值，必须是2的指数位值。1 2 4 8...
+	 * @param maskBits isSensor是false时生效。可以发生碰撞的碰撞值，可以多个。2|4|8...。-1表示所有都碰撞
 	 * @param position 生成位置
 	 * @return
 	 */
@@ -167,9 +195,9 @@ public class PhysicsManager {
 		
 		// 碰撞过滤。isSensor是true的刚体一定要检测碰撞，不设置过滤
 		if(!isSensor){
-			fixtureDef.filter.groupIndex = groupIndex; // 同组的正数的碰撞,负数不碰撞。0或不同组使用categoryBits和maskBits判断
-			fixtureDef.filter.categoryBits = categoryBits; // 自己的值，2的指数位值。1 2 4 8...
-			fixtureDef.filter.maskBits = maskBits; // 可以发生碰撞的值, 可以多个。2&4&8...
+			fixtureDef.filter.groupIndex = groupIndex; //
+			fixtureDef.filter.categoryBits = categoryBits; 
+			fixtureDef.filter.maskBits = maskBits; 
 		}
 		
 		body.createFixture(fixtureDef); // 生成Fixture，直接设置了不用接受返回值

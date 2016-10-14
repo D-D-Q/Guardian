@@ -1,13 +1,10 @@
 package com.game.core.manager;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
+import com.badlogic.gdx.InputProcessor;
 import com.game.core.component.ScriptComponent;
-import com.guardian.game.components.CharacterComponent;
-import com.guardian.game.components.CollisionComponent;
 import com.guardian.game.components.MessageComponent;
-import com.guardian.game.systems.MessageHandlingSystem;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -21,31 +18,8 @@ public class EntityManager implements EntityListener{
 	@Override
 	public void entityAdded(Entity entity) {
 		
-//		for(Component component : entity.getComponents()){
-//			
-//			// 添加角色刚体
-//			if(component instanceof CharacterComponent){
-//				PhysicsManager.addCharacterRigidBody(entity);
-//			}
-//			// 添加碰撞检测
-//			else if(component instanceof CollisionComponent){
-//				PhysicsManager.addCollision(entity);
-//			}
-//			// 消息组件添加监听
-//			else if(component instanceof MessageComponent){
-//				MessageComponent messageComponent = (MessageComponent)component;
-//				messageComponent.entity = entity;
-//				MsgManager.messageManager.addListener(messageComponent, MessageHandlingSystem.MSG_ATTACK);
-//			}
-//			// 脚本组件赋值实体
-//			else if(component instanceof ScriptComponent){
-//				ScriptComponent scriptComponent = (ScriptComponent)component;
-//				scriptComponent.script.entity = entity;
-//			}
-//		}
-		
 		// 添加角色刚体
-		if(MapperTools.physicsCM.get(entity) != null)
+		if(MapperTools.characterCM.get(entity) != null)
 			PhysicsManager.addCharacterRigidBody(entity);
 		
 		// 添加碰撞检测
@@ -59,14 +33,21 @@ public class EntityManager implements EntityListener{
 			MsgManager.messageManager.addListeners(messageComponent, messageComponent.message);
 		}
 		
-		// 脚本组件脚本赋值实体
+		// 脚本组件
 		ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
-		if(scriptComponent != null)
+		if(scriptComponent != null){
 			scriptComponent.script.entity = entity;
+			if(scriptComponent.script instanceof InputProcessor)
+				InputManager.addProcessor((InputProcessor)scriptComponent.script);
+		}
 	}
 
 	@Override
 	public void entityRemoved(Entity entity) {
 		
+		// 脚本组件，移出输入监听
+		ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
+		if(scriptComponent != null && scriptComponent.script instanceof InputProcessor)
+			InputManager.removeProcessor((InputProcessor)scriptComponent.script);
 	}
 }

@@ -1,16 +1,13 @@
 package com.guardian.game.screen;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.game.core.manager.InputManager;
 import com.guardian.game.GAME;
 import com.guardian.game.GameConfig;
 import com.guardian.game.GuardianGame;
@@ -69,20 +66,15 @@ public class GameScreen extends ScreenAdapter {
 		MapperTools.stateCM.get(GAME.hero).state = State.attack;
 		
 //		Entity hbws = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 10, 10 + 1);
-		Entity hbws = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), mapComponent.width/2, mapComponent.height/2 + 75);
+		Entity hbws = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), mapComponent.width/2, mapComponent.height/2 + 200);
 		game.engine.addEntity(hbws);
 		MapperTools.stateCM.get(hbws).orientation = Orientation.d2;
 		MapperTools.stateCM.get(hbws).state = State.idle;
 		
-		
-		MapperTools.combatCM.get(GAME.hero).targetEntity = hbws; // 临时设置攻击目标
-		
-		
 		initUI();
 		
-		InputMultiplexer multiplexer = new InputMultiplexer(); //事件处理链
-		multiplexer.addProcessor(UIstage); // UI事件
-		multiplexer.addProcessor(new InputAdapter() { // 拖动屏幕
+		InputManager.addProcessor(UIstage); // UI事件
+		InputManager.addProcessor(new InputAdapter() { // 拖动屏幕
 			
 			private int minGameCameraPositionX = 0 + GameConfig.width/2; // 地图左边边界是x坐标= 0 + 相机在屏幕中间
 			private int maxGameCameraPositionX = mapComponent.width - GameConfig.width/2; // 地图右边边界x坐标=地图宽 - 相机在屏幕中间
@@ -121,61 +113,7 @@ public class GameScreen extends ScreenAdapter {
 				
 				return true;
 			}
-			
-			float speed = 100;
-			
-			public boolean keyDown (int keycode) {
-				
-				Body body = MapperTools.physicsCM.get(GAME.hero).dynamicBody;
-				
-				float x = 0, y = 0;
-				
-				if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
-					y = 0;
-				else if(Gdx.input.isKeyPressed(Keys.W))
-					y = speed;
-				else if(Gdx.input.isKeyPressed(Keys.S))
-					y = -speed;
-				
-				if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
-					x = 0;
-				else if(Gdx.input.isKeyPressed(Keys.A))
-					x = -speed;
-				else if(Gdx.input.isKeyPressed(Keys.D))
-					x = speed;
-				
-				body.setLinearVelocity(x, y);
-				
-				return true;
-			}
-			
-			@Override
-			public boolean keyUp(int keycode) {
-				
-				Body body = MapperTools.physicsCM.get(GAME.hero).dynamicBody;
-				
-				float x = 0, y = 0;
-				
-				if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
-					y = 0;
-				else if(Gdx.input.isKeyPressed(Keys.W))
-					y = speed;
-				else if(Gdx.input.isKeyPressed(Keys.S))
-					y = -speed;
-				
-				if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
-					x = 0;
-				else if(Gdx.input.isKeyPressed(Keys.A))
-					x = -speed;
-				else if(Gdx.input.isKeyPressed(Keys.D))
-					x = speed;
-				
-				body.setLinearVelocity(x, y);
-				
-				return true;
-			}
 		});
-		Gdx.input.setInputProcessor(multiplexer);
 	}
 	
 	/**

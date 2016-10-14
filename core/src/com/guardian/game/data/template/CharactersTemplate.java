@@ -41,9 +41,14 @@ public class CharactersTemplate {
 	public float offsetY = 128;
 	
 	/**
-	 * 精灵刚体大小
+	 * 刚体大小。表示物体
 	 */
 	public float physicsRadius;
+	
+	/**
+	 * 精灵刚体大小。表示角色
+	 */
+	public float characterRadius;
 	
 	/**
 	 * 精灵碰撞大小

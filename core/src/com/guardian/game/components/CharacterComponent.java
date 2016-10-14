@@ -20,14 +20,14 @@ public class CharacterComponent  implements Component, Poolable {
 	
 	/**
 	 * 精灵的动态刚体，系统赋值
-	 * 用于精灵的移动，和CollisionComponent的碰撞检测，和staticBody的碰撞
+	 * 用于精灵的移动，和CollisionComponent的碰撞检测，和精灵的staticBody的碰撞
 	 * dynamicBody保证了精灵的物理移动能力和碰撞监测功能
 	 */
 	public Body dynamicBody;
 	
 	/**
 	 * 精灵的静态刚体，系统赋值
-	 * 用于精力的固定，和dynamicBody的碰撞
+	 * 用于精灵的固定，只和dynamicBody碰撞
 	 * staticBody保证了精灵不会被其他精灵撞动
 	 */
 	public Body staticBody;

@@ -84,8 +84,8 @@ public class EntityDao {
 		MessageComponent messageComponent = game.engine.createComponent(MessageComponent.class);
 		messageComponent.message = template.message;
 		
-		CharacterComponent physicsComponent = game.engine.createComponent(CharacterComponent.class);
-		physicsComponent.radius = template.physicsRadius;
+		CharacterComponent characterComponent = game.engine.createComponent(CharacterComponent.class);
+		characterComponent.radius = template.characterRadius;
 		
 		CollisionComponent collisionComponent = game.engine.createComponent(CollisionComponent.class);
 		collisionComponent.radius = template.collisionRadius;
@@ -106,7 +106,7 @@ public class EntityDao {
 		entity.add(attributesComponent);
 		entity.add(combatComponent);
 		entity.add(messageComponent);
-		entity.add(physicsComponent);
+		entity.add(characterComponent);
 		entity.add(collisionComponent);
 		entity.add(scriptComponent);
 		

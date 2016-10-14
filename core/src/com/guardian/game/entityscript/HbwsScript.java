@@ -1,6 +1,7 @@
 package com.guardian.game.entityscript;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.game.core.script.EntityScript;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.logs.Log;
@@ -18,9 +19,20 @@ public class HbwsScript extends EntityScript {
 	public boolean message(int messageType, Entity sender, Object extraInfo) {
 		
 		AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
+		AttributesComponent senderAttributesComponent = MapperTools.attributesCM.get(sender);
 		
-		Log.info(this, attributesComponent.name + ": 我被攻击");
+		Log.info(this, attributesComponent.name + ": 我" + senderAttributesComponent.name + "被攻击到了");
 		
 		return true;
+	}
+
+	@Override
+	public void beginContact(Contact contact, Entity target) {
+		Log.info(this, "beginContact");
+	}
+
+	@Override
+	public void endContact(Contact contact, Entity target) {
+		
 	}
 }

@@ -1,6 +1,7 @@
 package com.game.core.script;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.physics.box2d.Contact;
 
 /**
  * 实体脚本的基类
@@ -16,7 +17,7 @@ public abstract class EntityScript  {
 	public Entity entity;
 	
 	/**
-	 * 接受消息
+	 * 消息事件
 	 * 
 	 * @param messageType 消息类型
 	 * @param sender 发送者
@@ -24,4 +25,21 @@ public abstract class EntityScript  {
 	 * @return true处理完成
 	 */
 	public abstract boolean message(int messageType, Entity sender, Object extraInfo);
+	
+	
+	/**
+	 * CollisionComponent碰撞事件
+	 * 
+	 * @param contact 碰撞类
+	 * @param target 碰撞目标
+	 */
+	public abstract void beginContact(Contact contact, Entity target);
+	
+	/**
+	 * CollisionComponent结束碰撞事件
+	 * 
+	 * @param contact 碰撞类
+	 * @param target 碰撞目标
+	 */
+	public abstract void endContact(Contact contact, Entity target);
 }

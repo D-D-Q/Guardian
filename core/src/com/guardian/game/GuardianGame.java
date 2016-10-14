@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.game.core.Assets;
 import com.game.core.manager.EntityManager;
+import com.game.core.manager.InputManager;
 import com.game.core.manager.PhysicsManager;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.CameraComponent;
@@ -22,7 +23,6 @@ import com.guardian.game.systems.EquippedSystem;
 import com.guardian.game.systems.ItemsSystem;
 import com.guardian.game.systems.MessageHandlingSystem;
 import com.guardian.game.systems.PhysicsSystem;
-import com.guardian.game.systems.RenderingSystem;
 
 /**
  * 游戏主运行类
@@ -57,6 +57,8 @@ public class GuardianGame extends Game {
 	@Override
 	public void create () {
 		
+		/**--------------------libgdx start-------------------------*/
+		
 		Log.setLogLevel(Application.LOG_INFO); // 日志级别
 		fpsLog = new FPSLogger();
 		Log.info(this, "create begin");
@@ -70,10 +72,13 @@ public class GuardianGame extends Game {
 			e.printStackTrace();
 		}
 		
-		DataTemplateDao dataTemplateDao = new DataTemplateDao();
-		dataTemplateDao.load(GameScreenAssets.charactersTemplate);
-		
 		batch = new SpriteBatch();
+		
+		Gdx.input.setInputProcessor(InputManager.inputMultiplexer); // 监听输入事件
+		
+		/**--------------------libgdx end-------------------------*/
+		
+		/**--------------------ashley start-------------------------*/
 
 		engine = new PooledEngine(1, 10, 1, 10);
 		engine.addEntityListener(new EntityManager());
@@ -92,6 +97,11 @@ public class GuardianGame extends Game {
 		engine.addSystem(new CombatSystem(2));
 		engine.addSystem(new MessageHandlingSystem(3));
 //		engine.addSystem(new RenderingSystem(this, 4));
+		
+		/**--------------------ashley end-------------------------*/
+		
+		DataTemplateDao dataTemplateDao = new DataTemplateDao();
+		dataTemplateDao.load(GameScreenAssets.charactersTemplate);
 		
 		assets.assetManager.finishLoading();
 		

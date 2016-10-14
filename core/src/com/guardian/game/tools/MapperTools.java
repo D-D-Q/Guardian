@@ -32,7 +32,7 @@ public class MapperTools {
 	public static final ComponentMapper<TextureComponent> textureCM = ComponentMapper.getFor(TextureComponent.class);
 	public static final ComponentMapper<AttributesComponent> attributesCM = ComponentMapper.getFor(AttributesComponent.class);
 	
-	public static final ComponentMapper<CharacterComponent> physicsCM = ComponentMapper.getFor(CharacterComponent.class);
+	public static final ComponentMapper<CharacterComponent> characterCM = ComponentMapper.getFor(CharacterComponent.class);
 	public static final ComponentMapper<CollisionComponent> collisionCM = ComponentMapper.getFor(CollisionComponent.class);
 	public static final ComponentMapper<MessageComponent> messageCM = ComponentMapper.getFor(MessageComponent.class);
 	public static final ComponentMapper<CombatComponent> combatCM = ComponentMapper.getFor(CombatComponent.class);
