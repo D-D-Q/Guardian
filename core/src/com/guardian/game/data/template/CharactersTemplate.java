@@ -51,9 +51,22 @@ public class CharactersTemplate {
 	public float characterRadius;
 	
 	/**
-	 * 精灵碰撞大小
+	 * 精灵攻击范围
+	 * CombatComponent
 	 */
-	public float collisionRadius;
+	public float ATKRange = 0;
+
+	/**
+	 * 精灵攻击距离
+	 * CombatComponent
+	 */
+	public float ATKDistance = 0;
+	
+	/**
+	 * 碰撞检测范围
+	 * CollisionComponent
+	 */
+	public float collisionRadius = 0;
 	
 	/**
 	 * 名称
@@ -89,6 +102,11 @@ public class CharactersTemplate {
 	 * 体力
 	 */
 	public int VIT;
+	
+	/**
+	 * 移动速度
+	 */
+	public float speed = 0;
 	
 	/**
 	 * 需要接受的消息

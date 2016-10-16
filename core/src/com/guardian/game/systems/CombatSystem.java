@@ -6,7 +6,7 @@ import com.game.core.manager.MsgManager;
 import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.MessageComponent;
 import com.guardian.game.components.StateComponent;
-import com.guardian.game.components.StateComponent.State;
+import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.components.TextureComponent;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
@@ -32,7 +32,7 @@ public class CombatSystem extends IteratingSystem  {
 	protected void processEntity(Entity entity, float deltaTime) {
 		
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
-		if(stateComponent.state != State.attack) // 不是战斗状态。最好能角色进入战斗状态才进入这个系统的entities里
+		if(stateComponent.entityState.getCurrentState() != States.attack) // 不是战斗状态。最好能角色进入战斗状态才进入这个系统的entities里
 			return;
 		
 		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
@@ -42,13 +42,9 @@ public class CombatSystem extends IteratingSystem  {
 			return;
 		}
 		
-		if(combatComponent.isSendAttackMessage) // 已经触发过攻击事件了
+		if(combatComponent.isSendAttackMessage || !combatComponent.IsdistanceTarget()) // 已经触发过攻击事件了||失去目标了
 			return;
-		
 		combatComponent.isSendAttackMessage = true;
-		
-		if(combatComponent.targetEntity == null) // 失去目标了
-			return;
 		
 //		根据tile计算目标的代码，不用tile方式了
 //		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
@@ -64,7 +60,7 @@ public class CombatSystem extends IteratingSystem  {
 		
 		// 发送攻击消息
 		MessageComponent messageComponent = MapperTools.messageCM.get(entity);
-		MessageComponent targetMessageComponent = MapperTools.messageCM.get(combatComponent.targetEntity);
+		MessageComponent targetMessageComponent = MapperTools.messageCM.get(combatComponent.target);
 		MsgManager.messageManager.dispatchMessage(messageComponent, targetMessageComponent, MessageType.MSG_ATTACK, entity);
 	}
 }

@@ -32,13 +32,29 @@ public class AnimationSystem extends IteratingSystem {
 		Log.debug(this, "processEntity");
 		
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
-		stateComponent.stateTime += deltaTime;
-		
 		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
-		Animation animation = animationComponent.getAnimation(stateComponent.state, stateComponent.orientation);
-		TextureRegion currentFrame = animation.getKeyFrame(stateComponent.stateTime, true); // 根据时间获得当前帧，循环
 		
+		// 根据状态获得动画
+		Animation[] animations = animationComponent.animations.get(stateComponent.entityState.getCurrentState());
+		if(animations == null || animations.length < stateComponent.orientation.value)
+			return;
+		
+		// 根据时间获得当前帧，循环
+		animationComponent.stateTime += deltaTime;
+		TextureRegion currentFrame = animations[stateComponent.orientation.value].getKeyFrame(animationComponent.stateTime, true); 
+		
+		// 判断翻转方向的帧
+		if(stateComponent.orientation.isFlip && !animationComponent.flipFrame.containsKey(currentFrame)){ 
+			animationComponent.flipFrame.put(currentFrame, true);
+			currentFrame.flip(true, false);
+		}
+		else if(!stateComponent.orientation.isFlip && animationComponent.flipFrame.containsKey(currentFrame)){
+			animationComponent.flipFrame.remove(currentFrame);
+			currentFrame.flip(true, false);
+		}
+		
+		// 设置当前帧给纹理组件
 		TextureComponent textureComponent = MapperTools.textureCM.get(entity);
-		textureComponent.textureRegion = currentFrame; // 设置当前帧给纹理组件
+		textureComponent.textureRegion = currentFrame; 
 	}
 }

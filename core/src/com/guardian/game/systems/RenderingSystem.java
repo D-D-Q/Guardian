@@ -30,7 +30,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 		
 		super(FamilyTools.renderingF, new Comparator<Entity>(){
 			@Override
-	        public int compare(Entity e1, Entity e2) {// 降序排列，后面的后绘制在上层。 返回正数后绘制e1,返回负数后绘制e2
+	        public int compare(Entity e1, Entity e2) {// 降序排列，后面的后绘制在上层。 返回正数绘制e1在上,返回负数绘制e2在上
 				int y = (int)Math.signum(MapperTools.transformCM.get(e2).position.y - MapperTools.transformCM.get(e1).position.y); // 先按y轴算
 				if(y == 0)
 					return (int)Math.signum(MapperTools.transformCM.get(e1).position.z - MapperTools.transformCM.get(e2).position.z); // 再按z抽算
@@ -50,6 +50,8 @@ public class RenderingSystem extends SortedIteratingSystem {
 		MapComponent mapComponent = MapperTools.mapCM.get(GAME.screenEntity);
 		mapComponent.render(cameraComponent.camera); // 把更新数据了的相机，设置给地图显示使用
 		
+		forceSort(); // 绘制排序
+		
 		game.batch.begin();
 		super.update(deltaTime);
 		game.batch.end();
@@ -66,11 +68,6 @@ public class RenderingSystem extends SortedIteratingSystem {
 		
 		TextureRegion textureRegion = MapperTools.textureCM.get(entity).textureRegion;
 		
-		// 修正变换
-//		if(textureRegion instanceof TextureAtlas.AtlasRegion)
-//			transformComponent = AtlasUtil.correct((TextureAtlas.AtlasRegion)textureRegion, 
-//					transformComponent.copyTo(game.engine.createComponent(TransformComponent.class)));
-
 		if(textureRegion instanceof Sprite){ // 绘制精灵
 			Sprite sprite = (Sprite)textureRegion;
 			sprite.setPosition(transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY());

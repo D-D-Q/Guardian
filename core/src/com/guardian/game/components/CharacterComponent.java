@@ -1,9 +1,16 @@
 package com.guardian.game.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.manager.PhysicsManager;
+import com.guardian.game.components.StateComponent.Orientation;
+import com.guardian.game.components.StateComponent.States;
+import com.guardian.game.tools.MapperTools;
+import com.guardian.game.util.VectorUtil;
 
 /**
  * 物理刚体。
@@ -17,6 +24,11 @@ import com.game.core.manager.PhysicsManager;
  * @date 2016年10月12日
  */
 public class CharacterComponent  implements Component, Poolable {
+	
+	/**
+	 * 该组件的实体
+	 */
+	public Entity entity;
 	
 	/**
 	 * 精灵的动态刚体，系统赋值
@@ -36,6 +48,59 @@ public class CharacterComponent  implements Component, Poolable {
 	 * 半径
 	 */
 	public float radius;
+	
+	/**
+	 * 移动角色
+	 * 
+	 * @param vector2 方向
+	 */
+	public void move(Vector2 vector2){
+		
+		// 设置方向和状态
+		StateComponent stateComponent = MapperTools.stateCM.get(entity);
+		if(stateComponent != null){
+			stateComponent.orientation = Orientation.getOrientation(vector2);
+			stateComponent.moveVector = vector2.nor(); 	// 保留方向
+			stateComponent.entityState.changeState(States.run);
+		}
+	}
+	
+	/**
+	 * 移动角色
+	 * 
+	 * @param Vector3 位置
+	 */
+	public void moveTo(Vector2 position){
+		
+		Vector2 position2 = VectorUtil.toVector2(MapperTools.transformCM.get(entity).position);
+		if(position.epsilonEquals(position2, 0))
+			return;
+		
+		move(position.sub(position2));
+	}
+	
+	/**
+	 * 移动角色
+	 * 
+	 * @param Vector3 位置
+	 */
+	public void moveTo(Vector3 position){
+		moveTo(VectorUtil.toVector2(position));
+	}
+	
+	/**
+	 * 移动角色停止
+	 * 
+	 * @param vector2 速度和方向
+	 */
+	public void stopMove(){
+		
+		// 设置状态
+		StateComponent stateComponent = MapperTools.stateCM.get(entity);
+		if(stateComponent != null){
+			stateComponent.entityState.changeState(States.idle);
+		}
+	}
 
 	/** 
 	 * 对象池回收组件调用

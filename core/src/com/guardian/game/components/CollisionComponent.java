@@ -16,12 +16,12 @@ import com.game.core.manager.PhysicsManager;
 public class CollisionComponent implements Component, Poolable{
 
 	/**
-	 * 刚体，系统赋值
+	 * 传感器刚体，系统赋值
 	 */
 	public Body rigidBody;
 	
 	/**
-	 * 半径
+	 * 攻击范围半径
 	 */
 	public float radius;
 	

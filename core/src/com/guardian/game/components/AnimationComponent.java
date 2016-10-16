@@ -2,9 +2,10 @@ package com.guardian.game.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.guardian.game.components.StateComponent.Orientation;
-import com.guardian.game.components.StateComponent.State;
+import com.guardian.game.components.StateComponent.States;
 
 /**
  * 实体的动画集合组件
@@ -14,27 +15,30 @@ import com.guardian.game.components.StateComponent.State;
  */
 public class AnimationComponent implements Component, Poolable {
 
-	private Animation[][] animations;
+	/**
+	 * 根据状态和方向存储的动画数组
+	 */
+	public ObjectMap<States, Animation[]> animations;
 	
-	public AnimationComponent addAnimation(State state, Animation[] animations){
-
-		this.animations[state.value] = animations;
+	/**
+	 * 存储已翻转的帧
+	 */
+	public ObjectMap<TextureRegion, Boolean> flipFrame;
+	
+	/**
+	 * 当前动画已播放帧时间
+	 * TODO 每次切换动画的时候其实应该重新置0，否则可能不从第一帧播放。暂不做
+	 */
+	public float stateTime;
+	
+	public AnimationComponent addAnimation(States state, Animation[] animations){
+		this.animations.put(state, animations);
         return this;
 	}
 	
 	public AnimationComponent() {
-		animations = new Animation[State.values().length][8];
-	}
-	
-	/**
-	 * 获得动画
-	 * 
-	 * @param state 状态
-	 * @param direction 方向
-	 * @returncombat system
-	 */
-	public Animation getAnimation(State state, Orientation direction){
-		return animations[state.value][direction.value];
+		animations = new ObjectMap<>(8, 1);
+		flipFrame = new ObjectMap<>(8, 1);
 	}
 	
 	/* 
@@ -43,6 +47,8 @@ public class AnimationComponent implements Component, Poolable {
 	 */
 	@Override
 	public void reset() {
-		animations = null;
+		animations.clear();
+		flipFrame.clear();
+		stateTime = 0;
 	}
 }

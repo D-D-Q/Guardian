@@ -49,6 +49,11 @@ public class AttributesComponent implements Component, Poolable{
 	public int VIT;
 	
 	/**
+	 * 移动速度
+	 */
+	public float speed;
+	
+	/**
 	 * 修改某属性值
 	 * @param type
 	 * @param value 正加，负减
@@ -88,11 +93,13 @@ public class AttributesComponent implements Component, Poolable{
 	
 	@Override
 	public void reset() {
+		name = null;
 		Lv = 0;
 		ATK = 0;
 		DEF = 0;
 		HIT = 0;
 		AVD = 0;
 		VIT = 0;
+		speed = 0;
 	}
 }

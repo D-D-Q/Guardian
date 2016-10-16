@@ -1,6 +1,5 @@
 package com.guardian.game;
 
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -8,21 +7,23 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.game.core.Assets;
-import com.game.core.manager.EntityManager;
+import com.game.core.manager.AshleyManager;
 import com.game.core.manager.InputManager;
 import com.game.core.manager.PhysicsManager;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.CameraComponent;
 import com.guardian.game.entity.dao.DataTemplateDao;
-import com.guardian.game.entity.dao.EntityDao;
 import com.guardian.game.logs.Log;
 import com.guardian.game.screen.GameScreen;
 import com.guardian.game.systems.AnimationSystem;
 import com.guardian.game.systems.CombatSystem;
 import com.guardian.game.systems.EquippedSystem;
+import com.guardian.game.systems.GeneralSystem;
 import com.guardian.game.systems.ItemsSystem;
 import com.guardian.game.systems.MessageHandlingSystem;
 import com.guardian.game.systems.PhysicsSystem;
+import com.guardian.game.systems.RenderingSystem;
+import com.guardian.game.tools.MapperTools;
 
 /**
  * 游戏主运行类
@@ -31,6 +32,8 @@ import com.guardian.game.systems.PhysicsSystem;
  * @date 2016年9月11日 下午2:15:32
  */
 public class GuardianGame extends Game {
+	
+	public static GuardianGame game;
 	
 	/**
 	 * opengl绘制
@@ -43,13 +46,6 @@ public class GuardianGame extends Game {
 	public Assets assets;
 	
 	/**
-	 * ashley组件实体系统引擎
-	 */
-	public PooledEngine engine;
-	
-	public EntityDao entityDao;
-	
-	/**
 	 * 在控制台输出fps
 	 */
 	FPSLogger fpsLog;
@@ -57,10 +53,14 @@ public class GuardianGame extends Game {
 	@Override
 	public void create () {
 		
+		game = this;
+		
 		/**--------------------libgdx start-------------------------*/
 		
 		Log.setLogLevel(Application.LOG_INFO); // 日志级别
-		fpsLog = new FPSLogger();
+		if(GameConfig.fpsDebug)
+			fpsLog = new FPSLogger();
+		
 		Log.info(this, "create begin");
 		
 		assets = new Assets();
@@ -80,23 +80,19 @@ public class GuardianGame extends Game {
 		
 		/**--------------------ashley start-------------------------*/
 
-		engine = new PooledEngine(1, 10, 1, 10);
-		engine.addEntityListener(new EntityManager());
-		
-		entityDao = new EntityDao(this);
-		
-		GAME.UICameraComponent = engine.createComponent(CameraComponent.class);
+		GAME.UICameraComponent = AshleyManager.engine.createComponent(CameraComponent.class);
 		
 //		engine.addSystem((GAME.itemsSystem = new ItemsSystem(this)));
 //		engine.addSystem((GAME.equippedSystem = new EquippedSystem(this)));
 		GAME.itemsSystem = new ItemsSystem(this);
 		GAME.equippedSystem = new EquippedSystem(this);
 		
-		engine.addSystem(new PhysicsSystem(0));
-		engine.addSystem(new AnimationSystem(1));
-		engine.addSystem(new CombatSystem(2));
-		engine.addSystem(new MessageHandlingSystem(3));
-//		engine.addSystem(new RenderingSystem(this, 4));
+		AshleyManager.engine.addSystem(new GeneralSystem(5));
+		AshleyManager.engine.addSystem(new PhysicsSystem(10));
+		AshleyManager.engine.addSystem(new AnimationSystem(20));
+		AshleyManager.engine.addSystem(new CombatSystem(30));
+		AshleyManager.engine.addSystem(new MessageHandlingSystem(40));
+		AshleyManager.engine.addSystem(new RenderingSystem(this, 100));
 		
 		/**--------------------ashley end-------------------------*/
 		
@@ -106,7 +102,7 @@ public class GuardianGame extends Game {
 		assets.assetManager.finishLoading();
 		
 //		setScreen(new MainMenuScreen(this));
-		setScreen(new GameScreen(this));
+		setScreen(new GameScreen());
 	}
 
 	@Override
@@ -118,7 +114,14 @@ public class GuardianGame extends Game {
 		
 		super.render();
 		
-//		fpsLog.log();
+		if(GameConfig.physicsdebug){
+			CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
+			if(cameraComponent != null)
+				PhysicsManager.debugRender(cameraComponent.camera);
+		}
+		
+		if(GameConfig.fpsDebug)
+			fpsLog.log();
 	}
 	
 	/**
@@ -138,7 +141,9 @@ public class GuardianGame extends Game {
 		Log.info(this, "dispose begin");
 		super.dispose();
 		
-		engine.clearPools();
+		game = null;
+		
+		AshleyManager.engine.clearPools();
 		PhysicsManager.dispose();
 		
 		batch.dispose();

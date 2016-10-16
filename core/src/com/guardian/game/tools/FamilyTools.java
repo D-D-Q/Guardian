@@ -1,10 +1,11 @@
 package com.guardian.game.tools;
 
 import com.badlogic.ashley.core.Family;
+import com.game.core.component.ScriptComponent;
 import com.guardian.game.components.AnimationComponent;
+import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.CollisionComponent;
 import com.guardian.game.components.CombatComponent;
-import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.TextureComponent;
 import com.guardian.game.components.TransformComponent;
@@ -18,6 +19,8 @@ import com.guardian.game.components.TransformComponent;
 public class FamilyTools {
 
 //	public static final Family itemF = Family.all(TextureComponent.class, TransformComponent.class).get();
+	
+	public static final Family generalF = Family.one(StateComponent.class, ScriptComponent.class).get();
 	
 	public static final Family animationF = Family.all(StateComponent.class, TransformComponent.class, AnimationComponent.class, TextureComponent.class).get();
 	public static final Family renderingF = Family.all(TextureComponent.class, TransformComponent.class).get();

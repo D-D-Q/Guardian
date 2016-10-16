@@ -1,9 +1,11 @@
 package com.guardian.game.entityscript;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.game.core.script.EntityScript;
 import com.guardian.game.components.AttributesComponent;
+import com.guardian.game.components.CombatComponent;
+import com.guardian.game.components.StateComponent;
+import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
 
@@ -18,21 +20,30 @@ public class HbwsScript extends EntityScript {
 	@Override
 	public boolean message(int messageType, Entity sender, Object extraInfo) {
 		
+		super.message(messageType, sender, extraInfo);
+		
 		AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
 		AttributesComponent senderAttributesComponent = MapperTools.attributesCM.get(sender);
 		
-		Log.info(this, attributesComponent.name + ": 我" + senderAttributesComponent.name + "被攻击到了");
+		Log.info(this, attributesComponent.name + ": 我" + senderAttributesComponent.name + "被攻击到了。还有体力:" + attributesComponent.VIT);
 		
 		return true;
 	}
 
 	@Override
-	public void beginContact(Contact contact, Entity target) {
-		Log.info(this, "beginContact");
-	}
-
-	@Override
-	public void endContact(Contact contact, Entity target) {
+	public void update(float deltaTime) {
 		
+		StateComponent stateComponent = MapperTools.stateCM.get(entity);
+		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+		
+		if(combatComponent.target == null){
+			stateComponent.entityState.changeState(States.idle);
+			return;
+		}
+		
+		if(combatComponent.IsdistanceTarget())
+			stateComponent.entityState.changeState(States.attack);
+		else
+			MapperTools.characterCM.get(entity).moveTo(MapperTools.transformCM.get(combatComponent.target).position);
 	}
 }

@@ -2,11 +2,13 @@ package com.guardian.game.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.game.core.component.ScriptComponent;
 import com.game.core.manager.PhysicsManager;
@@ -15,6 +17,7 @@ import com.guardian.game.GameConfig;
 import com.guardian.game.components.CameraComponent;
 import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.CollisionComponent;
+import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.TransformComponent;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
@@ -32,17 +35,11 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	 */
 	private float accumulator = 0;
 
-	/**
-	 * 物理引擎debug
-	 */
-	public Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 	
 	public PhysicsSystem(int priority) {
 		super(FamilyTools.physicsF, priority);
 		
 		PhysicsManager.world.setContactListener(this); // 碰撞监听
-		if(GameConfig.physicsdebug)
-			debugRenderer = new Box2DDebugRenderer();
 	}
 	
 	/**
@@ -61,12 +58,6 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	    }
 	    
 	    super.update(deltaTime); // 更新精灵实体
-		
-	    if(GameConfig.physicsdebug){
-	    	CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-	    	cameraComponent.camera.update();
-	    	debugRenderer.render(PhysicsManager.world, cameraComponent.camera.combined);
-	    }
 	}
 	
 	/**
@@ -76,9 +67,6 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	protected void processEntity(Entity entity, float deltaTime) {
 		
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
-		
-		// TODO 移动速度 要从角色获取
-		Vector2 speed = Vector2.Zero;
 		
 		// 获得刚体位置，更新精灵位置
 		CharacterComponent physicsComponent = MapperTools.characterCM.get(entity);
@@ -90,17 +78,32 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 			
 			// 更新静态刚体位置
 			if(physicsComponent.staticBody != null)
-				physicsComponent.staticBody.setTransform(position.x, position.y, physicsComponent.staticBody.getAngle());
+				physicsComponent.staticBody.setTransform(position.x, position.y, physicsComponent.staticBody.getAngle()); // setTransform更新不会触发碰撞事件
 			
-			speed = physicsComponent.dynamicBody.getLinearVelocity();
-		}
-		
-		// 更新碰撞检测的位置。即以相同速度跟随实体移动
-		// TODO 应该放在物理引擎step之前，否则collision会比实体慢一步少更新一次step
-		if(speed != Vector2.Zero){
+			// 更新攻击距离碰撞检测的位置。下一帧就追上精灵
+			CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+			if(combatComponent != null){
+				
+				// 获得当前位置和目标位置的距离，当作速度。
+				Vector2 destination = new Vector2(position);
+				destination.sub(combatComponent.rangeBody.getPosition()); 
+				destination.scl(1/PhysicsManager.TIME_STEP); // 速度单位是秒，要一帧追上，速度需要乘以帧数(60)倍
+				
+				combatComponent.rangeBody.setLinearVelocity(destination);
+				combatComponent.distanceBody.setLinearVelocity(destination);
+			}
+			
+			// 更新碰撞检测的位置。下一帧就追上精灵
 			CollisionComponent collisionComponent = MapperTools.collisionCM.get(entity);
-			if(collisionComponent != null)
-				collisionComponent.rigidBody.setLinearVelocity(speed);
+			if(collisionComponent != null){
+				
+				// 获得当前位置和目标位置的距离，当作速度。
+				Vector2 destination = new Vector2(position);
+				destination.sub(collisionComponent.rigidBody.getPosition());
+				destination.scl(1/PhysicsManager.TIME_STEP); // 速度单位是秒，要一帧追上，速度需要乘以帧数(60)倍
+				
+				collisionComponent.rigidBody.setLinearVelocity(destination);
+			}
 		}
 	}
 	
@@ -121,8 +124,18 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		
 		// 转发事件
 		ScriptComponent scriptComponent = MapperTools.scriptCM.get(ContactEntit.entity);
-		if(scriptComponent != null)
-			scriptComponent.script.beginContact(contact, ContactEntit.target);
+		if(scriptComponent != null){
+			
+			CombatComponent combatComponent = MapperTools.combatCM.get(ContactEntit.entity);
+			if(combatComponent != null && combatComponent.rangeBody == ContactEntit.entityFixture.getBody()){ 
+				scriptComponent.script.enterATKRange(contact, ContactEntit.target); // 攻击范围检测到
+			}
+			else if(combatComponent != null && combatComponent.distanceBody == ContactEntit.entityFixture.getBody()){
+				scriptComponent.script.enterATKDistance(contact, ContactEntit.target); // 攻击范围检测到
+			}
+			else
+				scriptComponent.script.beginContact(contact, ContactEntit.target); // 普通碰撞检测事件
+		}
 	}
 
 	/**
@@ -142,8 +155,18 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		
 		// 转发事件
 		ScriptComponent scriptComponent = MapperTools.scriptCM.get(ContactEntit.entity);
-		if(scriptComponent != null)
-			scriptComponent.script.endContact(contact, ContactEntit.target);
+		if(scriptComponent != null){
+			
+			CombatComponent combatComponent = MapperTools.combatCM.get(ContactEntit.entity);
+			if(combatComponent != null && combatComponent.rangeBody == ContactEntit.entityFixture.getBody()){ 
+				scriptComponent.script.leaveATKRange(contact, ContactEntit.target); // 攻击范围检测到
+			}
+			else if(combatComponent != null && combatComponent.distanceBody == ContactEntit.entityFixture.getBody()){
+				scriptComponent.script.leaveATKDistance(contact, ContactEntit.target); // 攻击距离检测到
+			}
+			else
+				scriptComponent.script.endContact(contact, ContactEntit.target); // 普通碰撞检测事件
+		}
 	}
 
 	/**
@@ -177,15 +200,19 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		 * 碰撞检测刚体的实体
 		 */
 		public Entity entity;
+		public Fixture entityFixture;
 		
 		/**
 		 * 碰撞的目标实体
 		 */
 		public Entity target;
+		public Fixture targetFixture;
 		
-		public ContactEntit(Entity entity, Entity target) {
-			this.entity = entity;
-			this.target = target;
+		public ContactEntit(Fixture entityFixture, Fixture targetFixture) {
+			this.entityFixture = entityFixture;
+			this.entity = (Entity) entityFixture.getBody().getUserData();
+			this.targetFixture = targetFixture;
+			this.target = (Entity) targetFixture.getBody().getUserData();
 		}
 	}
 	
@@ -201,9 +228,9 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		
 		// 碰撞检测刚体的isSensor是true。另一个就是碰撞的目标
 		if(contact.getFixtureA().isSensor())
-			contactEntit = new ContactEntit((Entity) contact.getFixtureA().getBody().getUserData(), (Entity) contact.getFixtureB().getBody().getUserData());
+			contactEntit = new ContactEntit(contact.getFixtureA(), contact.getFixtureB());
 		else if(contact.getFixtureB().isSensor())
-			contactEntit = new ContactEntit((Entity) contact.getFixtureB().getBody().getUserData(), (Entity) contact.getFixtureA().getBody().getUserData());
+			contactEntit = new ContactEntit(contact.getFixtureB(), contact.getFixtureA());
 		
 		if(contactEntit == null || contactEntit.entity == contactEntit.target)
 			return null;

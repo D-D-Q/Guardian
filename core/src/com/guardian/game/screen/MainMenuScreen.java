@@ -49,7 +49,6 @@ public class MainMenuScreen extends ScreenAdapter{
 	public void render(float delta) {
 		
 		GAME.UICameraComponent.viewport.apply(); // true 相机位置锚点是左下，内部会camera.update(); // 更新相机数据
-		GAME.UICameraComponent.camera.update();
 		game.batch.setProjectionMatrix(GAME.UICameraComponent.camera.combined); // 相机信息设置给SpriteBatch，否则相机无用
 		
 		game.batch.begin();

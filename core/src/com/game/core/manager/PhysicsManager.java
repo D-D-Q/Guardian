@@ -1,18 +1,22 @@
 package com.game.core.manager;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.guardian.game.GameConfig;
 import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.CollisionComponent;
+import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.TransformComponent;
 import com.guardian.game.tools.MapperTools;
 
@@ -26,7 +30,7 @@ import com.guardian.game.tools.MapperTools;
 public class PhysicsManager {
 	
 	/**
-	 * 物理世界更新频率
+	 * 物理世界频率, 每秒60
 	 */
 	public static final float TIME_STEP = 1/60f;
 	
@@ -51,6 +55,24 @@ public class PhysicsManager {
 	 * 防止groupIndex重复
 	 */
 	private static Array<Short> groupIndexArray = new Array<Short>(false, 100);
+	
+	/**
+	 * 物理引擎debug绘制对象
+	 */
+	public static Box2DDebugRenderer debugRenderer;
+	static{
+		if(GameConfig.physicsdebug)
+			debugRenderer = new Box2DDebugRenderer();
+	}
+	
+	/**
+	 * 物理引擎debug绘制
+	 */
+	public static void debugRender(Camera camera){
+		if(debugRenderer != null){
+	    	debugRenderer.render(PhysicsManager.world, camera.combined);
+	    }
+	}
 	
 	/**
 	 * 添加精灵刚体
@@ -86,6 +108,35 @@ public class PhysicsManager {
 		
 		physicsComponent.dynamicBody = dynamicBody;
 		physicsComponent.staticBody = staticBody;
+	}
+	
+	/**
+	 * 添加战斗碰撞检测
+	 * categoryBits是默认值0x0001
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public static void addCombatRigidBody(Entity entity){
+		
+		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
+		CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
+		
+		CircleShape circle = new CircleShape(); // 圆形
+		
+		circle.setRadius(combatComponent.ATKRange);
+		Body rangeBody = createSensor(BodyType.KinematicBody, circle,
+				new Vector2(transformComponent.position.x, transformComponent.position.y));
+		rangeBody.setUserData(entity); // 刚体携带实体
+		
+		circle.setRadius(characterComponent.radius + combatComponent.ATKDistance);
+		Body distanceBody = createSensor(BodyType.KinematicBody, circle,
+				new Vector2(transformComponent.position.x, transformComponent.position.y));
+		distanceBody.setUserData(entity); // 刚体携带实体
+		
+		combatComponent.rangeBody = rangeBody;
+		combatComponent.distanceBody = distanceBody;
 		
 		circle.dispose();
 	}
@@ -97,7 +148,7 @@ public class PhysicsManager {
 	 * @param entity
 	 * @return
 	 */
-	public static void addCollision(Entity entity){
+	public static void addCollisionRigidBody(Entity entity){
 		
 		CollisionComponent collisionComponent = MapperTools.collisionCM.get(entity);
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
@@ -188,9 +239,9 @@ public class PhysicsManager {
 		
 		FixtureDef fixtureDef = new FixtureDef(); // 物理属性
 		fixtureDef.shape = shape; // 图形
-		fixtureDef.density = 1f; // 密度
-		fixtureDef.friction = 0f; // 摩擦力
-		fixtureDef.restitution = 0f; // 弹力（还原力）
+		fixtureDef.density = 1f; // 密度 非负数
+		fixtureDef.friction = 0f; // 摩擦力 取值0-1
+		fixtureDef.restitution = 0f; // 弹力（还原力） 取值0-1
 		fixtureDef.isSensor = isSensor; // true 不做物理反应，只是检测碰撞
 		
 		// 碰撞过滤。isSensor是true的刚体一定要检测碰撞，不设置过滤

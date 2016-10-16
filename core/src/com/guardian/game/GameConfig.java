@@ -32,4 +32,9 @@ public class GameConfig {
 	 * 物理引擎的debug模式
 	 */
 	public final static boolean physicsdebug = true;
+	
+	/**
+	 * fps
+	 */
+	public final static boolean fpsDebug = true;
 }
