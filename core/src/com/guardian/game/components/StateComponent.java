@@ -100,7 +100,7 @@ public class StateComponent implements Component, Poolable  {
 				
 				if(combatComponent == null || !combatComponent.IsDistanceTarget())
 					stateComponent.entityState.changeState(States.idle);
-				else if(combatComponent.target != null)
+				else if(!combatComponent.seekTarget() && combatComponent.target != null)
 					stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
 			}
 		},
@@ -171,11 +171,22 @@ public class StateComponent implements Component, Poolable  {
 	public static enum Orientation{
 		
 		d2(0, 0, -1), d1(1, -1, -1), d4(2, -1, 0), d7(3, -1, 1), 
-		d8(4, 0, 1), d9(3, true, 1, 1), d6(2, true, 1, 0), d3(1, true, 1, -1);
+		d8(4, 0, 1), d9(5, true, 3, 1, 1), d6(6, true, 2, 1, 0), d3(7, true, 1, 1, -1);
 		
-		public int value; // 动画数组的索引
+		/**
+		 * 动画数组的索引
+		 */
+		public int value; 
 		
-		public boolean isFlip = false; // 是否需要翻转
+		/**
+		 * 是否需要翻转, 默认false
+		 */
+		public boolean isFlip;
+		
+		/**
+		 * 需要翻转的数组索引
+		 */
+		public int flipValue;
 		
 		/**
 		 * 方向向量
@@ -183,12 +194,13 @@ public class StateComponent implements Component, Poolable  {
 		public Vector2 vector;
 		
 		private Orientation(int value, int x, int y){
-			this(value, false, x, y);
+			this(value, false, 0, x, y);
 		}
 		
-		private Orientation(int value, boolean isFlip, int x, int y){
+		private Orientation(int value, boolean isFlip, int flipValue, int x, int y){
 			this.value = value;
 			this.isFlip = isFlip;
+			this.flipValue = flipValue;
 			vector = new Vector2(x, y).nor();
 		}
 		

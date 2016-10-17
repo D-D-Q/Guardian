@@ -31,7 +31,7 @@ public class GameConfig {
 	/**
 	 * 物理引擎的debug模式
 	 */
-	public final static boolean physicsdebug = true;
+	public final static boolean physicsdebug = false;
 	
 	/**
 	 * fps

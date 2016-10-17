@@ -93,8 +93,8 @@ public class GuardianGame extends Game {
 		AshleyManager.engine.addSystem(new AnimationSystem(20));
 		AshleyManager.engine.addSystem(new CombatSystem(30));
 		AshleyManager.engine.addSystem(new MessageHandlingSystem(40));
-		AshleyManager.engine.addSystem(new Monstersystem(50));
-		AshleyManager.engine.addSystem(new RenderingSystem(this, 100));
+		AshleyManager.engine.addSystem(new RenderingSystem(this, 50));
+		AshleyManager.engine.addSystem(new Monstersystem(60));
 		
 		/**--------------------ashley end-------------------------*/
 		

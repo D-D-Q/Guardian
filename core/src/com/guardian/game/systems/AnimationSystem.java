@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.guardian.game.components.AnimationComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.TextureComponent;
-import com.guardian.game.logs.Log;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
 
@@ -29,7 +28,6 @@ public class AnimationSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		Log.debug(this, "processEntity");
 		
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
 		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
@@ -42,16 +40,6 @@ public class AnimationSystem extends IteratingSystem {
 		// 根据时间获得当前帧，循环
 		animationComponent.stateTime += deltaTime;
 		TextureRegion currentFrame = animations[stateComponent.orientation.value].getKeyFrame(animationComponent.stateTime, true); 
-		
-		// 判断翻转方向的帧
-		if(stateComponent.orientation.isFlip && !animationComponent.flipFrame.containsKey(currentFrame)){ 
-			animationComponent.flipFrame.put(currentFrame, true);
-			currentFrame.flip(true, false);
-		}
-		else if(!stateComponent.orientation.isFlip && animationComponent.flipFrame.containsKey(currentFrame)){
-			animationComponent.flipFrame.remove(currentFrame);
-			currentFrame.flip(true, false);
-		}
 		
 		// 设置当前帧给纹理组件
 		TextureComponent textureComponent = MapperTools.textureCM.get(entity);

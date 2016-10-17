@@ -5,7 +5,6 @@ import java.util.Comparator;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.guardian.game.GAME;
 import com.guardian.game.GuardianGame;
 import com.guardian.game.components.CameraComponent;

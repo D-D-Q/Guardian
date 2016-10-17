@@ -30,7 +30,7 @@
 		attackFrameIndex: 4,
 		offsetX: 128,
 		offsetY: 128,
-		characterRadius: 18,
+		characterRadius: 30,
 		ATKRange: 70,
 		ATKDistance: 3,
 		campBits: 2,
@@ -41,7 +41,7 @@
 		DEF: 1,
 		HIT: 1,
 		AVD: 1,
-		VIT: 10,
+		VIT: 1,
 		speed: 50,
 		message: [0],
 		script: com.guardian.game.entityscript.HbwsScript

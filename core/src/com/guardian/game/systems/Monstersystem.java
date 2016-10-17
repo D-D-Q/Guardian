@@ -46,5 +46,9 @@ public class Monstersystem extends EntitySystem {
 		Entity entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 300, 300);
 		AshleyManager.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
+		
+		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 600, 300);
+		AshleyManager.engine.addEntity(entity);
+		MapperTools.combatCM.get(entity).target = GAME.hero;
 	}
 }

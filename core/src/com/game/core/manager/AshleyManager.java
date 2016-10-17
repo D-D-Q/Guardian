@@ -33,7 +33,7 @@ public class AshleyManager{
 	
 	// 初始化
 	static{
-		engine = new PooledEngine(1, 10, 1, 10);
+		engine = new PooledEngine();
 		engine.addEntityListener(new EntityListener() {
 			
 			@Override

@@ -133,6 +133,30 @@ public class CombatComponent implements Component, Poolable{
 	}
 	
 	/**
+	 * 寻找能攻击的目标
+	 * @return
+	 */
+	public boolean seekTarget(){
+		
+		if(this.target != null)
+			return IsDistanceTarget();
+		
+		while(true){
+			this.target = distanceTargets.size == 0 ? (rangeTargets.size == 0 ? null : rangeTargets.first()) : distanceTargets.first();
+			// 如果是已销毁目标，移除后重新寻找
+			if(this.target != null && this.target.flags == 0){
+				rangeTargets.removeValue(target, true);
+				distanceTargets.removeValue(target, true);
+				this.target = null;
+			}
+			else
+				break;
+		};
+		
+		return IsDistanceTarget();
+	}
+	
+	/**
 	 * 进入攻击范围
 	 * 
 	 * @param contact 碰撞类
@@ -162,11 +186,8 @@ public class CombatComponent implements Component, Poolable{
 		
 		rangeTargets.removeValue(target, true);
 		
-		if(this.target == target){ // 设置新目标
-			this.target = distanceTargets.size == 0 ? 
-					(rangeTargets.size == 0 ? null : rangeTargets.first()) : 
-						distanceTargets.first(); 
-		}
+		if(this.target == target) // 设置新目标
+			this.target = distanceTargets.size == 0 ? (rangeTargets.size == 0 ? null : rangeTargets.first()) :	distanceTargets.first(); 
 	}
 	
 	/**
@@ -182,9 +203,8 @@ public class CombatComponent implements Component, Poolable{
 		
 		distanceTargets.add(target);
 
-		if(this.target == null || !IsDistanceTarget()){ // 更换攻击目标，谁直接能打到优先打谁，先不考虑追击
+		if(this.target == null || !IsDistanceTarget()) // 更换攻击目标，谁直接能打到优先打谁，先不考虑追击
 			this.target = target;
-		}
 	}
 	
 	/**
