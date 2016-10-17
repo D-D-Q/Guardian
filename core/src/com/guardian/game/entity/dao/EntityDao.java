@@ -42,6 +42,7 @@ public class EntityDao {
 	public Entity createCharactersEntity(CharactersTemplate template, int positionX, int positionY){
 		
 		Entity entity = AshleyManager.engine.createEntity();
+		entity.flags = 1; // 设置成有效
 		
 		StateComponent stateComponent = AshleyManager.engine.createComponent(StateComponent.class);
 		
@@ -79,6 +80,8 @@ public class EntityDao {
 			}
 			combatComponent.ATKRange = template.ATKRange;
 			combatComponent.ATKDistance = template.ATKDistance;
+			combatComponent.campBits = template.campBits;
+			combatComponent.campMaskBits = template.campMaskBits;
 			entity.add(combatComponent);
 		}
 		
@@ -113,6 +116,8 @@ public class EntityDao {
 		entity.add(characterComponent);
 		
 		entity.add(scriptComponent);
+		
+		GuardianGame.game.assets.assetManager.finishLoading();
 		
 		return entity;
 	}

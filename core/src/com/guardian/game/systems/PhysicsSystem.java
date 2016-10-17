@@ -2,9 +2,7 @@ package com.guardian.game.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -12,9 +10,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.game.core.component.ScriptComponent;
 import com.game.core.manager.PhysicsManager;
-import com.guardian.game.GAME;
-import com.guardian.game.GameConfig;
-import com.guardian.game.components.CameraComponent;
 import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.components.CollisionComponent;
 import com.guardian.game.components.CombatComponent;
@@ -128,13 +123,16 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 			
 			CombatComponent combatComponent = MapperTools.combatCM.get(ContactEntit.entity);
 			if(combatComponent != null && combatComponent.rangeBody == ContactEntit.entityFixture.getBody()){ 
-				scriptComponent.script.enterATKRange(contact, ContactEntit.target); // 攻击范围检测到
+				if(scriptComponent.script.enterATKRange(contact, ContactEntit.target)) // 攻击范围检测到
+					combatComponent.enterATKRange(contact, ContactEntit.target);
 			}
 			else if(combatComponent != null && combatComponent.distanceBody == ContactEntit.entityFixture.getBody()){
-				scriptComponent.script.enterATKDistance(contact, ContactEntit.target); // 攻击范围检测到
+				if(scriptComponent.script.enterATKDistance(contact, ContactEntit.target)) // 攻击范围检测到
+					combatComponent.enterATKDistance(contact, ContactEntit.target);
 			}
-			else
+			else{
 				scriptComponent.script.beginContact(contact, ContactEntit.target); // 普通碰撞检测事件
+			}
 		}
 	}
 
@@ -159,13 +157,16 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 			
 			CombatComponent combatComponent = MapperTools.combatCM.get(ContactEntit.entity);
 			if(combatComponent != null && combatComponent.rangeBody == ContactEntit.entityFixture.getBody()){ 
-				scriptComponent.script.leaveATKRange(contact, ContactEntit.target); // 攻击范围检测到
+				if(scriptComponent.script.leaveATKRange(contact, ContactEntit.target)) // 攻击范围检测到
+					combatComponent.leaveATKRange(contact, ContactEntit.target);
 			}
 			else if(combatComponent != null && combatComponent.distanceBody == ContactEntit.entityFixture.getBody()){
-				scriptComponent.script.leaveATKDistance(contact, ContactEntit.target); // 攻击距离检测到
+				if(scriptComponent.script.leaveATKDistance(contact, ContactEntit.target)) // 攻击距离检测到
+					combatComponent.leaveATKDistance(contact, ContactEntit.target);
 			}
-			else
+			else{
 				scriptComponent.script.endContact(contact, ContactEntit.target); // 普通碰撞检测事件
+			}
 		}
 	}
 
@@ -190,6 +191,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	
 	/**
 	 * 保存检测碰撞的实体和碰撞的目标实体
+	 * TODO 可以考虑pool池化。可能会频繁创建
 	 * 
 	 * @author D
 	 * @date 2016年10月14日

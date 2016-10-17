@@ -21,6 +21,7 @@ import com.guardian.game.systems.EquippedSystem;
 import com.guardian.game.systems.GeneralSystem;
 import com.guardian.game.systems.ItemsSystem;
 import com.guardian.game.systems.MessageHandlingSystem;
+import com.guardian.game.systems.Monstersystem;
 import com.guardian.game.systems.PhysicsSystem;
 import com.guardian.game.systems.RenderingSystem;
 import com.guardian.game.tools.MapperTools;
@@ -92,6 +93,7 @@ public class GuardianGame extends Game {
 		AshleyManager.engine.addSystem(new AnimationSystem(20));
 		AshleyManager.engine.addSystem(new CombatSystem(30));
 		AshleyManager.engine.addSystem(new MessageHandlingSystem(40));
+		AshleyManager.engine.addSystem(new Monstersystem(50));
 		AshleyManager.engine.addSystem(new RenderingSystem(this, 100));
 		
 		/**--------------------ashley end-------------------------*/

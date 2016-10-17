@@ -10,6 +10,7 @@ import com.guardian.game.GAME;
 import com.guardian.game.GuardianGame;
 import com.guardian.game.components.CameraComponent;
 import com.guardian.game.components.MapComponent;
+import com.guardian.game.components.TextureComponent;
 import com.guardian.game.components.TransformComponent;
 import com.guardian.game.logs.Log;
 import com.guardian.game.tools.FamilyTools;
@@ -62,14 +63,17 @@ public class RenderingSystem extends SortedIteratingSystem {
 		Log.debug(this, "processEntity");
 		
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
-		
 		if(transformComponent.isHidden)
 			return;
 		
-		TextureRegion textureRegion = MapperTools.textureCM.get(entity).textureRegion;
+		TextureComponent textureComponent = MapperTools.textureCM.get(entity);
+		if(textureComponent.textureRegion == null){
+			Log.info(this, "textureRegion is null");
+			return;
+		}
 		
-		if(textureRegion instanceof Sprite){ // 绘制精灵
-			Sprite sprite = (Sprite)textureRegion;
+		if(textureComponent.textureRegion instanceof Sprite){ // 绘制精灵
+			Sprite sprite = (Sprite)textureComponent.textureRegion;
 			sprite.setPosition(transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY());
 			sprite.draw(game.batch);
 		}
@@ -82,7 +86,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 	         *  float scaleX, float scaleY, 缩放，1是原始大小。从锚点向四周缩放
 	         *  float rotation, 旋转，正数是逆时针。以锚点为圆心旋转
 	         */
-			game.batch.draw(textureRegion, 
+			game.batch.draw(textureComponent.textureRegion, 
 					transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY(), 
 					transformComponent.origin.x, transformComponent.origin.y,
 					transformComponent.getWidth(), transformComponent.getHeight(),

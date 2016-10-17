@@ -1,6 +1,7 @@
 package com.guardian.game.entityscript;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.game.core.script.EntityScript;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.CombatComponent;
@@ -16,7 +17,7 @@ import com.guardian.game.tools.MapperTools;
  * @date 2016年10月13日 下午10:13:52
  */
 public class HbwsScript extends EntityScript {
-
+	
 	@Override
 	public boolean message(int messageType, Entity sender, Object extraInfo) {
 		
@@ -41,9 +42,19 @@ public class HbwsScript extends EntityScript {
 			return;
 		}
 		
-		if(combatComponent.IsdistanceTarget())
+		if(combatComponent.IsDistanceTarget())
 			stateComponent.entityState.changeState(States.attack);
-		else
+		else if(combatComponent.isCampTarget())
 			MapperTools.characterCM.get(entity).moveTo(MapperTools.transformCM.get(combatComponent.target).position);
+	}
+	
+	@Override
+	public boolean enterATKRange(Contact contact, Entity target) {
+		return false;
+	}
+	
+	@Override
+	public boolean leaveATKRange(Contact contact, Entity target) {
+		return false;
 	}
 }

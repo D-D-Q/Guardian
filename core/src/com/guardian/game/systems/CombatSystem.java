@@ -32,7 +32,7 @@ public class CombatSystem extends IteratingSystem  {
 	protected void processEntity(Entity entity, float deltaTime) {
 		
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
-		if(stateComponent.entityState.getCurrentState() != States.attack) // 不是战斗状态。最好能角色进入战斗状态才进入这个系统的entities里
+		if(!stateComponent.entityState.isInState(States.attack)) // 不是战斗状态。最好能角色进入战斗状态才进入这个系统的entities里
 			return;
 		
 		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
@@ -41,8 +41,8 @@ public class CombatSystem extends IteratingSystem  {
 			combatComponent.isSendAttackMessage = false;
 			return;
 		}
-		
-		if(combatComponent.isSendAttackMessage || !combatComponent.IsdistanceTarget()) // 已经触发过攻击事件了||失去目标了
+		// 已经触发过攻击事件了 || 失去目标了
+		if(combatComponent.isSendAttackMessage || !combatComponent.IsDistanceTarget())
 			return;
 		combatComponent.isSendAttackMessage = true;
 		

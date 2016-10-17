@@ -69,6 +69,16 @@ public class CharactersTemplate {
 	public float collisionRadius = 0;
 	
 	/**
+	 * 阵营
+	 */
+	public int campBits = 0x0001;
+	
+	/**
+	 * 攻击攻击的和
+	 */
+	public int campMaskBits = -1;
+	
+	/**
 	 * 名称
 	 */
 	public String name;

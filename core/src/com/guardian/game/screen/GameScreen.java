@@ -56,17 +56,9 @@ public class GameScreen extends ScreenAdapter {
 		GAME.screenEntity.add(gameCameraComponent);
 		gameCameraComponent.camera.position.set(mapComponent.width/2, mapComponent.height/2, 0); // 初始化相机位置, 该位置会在屏幕中心
 		
-//		GAME.hero = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(0), 10, 10); // 创建英雄
 		GAME.hero = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(0), mapComponent.width/2, mapComponent.height/2); // 创建英雄
 		AshleyManager.engine.addEntity(GAME.hero);
 		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
-//		MapperTools.stateCM.get(GAME.hero).entityState.changeState(States.attack);
-		
-//		Entity hbws = game.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 10, 10 + 1);
-		Entity hbws = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), mapComponent.width/2, mapComponent.height/2 + 200);
-		AshleyManager.engine.addEntity(hbws);
-		MapperTools.stateCM.get(hbws).orientation = Orientation.d2;
-//		MapperTools.stateCM.get(hbws).entityState.changeState(States.idle);
 		
 		initUI();
 		

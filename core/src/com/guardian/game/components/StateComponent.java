@@ -39,9 +39,8 @@ public class StateComponent implements Component, Poolable  {
 		idle(0){
 			@Override
 			public void update(Entity entity) {
-				
 				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-				if(combatComponent != null && combatComponent.IsdistanceTarget()){
+				if(combatComponent != null && combatComponent.IsDistanceTarget()){
 					
 					StateComponent stateComponent = MapperTools.stateCM.get(entity);
 					stateComponent.entityState.changeState(States.attack);
@@ -58,7 +57,6 @@ public class StateComponent implements Component, Poolable  {
 		run(1){
 			@Override
 			public void update(Entity entity) {
-				
 				CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
 				if(characterComponent != null){
 					AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
@@ -71,7 +69,6 @@ public class StateComponent implements Component, Poolable  {
 			
 			@Override
 			public void exit(Entity entity) {
-
 				CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
 				if(characterComponent != null)
 					characterComponent.dynamicBody.setLinearVelocity(Vector2.Zero);
@@ -85,15 +82,25 @@ public class StateComponent implements Component, Poolable  {
 		 * @date 2016年10月16日 下午7:59:44
 		 */
 		attack(2){
+			
+			@Override
+			public void enter(Entity entity) {
+				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+				
+				if(!combatComponent.isCampTarget()){ // 不能攻击的阵营
+					StateComponent stateComponent = MapperTools.stateCM.get(entity);
+					stateComponent.entityState.changeState(States.idle);
+				}
+			}
+			
 			@Override
 			public void update(Entity entity) {
-				
 				StateComponent stateComponent = MapperTools.stateCM.get(entity);
 				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
 				
-				if(combatComponent == null || !combatComponent.IsdistanceTarget())
+				if(combatComponent == null || !combatComponent.IsDistanceTarget())
 					stateComponent.entityState.changeState(States.idle);
-				else
+				else if(combatComponent.target != null)
 					stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
 			}
 		},
@@ -108,7 +115,6 @@ public class StateComponent implements Component, Poolable  {
 			@Override
 			public void enter(Entity entity) {
 				
-				// TODO 销毁实体操作
 				AshleyManager.engine.removeEntity(entity);
 			}
 		},
@@ -305,7 +311,7 @@ public class StateComponent implements Component, Poolable  {
 	 */
 	@Override
 	public void reset() {
-		entityState = null;
-		orientation = null;
+		entityState.setInitialState(States.idle);
+		orientation = Orientation.d2;
 	}
 }

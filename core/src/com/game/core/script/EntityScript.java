@@ -3,7 +3,6 @@ package com.game.core.script;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.guardian.game.components.AttributesComponent;
-import com.guardian.game.components.CombatComponent;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.tools.MessageType;
 
@@ -47,8 +46,10 @@ public abstract class EntityScript  {
 	 * 
 	 * @param contact 碰撞类
 	 * @param target 碰撞目标
+	 * @return true 继续执行默认组件的操作
 	 */
-	public void beginContact(Contact contact, Entity target){
+	public boolean beginContact(Contact contact, Entity target){
+		return true;
 	}
 	
 	
@@ -57,8 +58,10 @@ public abstract class EntityScript  {
 	 * 
 	 * @param contact 碰撞类
 	 * @param target 碰撞目标
+	 * @return true 继续执行默认组件的操作
 	 */
-	public void endContact(Contact contact, Entity target){
+	public boolean endContact(Contact contact, Entity target){
+		return true;
 	}
 	
 	/**
@@ -66,16 +69,10 @@ public abstract class EntityScript  {
 	 * 
 	 * @param contact 碰撞类
 	 * @param target 目标实体
+	 * @return true 继续执行默认组件的操作
 	 */
-	public void enterATKRange(Contact contact, Entity target) {
-		
-		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-		if(combatComponent != null){
-			combatComponent.rangeTargets.add(target);
-			
-			if(combatComponent.target == null) // 设置为当前目标
-				combatComponent.target = target;
-		}
+	public boolean enterATKRange(Contact contact, Entity target) {
+		return true;
 	}
 	
 	/**
@@ -83,20 +80,10 @@ public abstract class EntityScript  {
 	 * 
 	 * @param contact 碰撞类
 	 * @param target 目标实体
+	 * @return true 继续执行默认组件的操作
 	 */
-	public void leaveATKRange(Contact contact, Entity target) {
-		
-		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-		if(combatComponent != null){
-			combatComponent.rangeTargets.removeValue(target, true);
-			
-			// 设置新目标
-			if(combatComponent.target == target){
-				combatComponent.target = combatComponent.distanceTargets.size == 0 ? 
-						(combatComponent.rangeTargets.size == 0 ? null : combatComponent.rangeTargets.first()) : 
-							combatComponent.distanceTargets.first(); 
-			}
-		}
+	public boolean leaveATKRange(Contact contact, Entity target) {
+		return true;
 	}
 	
 	/**
@@ -104,17 +91,10 @@ public abstract class EntityScript  {
 	 * 
 	 * @param contact
 	 * @param target
+	 * @return true 继续执行默认组件的操作
 	 */
-	public void enterATKDistance(Contact contact, Entity target) {
-		
-		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-		if(combatComponent != null){
-			combatComponent.distanceTargets.add(target);
-
-			if(combatComponent.target == null || !combatComponent.IsdistanceTarget()){ // 更换攻击目标，谁直接能打到优先打谁，先不考虑追击
-				combatComponent.target = target;
-			}
-		}
+	public boolean enterATKDistance(Contact contact, Entity target) {
+		return true;
 	}
 	
 	/**
@@ -122,18 +102,10 @@ public abstract class EntityScript  {
 	 * 
 	 * @param contact
 	 * @param target
+	 * @return true 继续执行默认组件的操作
 	 */
-	public void leaveATKDistance(Contact contact, Entity target) {
-		
-		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-		if(combatComponent != null){
-			combatComponent.distanceTargets.removeValue(target, true);
-			
-			// 设置新目标
-			if(combatComponent.target == target){
-				combatComponent.target = combatComponent.distanceTargets.size == 0 ? target : combatComponent.distanceTargets.first(); 
-			}
-		}
+	public boolean leaveATKDistance(Contact contact, Entity target) {
+		return true;
 	}
 	
 	/**
