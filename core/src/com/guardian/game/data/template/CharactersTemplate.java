@@ -119,7 +119,7 @@ public class CharactersTemplate {
 	public float speed = 0;
 	
 	/**
-	 * 需要接受的消息
+	 * 需要接受的群发消息
 	 */
 	public int[] message;
 	

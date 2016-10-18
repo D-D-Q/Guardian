@@ -41,6 +41,10 @@ public class Monstersystem extends EntitySystem {
 		}
 	}
 
+	/**
+	 * 生成波数和BOSS
+	 * TODO 还未做
+	 */
 	protected void updateInterval (){
 		
 		Entity entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 300, 300);

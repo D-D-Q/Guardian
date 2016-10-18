@@ -52,6 +52,6 @@ public class MessageComponent implements Component, Poolable, Telegraph  {
 	@Override
 	public void reset() {
 		entity = null;
-		MsgManager.messageManager.removeListener(this, message);
+		message = null;
 	}
 }

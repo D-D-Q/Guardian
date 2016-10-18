@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.game.core.manager.MsgManager;
 import com.guardian.game.components.CombatComponent;
-import com.guardian.game.components.MessageComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.components.TextureComponent;
@@ -59,8 +58,6 @@ public class CombatSystem extends IteratingSystem  {
 //		}
 		
 		// 发送攻击消息
-		MessageComponent messageComponent = MapperTools.messageCM.get(entity);
-		MessageComponent targetMessageComponent = MapperTools.messageCM.get(combatComponent.target);
-		MsgManager.messageManager.dispatchMessage(messageComponent, targetMessageComponent, MessageType.MSG_ATTACK, entity);
+		MsgManager.sendMessage(entity, combatComponent.target, MessageType.MSG_ATTACK, null, false);
 	}
 }

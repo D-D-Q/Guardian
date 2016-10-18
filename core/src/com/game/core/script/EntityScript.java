@@ -3,6 +3,7 @@ package com.game.core.script;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.guardian.game.components.AttributesComponent;
+import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.tools.MessageType;
 
@@ -35,6 +36,11 @@ public abstract class EntityScript  {
 			
 			// TODO 伤害公式未定
 			attributesComponent.VIT -= senderAttributesComponent.ATK - attributesComponent.DEF;
+		}
+		if(messageType == MessageType.MSG_DEATH){
+			
+			// TODO 加经验升级
+			Log.info(this, "干掉一个");
 		}
 		
 		return true;

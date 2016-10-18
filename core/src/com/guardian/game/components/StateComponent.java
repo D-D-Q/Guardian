@@ -10,7 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.manager.AshleyManager;
+import com.game.core.manager.MsgManager;
 import com.guardian.game.tools.MapperTools;
+import com.guardian.game.tools.MessageType;
 import com.guardian.game.util.VectorUtil;
 
 /**
@@ -82,25 +84,14 @@ public class StateComponent implements Component, Poolable  {
 		 * @date 2016年10月16日 下午7:59:44
 		 */
 		attack(2){
-			
-			@Override
-			public void enter(Entity entity) {
-				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-				
-				if(!combatComponent.isCampTarget()){ // 不能攻击的阵营
-					StateComponent stateComponent = MapperTools.stateCM.get(entity);
-					stateComponent.entityState.changeState(States.idle);
-				}
-			}
-			
 			@Override
 			public void update(Entity entity) {
 				StateComponent stateComponent = MapperTools.stateCM.get(entity);
 				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
 				
-				if(combatComponent == null || !combatComponent.IsDistanceTarget())
+				if(combatComponent == null || combatComponent.seekTarget() != 2)
 					stateComponent.entityState.changeState(States.idle);
-				else if(!combatComponent.seekTarget() && combatComponent.target != null)
+				else if(combatComponent.target != null)
 					stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
 			}
 		},
@@ -114,6 +105,10 @@ public class StateComponent implements Component, Poolable  {
 		death(3){
 			@Override
 			public void enter(Entity entity) {
+				
+				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+				if(combatComponent != null)
+					MsgManager.sendMessage(entity, combatComponent.target, MessageType.MSG_DEATH, null, false);// 发送角色销毁消息
 				
 				AshleyManager.engine.removeEntity(entity);
 			}
@@ -129,10 +124,12 @@ public class StateComponent implements Component, Poolable  {
 			@Override
 			public void update(Entity entity) {
 				
+				if(entity.flags == 0)
+					return;
+				
 				AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
-				if(attributesComponent.VIT <= 0){
-					MapperTools.stateCM.get(entity).entityState.changeState(States.death);;
-				}
+				if(attributesComponent.VIT <= 0)
+					MapperTools.stateCM.get(entity).entityState.changeState(States.death);
 					
 			}
 		};
@@ -171,7 +168,7 @@ public class StateComponent implements Component, Poolable  {
 	public static enum Orientation{
 		
 		d2(0, 0, -1), d1(1, -1, -1), d4(2, -1, 0), d7(3, -1, 1), 
-		d8(4, 0, 1), d9(5, true, 3, 1, 1), d6(6, true, 2, 1, 0), d3(7, true, 1, 1, -1);
+		d8(4, 0, 1), d9(5, 3, 1, 1), d6(6, 2, 1, 0), d3(7, 1, 1, -1);
 		
 		/**
 		 * 动画数组的索引
@@ -179,12 +176,7 @@ public class StateComponent implements Component, Poolable  {
 		public int value; 
 		
 		/**
-		 * 是否需要翻转, 默认false
-		 */
-		public boolean isFlip;
-		
-		/**
-		 * 需要翻转的数组索引
+		 * 需要翻转的数组索引, 不需要-1
 		 */
 		public int flipValue;
 		
@@ -194,12 +186,11 @@ public class StateComponent implements Component, Poolable  {
 		public Vector2 vector;
 		
 		private Orientation(int value, int x, int y){
-			this(value, false, 0, x, y);
+			this(value, -1, x, y);
 		}
 		
-		private Orientation(int value, boolean isFlip, int flipValue, int x, int y){
+		private Orientation(int value, int flipValue, int x, int y){
 			this.value = value;
-			this.isFlip = isFlip;
 			this.flipValue = flipValue;
 			vector = new Vector2(x, y).nor();
 		}

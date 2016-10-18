@@ -26,7 +26,7 @@ public class AtlasUtil {
 			
 			Sprite[] sprites = new Sprite[length];
 			
-			if(orientation.isFlip){ // 翻转得来的帧
+			if(orientation.flipValue != -1){ // 翻转得来的帧
 				TextureRegion[] keyFrames = animation[orientation.flipValue].getKeyFrames(); // 获得原帧
 				for(int i = 0; i < keyFrames.length; ++i){
 					

@@ -28,6 +28,8 @@ import com.guardian.game.util.AtlasUtil;
 /**
  * 生产指定实体
  * 
+ * TODO 实体纹理和实体CharactersTemplate的预加载和释放
+ * 
  * @author D
  * @date 2016年9月16日 上午8:00:39
  */

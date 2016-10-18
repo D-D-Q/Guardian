@@ -19,7 +19,6 @@
 		AVD: 2,
 		VIT: 100,
 		speed: 80,
-		message: [0],
 		script: com.guardian.game.entityscript.HeroScript
 	},
 	{
@@ -43,7 +42,6 @@
 		AVD: 1,
 		VIT: 1,
 		speed: 50,
-		message: [0],
 		script: com.guardian.game.entityscript.HbwsScript
 	}
 ]

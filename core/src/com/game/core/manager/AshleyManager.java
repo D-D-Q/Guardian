@@ -66,7 +66,8 @@ public class AshleyManager{
 				MessageComponent messageComponent = MapperTools.messageCM.get(entity);
 				if(messageComponent != null){
 					messageComponent.entity = entity;
-					MsgManager.messageManager.addListeners(messageComponent, messageComponent.message);
+					if(messageComponent.message != null)
+						MsgManager.messageManager.addListeners(messageComponent, messageComponent.message);
 				}
 				
 				// 脚本组件
@@ -85,13 +86,13 @@ public class AshleyManager{
 				ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
 				if(scriptComponent != null && scriptComponent.script instanceof InputProcessor)
 					InputManager.removeProcessor((InputProcessor)scriptComponent.script);
+				
+				// 消息组件，移出消息监听
+				MessageComponent messageComponent = MapperTools.messageCM.get(entity);
+				if(messageComponent != null && messageComponent.message != null)
+					MsgManager.messageManager.removeListener(messageComponent, messageComponent.message);
 			}
 		});
 	}
-	
-	public AshleyManager() {
-		
-	}
-
 	
 }

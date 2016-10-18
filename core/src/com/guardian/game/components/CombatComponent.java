@@ -19,13 +19,12 @@ import com.guardian.game.tools.MapperTools;
 public class CombatComponent implements Component, Poolable{
 	
 	/**
-	 * 攻击范围传感器刚体，系统赋值
+	 * 警戒范围传感器刚体，系统赋值
 	 */
 	public Body rangeBody;
 	
 	/**
-	 * 攻击范围半径
-	 * 可获得攻击目标的距离
+	 * 警戒范围半径，即可锁定目标的距离
 	 */
 	public float ATKRange;
 	
@@ -35,8 +34,7 @@ public class CombatComponent implements Component, Poolable{
 	public Body distanceBody;
 	
 	/**
-	 * 攻击距离半径
-	 * 可真实攻击目标的距离
+	 * 攻击距离半径，即可攻击目标的距离
 	 */
 	public float ATKDistance;
 	
@@ -53,7 +51,7 @@ public class CombatComponent implements Component, Poolable{
 	public int campMaskBits = -1; 
 	
 	/**
-	 * 攻击范围内的所有目标
+	 * 警戒范围内的所有目标
 	 */
 	public Array<Entity> rangeTargets = new Array<>(false, 1);
 	
@@ -125,6 +123,9 @@ public class CombatComponent implements Component, Poolable{
 	 */
 	public boolean isCampTarget(){
 		
+		if(target == null)
+			return false;
+		
 		if(this.target.flags == 0){ // 目标Entity已销毁
 			this.target = null;
 			return false;
@@ -133,27 +134,44 @@ public class CombatComponent implements Component, Poolable{
 	}
 	
 	/**
-	 * 寻找能攻击的目标
-	 * @return
+	 * 寻找目标
+	 * @return 0:无寻找目标, 1:警戒范围内目标 , 2:能攻击的目标
 	 */
-	public boolean seekTarget(){
+	public int seekTarget(){
 		
-		if(this.target != null)
-			return IsDistanceTarget();
+		if(this.target != null && this.target.flags == 0)
+			this.target = null;
+		
+		if(IsDistanceTarget())
+			return 2;
 		
 		while(true){
-			this.target = distanceTargets.size == 0 ? (rangeTargets.size == 0 ? null : rangeTargets.first()) : distanceTargets.first();
+			
+			if(distanceTargets.size != 0){
+				this.target = distanceTargets.first();
+			}
+			else{
+				if(rangeTargets.size == 0)
+					return 0;
+				else if(this.target != null && rangeTargets.contains(this.target, true)) // 保证当前目标不变
+					return 1;
+				else
+					this.target = rangeTargets.first();
+			}
 			// 如果是已销毁目标，移除后重新寻找
-			if(this.target != null && this.target.flags == 0){
+			if(this.target.flags == 0){
+				
 				rangeTargets.removeValue(target, true);
 				distanceTargets.removeValue(target, true);
 				this.target = null;
 			}
+			else if(distanceTargets.contains(this.target, true))
+				return 2;
+			else if(rangeTargets.contains(this.target, true))
+				return 1;
 			else
-				break;
-		};
-		
-		return IsDistanceTarget();
+				return 0;
+		}
 	}
 	
 	/**
