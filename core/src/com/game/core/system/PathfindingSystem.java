@@ -3,7 +3,7 @@ package com.game.core.system;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
-import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.steer.behaviors.CollisionAvoidance;
 import com.badlogic.gdx.ai.steer.behaviors.PrioritySteering;
@@ -16,28 +16,28 @@ import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
 
 /**
- * AI系统
+ * AI计算系统
  * 寻路目标，躲避同类碰撞
  * 
  * @author D
  * @date 2016年10月18日
  */
-public class PathfindingSystem extends IteratingSystem implements EntityListener{
+public class PathfindingSystem extends IntervalIteratingSystem implements EntityListener{
 	
-	public PathfindingSystem(int priority) {
-		super(FamilyTools.AIF, priority);
-	}
-	
-	@Override
-	public void update(float deltaTime) {
-		GdxAI.getTimepiece().update(deltaTime);
-		super.update(GdxAI.getTimepiece().getDeltaTime());
+	/**
+	 * @param interval 计算间隔
+	 * @param priority
+	 */
+	public PathfindingSystem(float interval, int priority) {
+		super(FamilyTools.AIF, interval, priority);
 	}
 
 	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
+	protected void processEntity(Entity entity) {
 		
-		MapperTools.pathfindingCM.get(entity).update(deltaTime);
+		PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
+		if(pathfindingComponent.isPathfinding)
+			pathfindingComponent.update(GdxAI.getTimepiece().getDeltaTime());
 	}
 
 	@Override
@@ -73,5 +73,4 @@ public class PathfindingSystem extends IteratingSystem implements EntityListener
 	public void entityRemoved(Entity entity) {
 		
 	}
-	
 }

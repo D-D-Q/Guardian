@@ -96,7 +96,7 @@ public class GuardianGame extends Game {
 		
 		AshleyManager.engine.addSystem(new RenderingSystem(this, 50));
 		
-		AshleyManager.engine.addSystem(new PathfindingSystem(60));
+		AshleyManager.engine.addSystem(new PathfindingSystem(0.4f, 60));
 		AshleyManager.engine.addSystem(new MessageHandlingSystem(70));
 		AshleyManager.engine.addSystem(new Monstersystem(80));
 		

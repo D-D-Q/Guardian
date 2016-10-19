@@ -291,13 +291,20 @@ public class StateComponent implements Component, Poolable  {
 	/**
 	 * 朝向
 	 */
+	public void look(Vector2 vector2){
+		orientation = Orientation.getOrientation(vector2);
+	}
+	
+	/**
+	 * 朝向某点
+	 */
 	public void lookAt(Vector2 position){
 		
 		Vector2 position2 = MapperTools.transformCM.get(entity).position;
 		if(position.epsilonEquals(position2, 0))
 			orientation = Orientation.d2;
 		else
-			orientation = Orientation.getOrientation(position.sub(position2));
+			orientation = Orientation.getOrientation(VectorUtil.sub(position, position2));
 	}
 	
 	/**

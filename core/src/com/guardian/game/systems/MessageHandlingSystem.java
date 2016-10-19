@@ -1,7 +1,6 @@
 package com.guardian.game.systems;
 
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.gdx.ai.GdxAI;
 import com.game.core.manager.MsgManager;
 
 /**
@@ -21,9 +20,6 @@ public class MessageHandlingSystem extends EntitySystem{
 	
 	@Override
 	public void update(float deltaTime) {
-		
-		GdxAI.getTimepiece().update(deltaTime); // 更新AI系统时间，所有AI都要使用这个时间
-		
 		MsgManager.messageManager.update(); // 处理消息
 	}
 }

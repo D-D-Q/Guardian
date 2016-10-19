@@ -3,6 +3,7 @@ package com.guardian.game.screen;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -130,6 +131,10 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		
+		// AI时间
+		GdxAI.getTimepiece().update(delta);
+		
+		// ECS系统
 		AshleyManager.engine.update(delta);
 		
 		GAME.UICameraComponent.viewport.apply();
@@ -159,12 +164,11 @@ public class GameScreen extends ScreenAdapter {
 	}
 	
 	/**
-	 * 直接退出游戏，根本没有调用这个方法... 不知道为什么
+	 * dispose的时候调用, Screen的dispose根本不会被调用
 	 */
 	@Override
-	public void dispose() {
+	public void hide() {
 		Log.info(this, "dispose begin");
-		
 		UIstage.dispose();
 	}
 	

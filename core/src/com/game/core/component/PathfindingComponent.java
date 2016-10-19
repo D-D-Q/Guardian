@@ -1,5 +1,7 @@
 package com.game.core.component;
 
+import java.security.acl.Owner;
+
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.steer.Steerable;
@@ -15,6 +17,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.manager.PhysicsManager;
 import com.guardian.game.components.CharacterComponent;
+import com.guardian.game.components.StateComponent;
+import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -33,6 +37,16 @@ public class PathfindingComponent implements QueryCallback, Component, Steerable
 	public Entity entity;
 	
 	/**
+	 * 是否寻路
+	 */
+	public boolean isPathfinding;
+	
+	/**
+	 * 保存上次计算时候的角色位置
+	 */
+	public final Vector2 oldposition = new Vector2();
+	
+	/**
 	 * AI行为
 	 */
 	public SteeringBehavior<Vector2> steeringBehavior;
@@ -48,7 +62,7 @@ public class PathfindingComponent implements QueryCallback, Component, Steerable
 	private static final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
 	
 	public PathfindingComponent() {
-		box2dRadiusProximity = new Box2dRadiusProximity(this, 10); // 3开始躲避的距离，从两个AI的边缘算起
+		box2dRadiusProximity = new Box2dRadiusProximity(this, 10); // 10开始躲避的距离，从两个AI的边缘算起
 	}
 	
 	/** 
@@ -87,7 +101,18 @@ public class PathfindingComponent implements QueryCallback, Component, Steerable
 		
 		// 取直线加速度的方向，移动角色
 		if (!steeringOutput.linear.isZero()) {
-			characterComponent.move(steeringOutput.linear.nor());
+			
+			if(characterComponent.dynamicBody.getPosition().dst2(oldposition) < characterComponent.radius){ // 移动距离太近，可能不挡住暂停
+				oldposition.setZero();
+				
+				StateComponent stateComponent = MapperTools.stateCM.get(entity);
+				stateComponent.entityState.changeState(States.idle);
+				stateComponent.look(steeringOutput.linear.nor());
+			}
+			else{
+				oldposition.set(characterComponent.dynamicBody.getPosition()); // 记录位置
+				characterComponent.move(steeringOutput.linear.nor());
+			}
 		}
 	}
 
@@ -219,7 +244,9 @@ public class PathfindingComponent implements QueryCallback, Component, Steerable
 			
 			// 寻找躲避对象
 			Vector2 position = owner.getPosition();
-			PhysicsManager.world.QueryAABB((QueryCallback)owner, position.x - radius, position.y - radius, position.x + radius, position.y + radius);
+			float findRadius = owner.getBoundingRadius() + radius;
+			PhysicsManager.world.QueryAABB((QueryCallback)owner, 
+					position.x - findRadius, position.y - findRadius, position.x + findRadius, position.y + findRadius);
 			
 			int agentCount = agents.size;
 			int neighborCount = 0;
