@@ -31,9 +31,13 @@ public class RenderingSystem extends SortedIteratingSystem {
 		super(FamilyTools.renderingF, new Comparator<Entity>(){
 			@Override
 	        public int compare(Entity e1, Entity e2) {// 降序排列，后面的后绘制在上层。 返回正数绘制e1在上,返回负数绘制e2在上
-				int y = (int)Math.signum(MapperTools.transformCM.get(e2).position.y - MapperTools.transformCM.get(e1).position.y); // 先按y轴算
+				
+				TransformComponent e1TransformComponent = MapperTools.transformCM.get(e1);
+				TransformComponent e2TransformComponent = MapperTools.transformCM.get(e2);
+				
+				int y = (int)Math.signum(e2TransformComponent.position.y - e1TransformComponent.position.y); // 先按y轴算
 				if(y == 0)
-					return (int)Math.signum(MapperTools.transformCM.get(e1).position.z - MapperTools.transformCM.get(e2).position.z); // 再按z抽算
+					return (int)Math.signum(e1TransformComponent.index_z - e2TransformComponent.index_z); // 再按z抽算
 				return y;
 	        }
 		}, priority);

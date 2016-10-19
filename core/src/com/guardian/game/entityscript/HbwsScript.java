@@ -34,18 +34,18 @@ public class HbwsScript extends EntityScript {
 	@Override
 	public void update(float deltaTime) {
 		
-		StateComponent stateComponent = MapperTools.stateCM.get(entity);
-		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-		
-		if(combatComponent.target == null){
-			stateComponent.entityState.changeState(States.idle);
-			return;
-		}
-		
-		if(combatComponent.IsDistanceTarget())
-			stateComponent.entityState.changeState(States.attack);
-		else if(combatComponent.isCampTarget())
-			MapperTools.characterCM.get(entity).moveTo(MapperTools.transformCM.get(combatComponent.target).position);
+//		StateComponent stateComponent = MapperTools.stateCM.get(entity);
+//		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+//		
+//		if(combatComponent.target == null){
+//			stateComponent.entityState.changeState(States.idle);
+//			return;
+//		}
+//		
+//		if(combatComponent.IsDistanceTarget())
+//			stateComponent.entityState.changeState(States.attack);
+//		else if(combatComponent.isCampTarget())
+//			MapperTools.characterCM.get(entity).moveTo(MapperTools.transformCM.get(combatComponent.target).position);
 	}
 	
 	@Override

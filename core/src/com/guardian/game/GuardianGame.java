@@ -10,6 +10,7 @@ import com.game.core.Assets;
 import com.game.core.manager.AshleyManager;
 import com.game.core.manager.InputManager;
 import com.game.core.manager.PhysicsManager;
+import com.game.core.system.PathfindingSystem;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.CameraComponent;
 import com.guardian.game.entity.dao.DataTemplateDao;
@@ -92,9 +93,12 @@ public class GuardianGame extends Game {
 		AshleyManager.engine.addSystem(new PhysicsSystem(10));
 		AshleyManager.engine.addSystem(new AnimationSystem(20));
 		AshleyManager.engine.addSystem(new CombatSystem(30));
-		AshleyManager.engine.addSystem(new MessageHandlingSystem(40));
+		
 		AshleyManager.engine.addSystem(new RenderingSystem(this, 50));
-		AshleyManager.engine.addSystem(new Monstersystem(60));
+		
+		AshleyManager.engine.addSystem(new PathfindingSystem(60));
+		AshleyManager.engine.addSystem(new MessageHandlingSystem(70));
+		AshleyManager.engine.addSystem(new Monstersystem(80));
 		
 		/**--------------------ashley end-------------------------*/
 		

@@ -3,6 +3,8 @@ package com.game.core.component;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.steer.Steerable;
+import com.badlogic.gdx.ai.steer.SteeringAcceleration;
+import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.ai.steer.proximities.RadiusProximity;
 import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.math.Vector2;
@@ -12,34 +14,41 @@ import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.manager.PhysicsManager;
+import com.guardian.game.components.CharacterComponent;
 import com.guardian.game.tools.MapperTools;
 
 /**
  * 寻路组件
- * 	RadiusProximity 实现躲避其他AI主体
  *  QueryCallback 获取躲避的对象的接口
- *  Steerable AI主体接口
+ *  Steerable AI主体接口，忽略角速度
  * 
  * @author D
  * @date 2016年10月18日
  */
-public class PathfindingComponent extends RadiusProximity<Vector2> implements QueryCallback, Component, Steerable<Vector2>, Poolable {
+public class PathfindingComponent implements QueryCallback, Component, Steerable<Vector2>, Poolable {
+	
+	/**
+	 * 该组件的实体
+	 */
+	public Entity entity;
+	
+	/**
+	 * AI行为
+	 */
+	public SteeringBehavior<Vector2> steeringBehavior;
+	
+	/**
+	 * 判断躲避其他AI主体
+	 */
+	public Box2dRadiusProximity box2dRadiusProximity;
+	
+	/**
+	 * 保存AI行为计算结果
+	 */
+	private static final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
 	
 	public PathfindingComponent() {
-		super(null, new Array<PathfindingComponent>(false, 8), 0);
-		setOwner(this);
-	}
-	
-	@Override
-	public int findNeighbors(com.badlogic.gdx.ai.steer.Proximity.ProximityCallback<Vector2> callback) {
-		
-		agents.clear();
-		
-		// 寻找躲避对象
-		Vector2 position = owner.getPosition();
-		PhysicsManager.world.QueryAABB(this, position.x - radius, position.y - radius, position.x + radius, position.y + radius);
-		
-		return super.findNeighbors(callback);
+		box2dRadiusProximity = new Box2dRadiusProximity(this, 10); // 3开始躲避的距离，从两个AI的边缘算起
 	}
 	
 	/** 
@@ -52,141 +61,242 @@ public class PathfindingComponent extends RadiusProximity<Vector2> implements Qu
 			return true;
 		
 		PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get((Entity)fixture.getBody().getUserData());
+		if(pathfindingComponent == null || pathfindingComponent == this) // 不是自己
+			return true;
 		
 //		agents.add(pathfindingComponent); // 直接添加泛型编译不通过
-		((Array<PathfindingComponent>)agents).add(pathfindingComponent);
+		((Array<PathfindingComponent>)box2dRadiusProximity.getAgents()).add(pathfindingComponent);
 		
 		return true;
 	}
 	
+	/**
+	 * 计算更新
+	 * 忽略角度速度。不必改变刚体的方向，因为角色就8个的方向，移动时通过目标位置计算
+	 *  
+	 * @param deltaTime
+	 */
+	public void update (float deltaTime) {
+		
+		if (steeringBehavior == null)
+			return;
+		
+		CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
+		
+		steeringBehavior.calculateSteering(steeringOutput);
+		
+		// 取直线加速度的方向，移动角色
+		if (!steeringOutput.linear.isZero()) {
+			characterComponent.move(steeringOutput.linear.nor());
+		}
+	}
 
 	@Override
 	public Vector2 getPosition() {
-		// TODO Auto-generated method stub
-		return null;
+		return MapperTools.characterCM.get(entity).dynamicBody.getPosition();
 	}
 
 	@Override
 	public float getOrientation() {
-		// TODO Auto-generated method stub
-		return 0;
+		return MapperTools.characterCM.get(entity).dynamicBody.getAngle();
 	}
 
 	@Override
 	public void setOrientation(float orientation) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public float vectorToAngle(Vector2 vector) {
-		// TODO Auto-generated method stub
-		return 0;
+		return vector.angleRad();
 	}
 
 	@Override
 	public Vector2 angleToVector(Vector2 outVector, float angle) {
-		// TODO Auto-generated method stub
-		return null;
+		outVector.x = (float)Math.sin(angle);
+		outVector.y = (float)Math.cos(angle);
+		return outVector;
 	}
 
 	@Override
 	public Location<Vector2> newLocation() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Box2dLocation();
 	}
 
 	@Override
 	public float getZeroLinearSpeedThreshold() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 0.001f;
 	}
 
 	@Override
 	public void setZeroLinearSpeedThreshold(float value) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public float getMaxLinearSpeed() {
-		// TODO Auto-generated method stub
-		return 0;
+		return MapperTools.attributesCM.get(entity).speed;
 	}
 
 	@Override
 	public void setMaxLinearSpeed(float maxLinearSpeed) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public float getMaxLinearAcceleration() {
-		// TODO Auto-generated method stub
-		return 0;
+		return MapperTools.attributesCM.get(entity).speed;
 	}
 
 	@Override
 	public void setMaxLinearAcceleration(float maxLinearAcceleration) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public float getMaxAngularSpeed() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 0f;
 	}
 
 	@Override
 	public void setMaxAngularSpeed(float maxAngularSpeed) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public float getMaxAngularAcceleration() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 0f;
 	}
 
 	@Override
 	public void setMaxAngularAcceleration(float maxAngularAcceleration) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Vector2 getLinearVelocity() {
-		// TODO Auto-generated method stub
-		return null;
+		return MapperTools.characterCM.get(entity).dynamicBody.getLinearVelocity();
 	}
 
 	@Override
 	public float getAngularVelocity() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public float getBoundingRadius() {
-		// TODO Auto-generated method stub
-		return 0;
+		return MapperTools.characterCM.get(entity).radius;
 	}
 
 	@Override
 	public boolean isTagged() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setTagged(boolean tagged) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
 	public void reset() {
+		entity = null;
+		steeringBehavior = null;
+	}
+	
+	/**
+	 * 实现box2的判断躲避其他AI主体
+	 * 
+	 * @author D
+	 * @date 2016年10月19日
+	 */
+	private static class Box2dRadiusProximity extends RadiusProximity<Vector2>{
+		
+		public Box2dRadiusProximity(PathfindingComponent owner, float radius) {
+			super(owner, new Array<PathfindingComponent>(false, 8), radius);
+		}
+		
+		/**
+		 * 两个角色之间的距离 < 躲避距离 + 两个角色大小的半径。就要躲避了
+		 */
+		@Override
+		public int findNeighbors(ProximityCallback<Vector2> callback) {
+			
+			agents.clear();
+			
+			// 寻找躲避对象
+			Vector2 position = owner.getPosition();
+			PhysicsManager.world.QueryAABB((QueryCallback)owner, position.x - radius, position.y - radius, position.x + radius, position.y + radius);
+			
+			int agentCount = agents.size;
+			int neighborCount = 0;
+			
+			float boundingRadius = owner.getBoundingRadius();
+			Vector2 ownerPosition = owner.getPosition();
+			
+			for (int i = 0; i < agentCount; ++i) {
+				Steerable<Vector2> currentAgent = agents.get(i);
+
+				if (currentAgent != owner) { // 不是自己
+					
+					float squareDistance = ownerPosition.dst2(currentAgent.getPosition());
+					float range = radius + boundingRadius + currentAgent.getBoundingRadius();
+
+					if (squareDistance < range * range) {
+						if (callback.reportNeighbor(currentAgent))
+							neighborCount++;
+					}
+				}
+			}
+
+			return neighborCount;
+		}
+	}
+
+	/**
+	 * 位置变量类
+	 * 
+	 * @author D
+	 * @date 2016年10月19日
+	 */
+	public static class Box2dLocation implements Location<Vector2> {
+
+		Vector2 position;
+		float orientation;
+
+		public Box2dLocation () {
+			this.position = new Vector2();
+			this.orientation = 0;
+		}
+		
+		public Box2dLocation (Vector2 position) {
+			this.position = position;
+			this.orientation = 0;
+		}
+
+		@Override
+		public Vector2 getPosition () {
+			return position;
+		}
+
+		@Override
+		public float getOrientation () {
+			return orientation;
+		}
+
+		@Override
+		public void setOrientation (float orientation) {
+			this.orientation = orientation;
+		}
+
+		@Override
+		public Location<Vector2> newLocation () {
+			return new Box2dLocation();
+		}
+
+		@Override
+		public float vectorToAngle (Vector2 vector) {
+			return vector.angleRad();
+		}
+
+		@Override
+		public Vector2 angleToVector (Vector2 outVector, float angle) {
+			outVector.x = (float)Math.sin(angle);
+			outVector.y = (float)Math.cos(angle);
+			return outVector;
+		}
 	}
 }

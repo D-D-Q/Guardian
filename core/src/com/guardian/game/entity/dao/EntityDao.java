@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.game.core.component.PathfindingComponent;
 import com.game.core.component.ScriptComponent;
 import com.game.core.manager.AshleyManager;
 import com.game.core.script.EntityScript;
@@ -34,21 +35,23 @@ import com.guardian.game.util.AtlasUtil;
  * @date 2016年9月16日 上午8:00:39
  */
 public class EntityDao {
-
+	
 	/**
 	 * 创建角色实体
 	 * 
 	 * @param template
 	 * @return
 	 */
-	public Entity createCharactersEntity(CharactersTemplate template, int positionX, int positionY){
+	public Entity createHeroEntity(CharactersTemplate template, int positionX, int positionY){
 		
 		Entity entity = AshleyManager.engine.createEntity();
 		entity.flags = 1; // 设置成有效
 		
 		StateComponent stateComponent = AshleyManager.engine.createComponent(StateComponent.class);
+		entity.add(stateComponent);
 		
 		TextureComponent textureComponent = AshleyManager.engine.createComponent(TextureComponent.class);
+		entity.add(textureComponent);
 		
 		AnimationComponent animationComponent = AshleyManager.engine.createComponent(AnimationComponent.class);
 		Array<Sprite> frames = GuardianGame.game.assets.getFrames(template.fileName); // 所有动画帧
@@ -59,11 +62,13 @@ public class EntityDao {
 		index += 5 * template.runFrames;
 		Animation[] animations = AtlasUtil.stateAnimation(frames, index, template.attackFrames);
 		animationComponent.addAnimation(States.attack, animations);
+		entity.add(animationComponent);
 		
 		TransformComponent transformComponent = AshleyManager.engine.createComponent(TransformComponent.class);
 		transformComponent.init(frames.get(0).getWidth(), frames.get(0).getHeight(), template.offsetX, template.offsetY, 100); // 初始化画布大小和锚点
 //		transformComponent.setMapPosition(positionX, positionY); // 初始化tile位置, z是绘制优先级
-		transformComponent.position.set(positionX, positionY, transformComponent.position.z); // 初始化位置, z是绘制优先级
+		transformComponent.position.set(positionX, positionY); // 初始化位置, z是绘制优先级
+		entity.add(transformComponent);
 		
 		AttributesComponent attributesComponent = AshleyManager.engine.createComponent(AttributesComponent.class); // 变量属性信息
 		attributesComponent.name = template.name;
@@ -74,6 +79,7 @@ public class EntityDao {
 		attributesComponent.AVD = template.AVD;
 		attributesComponent.VIT = template.VIT;
 		attributesComponent.speed = template.speed;
+		entity.add(attributesComponent);
 		
 		if(template.ATKRange != 0 || template.ATKDistance != 0){
 			CombatComponent combatComponent = AshleyManager.engine.createComponent(CombatComponent.class);
@@ -89,9 +95,11 @@ public class EntityDao {
 		
 		MessageComponent messageComponent = AshleyManager.engine.createComponent(MessageComponent.class);
 		messageComponent.message = template.message;
+		entity.add(messageComponent);
 		
 		CharacterComponent characterComponent = AshleyManager.engine.createComponent(CharacterComponent.class);
 		characterComponent.radius = template.characterRadius;
+		entity.add(characterComponent);
 		
 		if(template.collisionRadius != 0){
 			CollisionComponent collisionComponent = AshleyManager.engine.createComponent(CollisionComponent.class);
@@ -104,20 +112,28 @@ public class EntityDao {
 			Class<?> scriptClass = ClassReflection.forName(template.script);
 			Constructor<?> constructor = scriptClass.getConstructor();
 			scriptComponent.script =  (EntityScript) constructor.newInstance();
+			entity.add(scriptComponent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		entity.add(transformComponent);
-		entity.add(stateComponent);
-		entity.add(textureComponent);
-		entity.add(animationComponent);
-		entity.add(attributesComponent);
+		GuardianGame.game.assets.assetManager.finishLoading();
 		
-		entity.add(messageComponent);
-		entity.add(characterComponent);
+		return entity;
+	}
+
+	/**
+	 * 创建角色实体
+	 * 
+	 * @param template
+	 * @return
+	 */
+	public Entity createCharactersEntity(CharactersTemplate template, int positionX, int positionY){
 		
-		entity.add(scriptComponent);
+		Entity entity = createHeroEntity(template, positionX, positionY);
+		
+		PathfindingComponent pathfindingComponent = AshleyManager.engine.createComponent(PathfindingComponent.class);
+		entity.add(pathfindingComponent);
 		
 		GuardianGame.game.assets.assetManager.finishLoading();
 		

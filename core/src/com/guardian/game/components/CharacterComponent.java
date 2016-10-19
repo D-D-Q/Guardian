@@ -60,7 +60,7 @@ public class CharacterComponent  implements Component, Poolable {
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
 		if(stateComponent != null){
 			stateComponent.orientation = Orientation.getOrientation(vector2);
-			stateComponent.moveVector = vector2.nor(); 	// 保留方向
+			stateComponent.moveOrientationVector.set(vector2.nor()); // 保留方向
 			stateComponent.entityState.changeState(States.run);
 		}
 	}
@@ -72,7 +72,7 @@ public class CharacterComponent  implements Component, Poolable {
 	 */
 	public void moveTo(Vector2 position){
 		
-		Vector2 position2 = VectorUtil.toVector2(MapperTools.transformCM.get(entity).position);
+		Vector2 position2 = MapperTools.transformCM.get(entity).position;
 		if(position.epsilonEquals(position2, 0))
 			return;
 		

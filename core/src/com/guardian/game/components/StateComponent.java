@@ -65,7 +65,7 @@ public class StateComponent implements Component, Poolable  {
 					StateComponent stateComponent = MapperTools.stateCM.get(entity);
 					
 					// 移动精灵的动态刚体。方向乘以速度
-					characterComponent.dynamicBody.setLinearVelocity(stateComponent.moveVector.nor().scl(attributesComponent.speed));
+					characterComponent.dynamicBody.setLinearVelocity(stateComponent.moveOrientationVector.nor().scl(attributesComponent.speed));
 				}
 			}
 			
@@ -130,7 +130,6 @@ public class StateComponent implements Component, Poolable  {
 				AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
 				if(attributesComponent.VIT <= 0)
 					MapperTools.stateCM.get(entity).entityState.changeState(States.death);
-					
 			}
 		};
 		
@@ -282,7 +281,7 @@ public class StateComponent implements Component, Poolable  {
 	 * 人物移动方向, 不限制
 	 * 如果这个值限制成Orientation.vector的取值，就是只能8方向行走
 	 */
-	public Vector2 moveVector;
+	public final Vector2 moveOrientationVector = new Vector2();
 	
 	public StateComponent() {
 		entityState = new DefaultStateMachine<Entity, StateComponent.States>(null, States.idle, States.global); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类
@@ -294,7 +293,7 @@ public class StateComponent implements Component, Poolable  {
 	 */
 	public void lookAt(Vector2 position){
 		
-		Vector2 position2 = VectorUtil.toVector2(MapperTools.transformCM.get(entity).position);
+		Vector2 position2 = MapperTools.transformCM.get(entity).position;
 		if(position.epsilonEquals(position2, 0))
 			orientation = Orientation.d2;
 		else
