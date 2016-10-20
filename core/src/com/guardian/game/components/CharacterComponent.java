@@ -3,14 +3,12 @@ package com.guardian.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.manager.PhysicsManager;
 import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.tools.MapperTools;
-import com.guardian.game.util.VectorUtil;
 
 /**
  * 物理刚体。
@@ -78,15 +76,6 @@ public class CharacterComponent  implements Component, Poolable {
 			return;
 		
 		move(position.sub(position2));
-	}
-	
-	/**
-	 * 移动角色
-	 * 
-	 * @param Vector3 位置
-	 */
-	public void moveTo(Vector3 position){
-		moveTo(VectorUtil.toVector2(position));
 	}
 	
 	/**

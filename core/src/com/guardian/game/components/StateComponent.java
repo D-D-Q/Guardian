@@ -7,13 +7,11 @@ import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.manager.AshleyManager;
 import com.game.core.manager.MsgManager;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.tools.MessageType;
-import com.guardian.game.util.VectorUtil;
 
 /**
  * 精灵状态组件
@@ -208,16 +206,6 @@ public class StateComponent implements Component, Poolable  {
 		}
 		
 		/**
-		 * 返回向量对应的角度
-		 * 
-		 * @param vector3
-		 * @return
-		 */
-		public static Orientation getOrientation(Vector3 vector){
-			return getOrientation(VectorUtil.toVector2(vector));
-		}
-		
-		/**
 		 * 返回vector2在vector1的方向
 		 * 
 		 * @param vector1 当前位置
@@ -273,7 +261,7 @@ public class StateComponent implements Component, Poolable  {
 	/**
 	 * 状态机
 	 */
-	public StateMachine<Entity, States> entityState;
+	public final StateMachine<Entity, States> entityState;
 	
 	/**
 	 * 人物方向, 只有8个
@@ -308,17 +296,10 @@ public class StateComponent implements Component, Poolable  {
 		if(position.epsilonEquals(position2, 0))
 			orientation = Orientation.d2;
 		else{
-			Vector2 vector = VectorUtil.sub(position, position2);
+			Vector2 vector = position.cpy().sub(position2);
 			orientation = Orientation.getOrientation(vector);
 			moveOrientationVector.set(vector.nor());
 		}
-	}
-	
-	/**
-	 * 朝向
-	 */
-	public void lookAt(Vector3 position){
-		lookAt(VectorUtil.toVector2(position));
 	}
 	
 	/* 

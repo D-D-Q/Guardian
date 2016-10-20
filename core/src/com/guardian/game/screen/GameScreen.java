@@ -55,17 +55,13 @@ public class GameScreen extends ScreenAdapter {
 		
 		CameraComponent gameCameraComponent = AshleyManager.engine.createComponent(CameraComponent.class); // 添加相机组件
 		GAME.screenEntity.add(gameCameraComponent);
-		gameCameraComponent.camera.position.set(mapComponent.width/2, mapComponent.height/2, 0); // 初始化相机位置, 该位置会在屏幕中心
+		gameCameraComponent.camera.position.set(864, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
 		
-		GAME.hero = AshleyManager.entityDao.createHeroEntity(GAME.charactersTemplate.get(0), mapComponent.width/2, mapComponent.height/2); // 创建英雄
+		gameCameraComponent.camera.zoom = 10;
+		
+		GAME.hero = AshleyManager.entityDao.createHeroEntity(GAME.charactersTemplate.get(0), 864, 480); // 创建英雄
 		AshleyManager.engine.addEntity(GAME.hero);
 		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
-		
-		
-		Entity entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 300, 300);
-		AshleyManager.engine.addEntity(entity);
-		MapperTools.combatCM.get(entity).target = GAME.hero;
-		
 		
 		initUI();
 		
@@ -109,6 +105,7 @@ public class GameScreen extends ScreenAdapter {
 				
 				return true;
 			}
+			
 		});
 	}
 	
@@ -147,7 +144,7 @@ public class GameScreen extends ScreenAdapter {
 		super.resize(width, height);
 		
 		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-		cameraComponent.viewport.update(width, height, false); // 相机锚点默认是中心。如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
+		cameraComponent.viewport.update(width, height, false); // 设置屏幕宽高。必须！
 	}
 	
 	/**

@@ -24,6 +24,9 @@ public class Monstersystem extends EntitySystem {
 	 * 未执行的流逝时间
 	 */
 	private float accumulator;
+	
+	public int tolat = 10;
+	public int cur = 0;
 
 	public Monstersystem (int priority) {
 		super(priority);
@@ -47,11 +50,23 @@ public class Monstersystem extends EntitySystem {
 	 */
 	protected void updateInterval (){
 		
-		Entity entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 300, 1500);
+		if(cur > tolat)
+			return;
+		++cur;
+		
+		Entity entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 345, 2080);
 		AshleyManager.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 		
-		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 600, 1500);
+		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 690, 2080);
+		AshleyManager.engine.addEntity(entity);
+		MapperTools.combatCM.get(entity).target = GAME.hero;
+		
+		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 1038, 2080);
+		AshleyManager.engine.addEntity(entity);
+		MapperTools.combatCM.get(entity).target = GAME.hero;
+		
+		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 1383, 2080);
 		AshleyManager.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 	}

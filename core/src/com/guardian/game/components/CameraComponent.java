@@ -32,6 +32,7 @@ public class CameraComponent implements Component, Poolable{
 	public CameraComponent() {
 		camera = new OrthographicCamera(); // 默认正交相机
 		viewport = new FillViewport(GameConfig.width, GameConfig.hieght, camera); // 默认扩大显示
+//		viewport.setScreenPosition(screenX, screenY);
 	}
 	
 	/**
