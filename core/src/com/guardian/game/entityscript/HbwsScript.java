@@ -2,6 +2,7 @@ package com.guardian.game.entityscript;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.game.core.component.PathfindingComponent;
 import com.game.core.script.EntityScript;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.CombatComponent;
@@ -42,12 +43,16 @@ public class HbwsScript extends EntityScript {
 			return;
 		}
 		
+		PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
+		
 		if(combatComponent.IsDistanceTarget()){
-			MapperTools.pathfindingCM.get(entity).isPathfinding = false;
+			pathfindingComponent.isPathfinding = false;
 			stateComponent.entityState.changeState(States.attack);
 		}
-		else if(combatComponent.isCampTarget())
-			MapperTools.pathfindingCM.get(entity).isPathfinding = true;
+		else if(combatComponent.isCampTarget()){
+			pathfindingComponent.position.set(MapperTools.transformCM.get(combatComponent.target).position);
+			pathfindingComponent.isPathfinding = true;
+		}
 	}
 	
 	@Override

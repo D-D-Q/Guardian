@@ -29,4 +29,10 @@ public class VectorUtil {
 	public static Vector2 toVector2(Vector3 vector3){
 		return new Vector2(vector3.x, vector3.y);
 	}
+	
+	public static Vector2 scl (Vector2 vector, float scalar) {
+		return new Vector2(vector).scl(scalar);
+	}
+	
+	//TODO 要一个Vector2的池化，new的地方太多了 
 }

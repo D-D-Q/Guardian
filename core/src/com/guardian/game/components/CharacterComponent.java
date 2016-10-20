@@ -61,6 +61,7 @@ public class CharacterComponent  implements Component, Poolable {
 		if(stateComponent != null){
 			stateComponent.orientation = Orientation.getOrientation(vector2);
 			stateComponent.moveOrientationVector.set(vector2.nor()); // 保留方向
+//			stateComponent.moveOrientationVector.set(stateComponent.orientation.vector);
 			stateComponent.entityState.changeState(States.run);
 		}
 	}

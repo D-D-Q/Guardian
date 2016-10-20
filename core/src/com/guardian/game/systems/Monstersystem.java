@@ -47,11 +47,11 @@ public class Monstersystem extends EntitySystem {
 	 */
 	protected void updateInterval (){
 		
-		Entity entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 300, 300);
+		Entity entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 300, 1500);
 		AshleyManager.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 		
-		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 600, 300);
+		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 600, 1500);
 		AshleyManager.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 	}

@@ -42,10 +42,13 @@ public class StateComponent implements Component, Poolable  {
 			@Override
 			public void update(Entity entity) {
 				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-				if(combatComponent != null && combatComponent.IsDistanceTarget()){
-					
+				if(combatComponent != null){
 					StateComponent stateComponent = MapperTools.stateCM.get(entity);
-					stateComponent.entityState.changeState(States.attack);
+					if(combatComponent.IsDistanceTarget()){
+						stateComponent.entityState.changeState(States.attack);
+					}
+					else if(combatComponent.target != null)
+						stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
 				}
 			}
 		}, 
@@ -281,7 +284,7 @@ public class StateComponent implements Component, Poolable  {
 	 * 人物移动方向, 不限制
 	 * 如果这个值限制成Orientation.vector的取值，就是只能8方向行走
 	 */
-	public final Vector2 moveOrientationVector = new Vector2();
+	public final Vector2 moveOrientationVector = new Vector2(Orientation.d2.vector);
 	
 	public StateComponent() {
 		entityState = new DefaultStateMachine<Entity, StateComponent.States>(null, States.idle, States.global); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类
@@ -291,8 +294,9 @@ public class StateComponent implements Component, Poolable  {
 	/**
 	 * 朝向
 	 */
-	public void look(Vector2 vector2){
-		orientation = Orientation.getOrientation(vector2);
+	public void look(Vector2 vector){
+		orientation = Orientation.getOrientation(vector);
+		moveOrientationVector.set(vector.nor());
 	}
 	
 	/**
@@ -303,8 +307,11 @@ public class StateComponent implements Component, Poolable  {
 		Vector2 position2 = MapperTools.transformCM.get(entity).position;
 		if(position.epsilonEquals(position2, 0))
 			orientation = Orientation.d2;
-		else
-			orientation = Orientation.getOrientation(VectorUtil.sub(position, position2));
+		else{
+			Vector2 vector = VectorUtil.sub(position, position2);
+			orientation = Orientation.getOrientation(vector);
+			moveOrientationVector.set(vector.nor());
+		}
 	}
 	
 	/**
