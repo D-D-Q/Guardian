@@ -1,16 +1,16 @@
-package com.guardian.game.systems;
+package com.game.core.system;
 
 import java.util.Comparator;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.game.core.component.CameraComponent;
+import com.game.core.component.MapComponent;
+import com.game.core.component.TextureComponent;
+import com.game.core.component.TransformComponent;
 import com.guardian.game.GAME;
 import com.guardian.game.GuardianGame;
-import com.guardian.game.components.CameraComponent;
-import com.guardian.game.components.MapComponent;
-import com.guardian.game.components.TextureComponent;
-import com.guardian.game.components.TransformComponent;
 import com.guardian.game.logs.Log;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;

@@ -16,6 +16,7 @@ import com.guardian.game.logs.Log;
  * @author D
  * @date 2016年9月19日 下午9:36:29
  */
+@Deprecated
 public class DataTemplateDao {
 	
 	InternalFileHandleResolver fileHandleResolver = new InternalFileHandleResolver();

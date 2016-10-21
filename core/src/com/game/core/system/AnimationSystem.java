@@ -1,12 +1,12 @@
-package com.guardian.game.systems;
+package com.game.core.system;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.guardian.game.components.AnimationComponent;
+import com.game.core.component.AnimationComponent;
+import com.game.core.component.TextureComponent;
 import com.guardian.game.components.StateComponent;
-import com.guardian.game.components.TextureComponent;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
 

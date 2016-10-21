@@ -8,6 +8,8 @@ import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.game.core.component.CharacterComponent;
+import com.game.core.component.CombatComponent;
 import com.game.core.manager.AshleyManager;
 import com.game.core.manager.MsgManager;
 import com.guardian.game.tools.MapperTools;

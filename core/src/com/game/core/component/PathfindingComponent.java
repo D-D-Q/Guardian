@@ -18,8 +18,6 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.manager.PhysicsManager;
-import com.guardian.game.components.CharacterComponent;
-import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.MapperTools;
 

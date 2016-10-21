@@ -1,11 +1,10 @@
-package com.guardian.game.components;
+package com.game.core.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.component.ScriptComponent;
 import com.game.core.manager.MsgManager;
 import com.guardian.game.tools.MapperTools;
 

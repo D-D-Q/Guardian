@@ -1,9 +1,10 @@
-package com.guardian.game.components;
+package com.game.core.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.States;
 
 /**

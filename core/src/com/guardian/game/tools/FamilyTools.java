@@ -1,15 +1,15 @@
 package com.guardian.game.tools;
 
 import com.badlogic.ashley.core.Family;
+import com.game.core.component.AnimationComponent;
+import com.game.core.component.CharacterComponent;
+import com.game.core.component.CollisionComponent;
+import com.game.core.component.CombatComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.component.ScriptComponent;
-import com.guardian.game.components.AnimationComponent;
-import com.guardian.game.components.CharacterComponent;
-import com.guardian.game.components.CollisionComponent;
-import com.guardian.game.components.CombatComponent;
+import com.game.core.component.TextureComponent;
+import com.game.core.component.TransformComponent;
 import com.guardian.game.components.StateComponent;
-import com.guardian.game.components.TextureComponent;
-import com.guardian.game.components.TransformComponent;
 
 /**
  * family集合工具

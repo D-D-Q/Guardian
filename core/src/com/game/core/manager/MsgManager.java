@@ -2,7 +2,7 @@ package com.game.core.manager;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.msg.MessageManager;
-import com.guardian.game.components.MessageComponent;
+import com.game.core.component.MessageComponent;
 import com.guardian.game.tools.MapperTools;
 
 /**

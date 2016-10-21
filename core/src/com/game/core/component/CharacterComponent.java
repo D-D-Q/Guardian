@@ -1,4 +1,4 @@
-package com.guardian.game.components;
+package com.game.core.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.manager.PhysicsManager;
+import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.tools.MapperTools;

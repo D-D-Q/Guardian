@@ -1,4 +1,4 @@
-package com.guardian.game.systems;
+package com.game.core.system;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -8,12 +8,12 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.game.core.component.CharacterComponent;
+import com.game.core.component.CollisionComponent;
+import com.game.core.component.CombatComponent;
 import com.game.core.component.ScriptComponent;
+import com.game.core.component.TransformComponent;
 import com.game.core.manager.PhysicsManager;
-import com.guardian.game.components.CharacterComponent;
-import com.guardian.game.components.CollisionComponent;
-import com.guardian.game.components.CombatComponent;
-import com.guardian.game.components.TransformComponent;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
 

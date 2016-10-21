@@ -1,20 +1,20 @@
 package com.guardian.game.tools;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.game.core.component.AnimationComponent;
+import com.game.core.component.CameraComponent;
+import com.game.core.component.CharacterComponent;
+import com.game.core.component.CollisionComponent;
+import com.game.core.component.CombatComponent;
+import com.game.core.component.MapComponent;
+import com.game.core.component.MessageComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.component.ScriptComponent;
-import com.guardian.game.components.AnimationComponent;
+import com.game.core.component.TextureComponent;
+import com.game.core.component.TransformComponent;
 import com.guardian.game.components.AttributesComponent;
-import com.guardian.game.components.CameraComponent;
-import com.guardian.game.components.CharacterComponent;
-import com.guardian.game.components.CollisionComponent;
-import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.ItemComponent;
-import com.guardian.game.components.MapComponent;
-import com.guardian.game.components.MessageComponent;
 import com.guardian.game.components.StateComponent;
-import com.guardian.game.components.TextureComponent;
-import com.guardian.game.components.TransformComponent;
 
 /**
  * 组件映射工具

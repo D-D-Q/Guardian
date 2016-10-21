@@ -13,11 +13,11 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.game.core.component.CharacterComponent;
+import com.game.core.component.CollisionComponent;
+import com.game.core.component.CombatComponent;
+import com.game.core.component.TransformComponent;
 import com.guardian.game.GameConfig;
-import com.guardian.game.components.CharacterComponent;
-import com.guardian.game.components.CollisionComponent;
-import com.guardian.game.components.CombatComponent;
-import com.guardian.game.components.TransformComponent;
 import com.guardian.game.tools.MapperTools;
 
 /**

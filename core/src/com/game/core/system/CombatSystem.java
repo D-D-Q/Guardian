@@ -1,12 +1,12 @@
-package com.guardian.game.systems;
+package com.game.core.system;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.game.core.component.CombatComponent;
+import com.game.core.component.TextureComponent;
 import com.game.core.manager.MsgManager;
-import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.States;
-import com.guardian.game.components.TextureComponent;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.tools.MessageType;

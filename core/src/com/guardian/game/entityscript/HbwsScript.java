@@ -2,10 +2,10 @@ package com.guardian.game.entityscript;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.game.core.component.CombatComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.script.EntityScript;
 import com.guardian.game.components.AttributesComponent;
-import com.guardian.game.components.CombatComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.logs.Log;

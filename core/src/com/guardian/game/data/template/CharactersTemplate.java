@@ -6,7 +6,7 @@ package com.guardian.game.data.template;
  * @author D
  * @date 2016年9月19日 下午9:40:31
  */
-public class CharactersTemplate {
+public class CharactersTemplate{
 	
 	/**
 	 * 文件名
