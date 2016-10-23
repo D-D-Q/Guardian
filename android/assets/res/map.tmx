@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="54" height="65" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="65" height="65" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="tankbrigade" tilewidth="32" tileheight="32" spacing="1">
   <image source="tankbrigade.png" width="800" height="600"/>
  </tileset>
- <layer name="0" width="54" height="65">
+ <layer name="0" width="65" height="65">
   <data encoding="base64" compression="zlib">
-   eJztz7ENgDAQwMCfNij7L5ARaJDA6Irr7T0z+4cuAAAAAAAAADLWjbf7fPny9T2+Wny1+Grx1eKrxVeLrxZfLb5afLX4avH1vAPi54QK
+   eJzt2EEOgCAMBVFOK/e/gdtKCu78JjOLRtJV+0AE5xhjBuJqYpYnITqDakGIOu/E/k8GJAcNNOgM1jEhNNifDTTQgG5A61+DswHJQQMNNNCgGuws0rWlDdJ1aaCBBhkD8n54ckjXpIEGfzCYg+eggQYaeG+s803tXwMN3gxIDp1BzRNCAw3W3q8ln65NAw2SBu4HbINunK7NdZBzqLl0Xcm1oAHvznRaC7SgG/geaLAzoDnQv42eE/2PpIEGGjwN3BM12J2PNOAZrBY1/2XcAtei2g==
   </data>
  </layer>
 </map>

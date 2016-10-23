@@ -1,13 +1,16 @@
 package com.game.core.component;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guardian.game.GameConfig;
+import com.guardian.game.logs.Log;
 
 /**
  * 地图组件
@@ -24,12 +27,17 @@ public class MapComponent implements Component, Poolable{
 	/**
 	 * 地图宽（像素）
 	 */
-	public int width;
+	public static float width;
 	
 	/**
 	 * 地图高（像素）
 	 */
-	public int height;
+	public static float height;
+	
+	/**
+	 * 小地图缩放倍数
+	 */
+	public static float miniMapScale;
 	
 	/**
 	 * 初始化地图
@@ -42,14 +50,48 @@ public class MapComponent implements Component, Poolable{
 		TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get(0);
 		width = mapLayer.getWidth() * GameConfig.tileSize;
 		height = mapLayer.getHeight() * GameConfig.tileSize;
+		
+		miniMapScale = Math.min(GameConfig.miniMapSize/width, GameConfig.miniMapSize/height);
+		
 	};
 	
 	/**
 	 * 绘制
 	 */
-	public void render(OrthographicCamera camera){
-		renderer.setView(camera);
+	public void render(CameraComponent cameraComponent){
+		renderer.setView(cameraComponent.camera);
 		renderer.render();
+	}
+	
+	/**
+	 * 绘制小地图
+	 */
+	public void renderMini(CameraComponent cameraComponent){
+		/*
+		 * cameraComponent.viewport.getScreenX()和 cameraComponent.viewport.getScreenY()
+		 * 是viewport缩放之后的偏移量，因为缩放之后居中，所以偏移量是真正缩放差/2
+		 * 比如cameraComponent.viewport.getScreenX()是-1, 那么程序中绘制0实际对当前坐标就是绘制的-1
+		 * abs(cameraComponent.viewport.getScreenX())就是屏幕两边多出的距离
+		 */
+		
+		// 备份
+		float zoom = cameraComponent.camera.zoom;
+		Vector3 position = cameraComponent.camera.position.cpy();
+		
+		// 修改
+		cameraComponent.camera.zoom = zoom/miniMapScale;
+//		cameraComponent.camera.position.x = Gdx.graphics.getWidth() - GameConfig.miniMapSize;
+//		cameraComponent.camera.position.y = Gdx.graphics.getHeight() - GameConfig.miniMapSize;
+		cameraComponent.camera.position.x = cameraComponent.camera.viewportWidth - GameConfig.miniMapSize/2;
+		cameraComponent.camera.position.y = cameraComponent.camera.viewportHeight - GameConfig.miniMapSize/2;
+		cameraComponent.camera.update();
+		
+		render(cameraComponent);
+		
+		// 还原
+		cameraComponent.camera.zoom = zoom;
+		cameraComponent.camera.position.set(position);
+		cameraComponent.camera.update();
 	}
 
 	@Override

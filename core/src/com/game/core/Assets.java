@@ -1,6 +1,5 @@
 package com.game.core;
 
-
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,9 +7,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -21,7 +17,6 @@ import com.badlogic.gdx.utils.reflect.Annotation;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Field;
 import com.game.core.annotation.Asset;
-import com.game.core.annotation.AssetTTFFont;
 import com.guardian.game.logs.Log;
 
 /**
@@ -48,8 +43,10 @@ public class Assets{
 	
 	public Assets() {
 		assetManager = new AssetManager();
-		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
-		assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
+		
+		// FreeType在android下会加载失败
+//		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
+//		assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver())); //设置Tiled编辑器地图
 		
 		Texture.setAssetManager(assetManager); // 设置游戏切出切回时候，资源管理器可以管理纹理
@@ -61,7 +58,7 @@ public class Assets{
 	 */
 	public void loadAssets(Class<?> screen) throws Exception{
 		
-		ObjectMap<String, Object> resources = new ObjectMap<>(2);
+		ObjectMap<String, Object> resources = new ObjectMap<>(2); // 字体资源，皮肤和资源管理器都需要
 		Field skin = null;
 		
 		// 不能用java的反射。用libgdx的反射实现， 这样可以支持GWT编译html。
@@ -75,15 +72,15 @@ public class Assets{
 				}
 				assetManager.load(field.get(null).toString(), assetType.value());
 			}
-			else if(field.isAnnotationPresent(AssetTTFFont.class)){ // 指定参数的ttf字体资源
-				Annotation annotation = field.getDeclaredAnnotation(AssetTTFFont.class);
-				AssetTTFFont assetType = annotation.getAnnotation(AssetTTFFont.class);
-				String fileName = field.get(null).toString();
-				assetManager.load(fileName, BitmapFont.class, assetType.value().newInstance());
-				assetManager.finishLoadingAsset(fileName);
-				resources.put(fileName, assetManager.get(fileName, BitmapFont.class)); // 添加字体到皮肤资源
-				repeated.add(fileName); // 记录资源管理器和皮肤管理器的重复资源名
-			}
+//			else if(field.isAnnotationPresent(AssetTTFFont.class)){ // 指定参数的ttf字体资源
+//				Annotation annotation = field.getDeclaredAnnotation(AssetTTFFont.class);
+//				AssetTTFFont assetType = annotation.getAnnotation(AssetTTFFont.class);
+//				String fileName = field.get(null).toString();
+//				assetManager.load(fileName, BitmapFont.class, assetType.value().newInstance());
+//				assetManager.finishLoadingAsset(fileName);
+//				resources.put(fileName, assetManager.get(fileName, BitmapFont.class)); // 添加字体到皮肤资源
+//				repeated.add(fileName); // 记录资源管理器和皮肤管理器的重复资源名
+//			}
 			// TODO 实现各种资源类型注解（含有指定加载参数类）的判断和指定参数的初始化，并加载该资源。比如AssetTexture、AssetTextureAtlas等注解。AssetTTFFont是已经实现了的
 			
 		}

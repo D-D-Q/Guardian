@@ -72,6 +72,7 @@ public class GuardianGame extends Game {
 		} catch (Exception e) {
 			Log.error(this, "资源加载失败:" + e.getMessage());
 			e.printStackTrace();
+			Gdx.app.exit(); // 不会立刻停止，方法还好继续向下执行
 		}
 		
 		batch = new SpriteBatch();
@@ -106,6 +107,8 @@ public class GuardianGame extends Game {
 		dataTemplateDao.load(GameScreenAssets.charactersTemplate);
 		
 		assets.assetManager.finishLoading();
+		
+		Log.info(this, "资源加载进度:" + assets.assetManager.getProgress() * 100);
 		
 //		setScreen(new MainMenuScreen(this));
 		setScreen(new GameScreen());

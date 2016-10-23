@@ -4,7 +4,10 @@ import java.util.Comparator;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.game.core.component.CameraComponent;
 import com.game.core.component.MapComponent;
 import com.game.core.component.TextureComponent;
@@ -26,6 +29,8 @@ public class RenderingSystem extends SortedIteratingSystem {
 	
 	public final GuardianGame game;
 	
+	public ShapeRenderer shapeRenderer;
+	
 	public RenderingSystem(GuardianGame guardianGame, int priority) {
 		
 		super(FamilyTools.renderingF, new Comparator<Entity>(){
@@ -43,22 +48,34 @@ public class RenderingSystem extends SortedIteratingSystem {
 		}, priority);
 		
 		this.game = guardianGame;
+		
+		shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setAutoShapeType(true);
+		
 	}
 	
 	@Override
 	public void update(float deltaTime) {
 		
 		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-		cameraComponent.apply(game.batch);  // 更新相机数据，并设置相机数据给batch
 		
 		MapComponent mapComponent = MapperTools.mapCM.get(GAME.screenEntity);
-		mapComponent.render(cameraComponent.camera); // 把更新数据了的相机，设置给地图显示使用
+		mapComponent.render(cameraComponent); // 把更新数据了的相机，设置给地图显示使用
+
+		mapComponent.renderMini(cameraComponent); // 小地图
+		shapeRenderer.setProjectionMatrix(GAME.UICameraComponent.camera.combined);
+		
+		cameraComponent.update(game.batch);  // 更新相机数据，并设置相机数据给batch
 		
 		forceSort(); // 绘制排序
 		
 		game.batch.begin();
+		shapeRenderer.begin(ShapeType.Filled);
+		
 		super.update(deltaTime);
+		
 		game.batch.end();
+		shapeRenderer.end();
 	}
 	
 	@Override
@@ -96,5 +113,10 @@ public class RenderingSystem extends SortedIteratingSystem {
 					transformComponent.scale.x, transformComponent.scale.y,
 					transformComponent.rotation);
 		}
+		
+		shapeRenderer.setColor(Color.RED);
+		shapeRenderer.circle(transformComponent.position.x * 135/MapComponent.height, transformComponent.position.y * 135/MapComponent.height, 2);
+//		Log.info(this, miniMapScale);
+//		shapeRenderer.point(transformComponent.position.x * miniMapScale, transformComponent.position.y * miniMapScale, 100);
 	}
 }

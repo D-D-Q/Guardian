@@ -56,9 +56,10 @@ public class SwitchScreen extends ScreenAdapter {
 		}
 		
 		// TODO 加载中...
-		game.batch.begin();
+//		game.batch.begin();
 		
+		Log.info(this, game.assets.assetManager.getProgress());
 		
-		game.batch.end();
+//		game.batch.end();
 	}
 }

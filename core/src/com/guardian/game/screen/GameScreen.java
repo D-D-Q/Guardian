@@ -56,8 +56,7 @@ public class GameScreen extends ScreenAdapter {
 		CameraComponent gameCameraComponent = AshleyManager.engine.createComponent(CameraComponent.class); // 添加相机组件
 		GAME.screenEntity.add(gameCameraComponent);
 		gameCameraComponent.camera.position.set(864, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
-		
-		gameCameraComponent.camera.zoom = 10;
+		gameCameraComponent.apply();
 		
 		GAME.hero = AshleyManager.entityDao.createHeroEntity(GAME.charactersTemplate.get(0), 864, 480); // 创建英雄
 		AshleyManager.engine.addEntity(GAME.hero);
@@ -68,10 +67,10 @@ public class GameScreen extends ScreenAdapter {
 		InputManager.addProcessor(UIstage); // UI事件
 		InputManager.addProcessor(new InputAdapter() { // 拖动屏幕
 			
-			private int minGameCameraPositionX = 0 + GameConfig.width/2; // 地图左边边界是x坐标= 0 + 相机在屏幕中间
-			private int maxGameCameraPositionX = mapComponent.width - GameConfig.width/2; // 地图右边边界x坐标=地图宽 - 相机在屏幕中间
-			private int minGameCameraPositionY = 0 + GameConfig.hieght/2; // 地图下边边界是y坐标=0
-			private int maxGameCameraPositionY = mapComponent.height - GameConfig.hieght/2; // 地图上边边界x坐标=地图高 - 相机在屏幕中间
+			private float minGameCameraPositionX = 0 + GameConfig.width/2; // 地图左边边界是x坐标= 0 + 相机在屏幕中间
+			private float maxGameCameraPositionX = mapComponent.width - GameConfig.width/2; // 地图右边边界x坐标=地图宽 - 相机在屏幕中间
+			private float minGameCameraPositionY = 0 + GameConfig.hieght/2; // 地图下边边界是y坐标=0
+			private float maxGameCameraPositionY = mapComponent.height - GameConfig.hieght/2; // 地图上边边界x坐标=地图高 - 相机在屏幕中间
 			
 			private int screenX, screenY;
 			
@@ -128,13 +127,15 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		
+		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
+		cameraComponent.apply();
+		
 		// AI时间
 		GdxAI.getTimepiece().update(delta);
 		
 		// ECS系统
 		AshleyManager.engine.update(delta);
 		
-		GAME.UICameraComponent.viewport.apply();
 		UIstage.act(delta);
 		UIstage.draw(); // 它自己会把相机信息设置给SpriteBatch
 	}

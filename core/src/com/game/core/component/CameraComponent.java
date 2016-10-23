@@ -32,21 +32,27 @@ public class CameraComponent implements Component, Poolable{
 	public CameraComponent() {
 		camera = new OrthographicCamera(); // 默认正交相机
 		viewport = new FillViewport(GameConfig.width, GameConfig.hieght, camera); // 默认扩大显示
-//		viewport.setScreenPosition(screenX, screenY);
 	}
 	
 	/**
-	 * 使用相机
+	 * 如果有多个viewport可以设置当前应用哪个。它会通知opengl使用自己。
+	 * 如果只更新了camera的数据，使用update方法就可以
 	 */
-	public void apply(SpriteBatch batch){
-//		viewport.apply(); // 如果有多个viewport可以设置当前应用哪个。内部会调用camera.update();更新相机数据
+	public void apply(){
+		viewport.apply(); // 
+	}
+	
+	/**
+	 * 如果之前没有使用过其他viewport的apply，可以使用它
+	 */
+	public void update(SpriteBatch batch){
 		camera.update(); // 更新相机数据
 		batch.setProjectionMatrix(camera.combined); // 相机信息设置给SpriteBatch，否则相机无用
 	}
 	
 	@Override
 	public void reset() {
-		camera = null;
-		viewport = null;
+		camera = new OrthographicCamera(); // 默认正交相机
+		viewport = new FillViewport(GameConfig.width, GameConfig.hieght, camera); // 默认扩大显示
 	}
 }

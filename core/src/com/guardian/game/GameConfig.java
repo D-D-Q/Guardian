@@ -19,6 +19,11 @@ public class GameConfig {
 	public final static byte tileSize = 32; 
 	
 	/**
+	 * 地图图块大小
+	 */
+	public final static int miniMapSize = 135; 
+	
+	/**
 	 * 角色占用大小，4个图块
 	 */
 	public final static byte characterTileSize = 64; 

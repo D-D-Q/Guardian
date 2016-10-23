@@ -1,13 +1,12 @@
 package com.guardian.game.assets;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.game.core.annotation.Asset;
-import com.game.core.annotation.AssetTTFFont;
-import com.guardian.game.assets.parameter.FzstkFontParameter;
 
 /**
  * 加载游戏窗口资源
@@ -16,8 +15,8 @@ import com.guardian.game.assets.parameter.FzstkFontParameter;
  */
 public class GameScreenAssets {
 	
-	@AssetTTFFont(FzstkFontParameter.class) // ttf资源，必须传递加载参数类设置参数
-	public final static String font0 = "fzstk.ttf"; // 通过ttf生成的字体资源的名字。会在皮肤之前生成，可以在skin的json中通过该名字使用字体。必须.ttf结尾
+	@Asset(BitmapFont.class)
+	public final static String font0 = "fonts/fzstk.fnt"; 
 	
 	@Asset(I18NBundle.class)
 	public final static String i18NBundle = "i18n/GameScreenMessage";
@@ -32,7 +31,7 @@ public class GameScreenAssets {
 	public final static String map = "res/map.tmx";
 	
 	@Asset(Skin.class)
-	public final static String default_skin = "res/defaultUI.json"; // UI皮肤会其他资源都加载之完成之后才能加载
+	public final static String default_skin = "skin/defaultUI.json"; // UI皮肤会其他资源都加载之完成之后才能加载
 	
 	// DATA资源
 	public final static String charactersTemplate = "data/data.json"; // 角色资源，会加按json顺序载成数组
