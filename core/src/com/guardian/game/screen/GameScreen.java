@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.ai.GdxAI;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -50,8 +51,10 @@ public class GameScreen extends ScreenAdapter {
 		AshleyManager.engine.addEntity(GAME.screenEntity);
 		
 		MapComponent mapComponent = AshleyManager.engine.createComponent(MapComponent.class); // 添加地图组件
+		mapComponent.init(GuardianGame.game.assets.getMap(GameScreenAssets.map), 
+				GuardianGame.game.assets.assetManager.get(GameScreenAssets.miniMap, Texture.class), 
+				GuardianGame.game.batch); // 初始化地图
 		GAME.screenEntity.add(mapComponent);
-		mapComponent.init(GuardianGame.game.assets.getMap(GameScreenAssets.map), GuardianGame.game.batch); // 初始化地图
 		
 		CameraComponent gameCameraComponent = AshleyManager.engine.createComponent(CameraComponent.class); // 添加相机组件
 		GAME.screenEntity.add(gameCameraComponent);

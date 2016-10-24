@@ -1,16 +1,16 @@
 package com.game.core.component;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guardian.game.GameConfig;
-import com.guardian.game.logs.Log;
 
 /**
  * 地图组件
@@ -20,9 +20,10 @@ import com.guardian.game.logs.Log;
  */
 public class MapComponent implements Component, Poolable{
 	
-	public TiledMap map; 
-	
-	public OrthogonalTiledMapRenderer renderer;
+	/**
+	 * 大地图绘制
+	 */
+	private OrthogonalTiledMapRenderer renderer;
 	
 	/**
 	 * 地图宽（像素）
@@ -35,16 +36,31 @@ public class MapComponent implements Component, Poolable{
 	public static float height;
 	
 	/**
+	 * 小地图
+	 */
+	private Texture miniMap;
+	
+	/**
 	 * 小地图缩放倍数
 	 */
 	public static float miniMapScale;
 	
 	/**
-	 * 初始化地图
+	 * 小地图绘制
+	 */
+	private ShapeRenderer shapeRenderer;
+	
+	/**
+	 * 保存小地图绘制的位置
+	 */
+	private float miniMapX, miniMapY;
+	
+	/**
+	 * 初始化地图, 必须调用
 	 * @param map
 	 */
-	public void init(TiledMap map, SpriteBatch batch){
-		this.map = map;
+	public void init(TiledMap map, Texture miniMap, SpriteBatch batch){
+		this.miniMap = miniMap;
 		this.renderer = new OrthogonalTiledMapRenderer(map, 1f, batch); // 地图绘制，第二个参数缩放，比如要游戏1像素=地图16像素，就是缩小地图16倍，可以传1/16f
 		
 		TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get(0);
@@ -53,6 +69,8 @@ public class MapComponent implements Component, Poolable{
 		
 		miniMapScale = Math.min(GameConfig.miniMapSize/width, GameConfig.miniMapSize/height);
 		
+		shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setAutoShapeType(true);
 	};
 	
 	/**
@@ -64,39 +82,44 @@ public class MapComponent implements Component, Poolable{
 	}
 	
 	/**
-	 * 绘制小地图
+	 * 开始绘制小地图，右上角
 	 */
-	public void renderMini(CameraComponent cameraComponent){
+	public void renderMiniBegin(CameraComponent cameraComponent){
 		/*
 		 * cameraComponent.viewport.getScreenX()和 cameraComponent.viewport.getScreenY()
 		 * 是viewport缩放之后的偏移量，因为缩放之后居中，所以偏移量是真正缩放差/2
 		 * 比如cameraComponent.viewport.getScreenX()是-1, 那么程序中绘制0实际对当前坐标就是绘制的-1
 		 * abs(cameraComponent.viewport.getScreenX())就是屏幕两边多出的距离
 		 */
+		miniMapX = cameraComponent.camera.position.x + (cameraComponent.camera.viewportWidth/2 + cameraComponent.viewport.getScreenX() - GameConfig.miniMapSize);
+		miniMapY = cameraComponent.camera.position.y + (cameraComponent.camera.viewportHeight/2 + cameraComponent.viewport.getScreenY() - GameConfig.miniMapSize);
+		renderer.getBatch().begin();
+		renderer.getBatch().draw(miniMap, miniMapX, miniMapY);
+		renderer.getBatch().end();
 		
-		// 备份
-		float zoom = cameraComponent.camera.zoom;
-		Vector3 position = cameraComponent.camera.position.cpy();
-		
-		// 修改
-		cameraComponent.camera.zoom = zoom/miniMapScale;
-//		cameraComponent.camera.position.x = Gdx.graphics.getWidth() - GameConfig.miniMapSize;
-//		cameraComponent.camera.position.y = Gdx.graphics.getHeight() - GameConfig.miniMapSize;
-		cameraComponent.camera.position.x = cameraComponent.camera.viewportWidth - GameConfig.miniMapSize/2;
-		cameraComponent.camera.position.y = cameraComponent.camera.viewportHeight - GameConfig.miniMapSize/2;
-		cameraComponent.camera.update();
-		
-		render(cameraComponent);
-		
-		// 还原
-		cameraComponent.camera.zoom = zoom;
-		cameraComponent.camera.position.set(position);
-		cameraComponent.camera.update();
+		shapeRenderer.setProjectionMatrix(cameraComponent.camera.combined);
+		shapeRenderer.begin(ShapeType.Filled);
+	}
+	
+	public void renderMiniEnd(){
+		shapeRenderer.end();
+	}
+	
+	/**
+	 * 位置小地图点
+	 * 
+	 * @param color
+	 * @param x 在大地图的位置
+	 * @param y 在大地图的位置
+	 */
+	public void miniDraw(Color color, float x, float y){
+		shapeRenderer.setColor(color);
+		shapeRenderer.circle(miniMapX + x * miniMapScale, miniMapY + y * miniMapScale, 2);
 	}
 
 	@Override
 	public void reset() {
-		map = null; // 资源管理器dispose
+		miniMap = null;
 		renderer.dispose();
 		renderer = null;
 	}

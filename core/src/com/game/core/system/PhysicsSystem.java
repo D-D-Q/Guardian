@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.component.CharacterComponent;
 import com.game.core.component.CollisionComponent;
 import com.game.core.component.CombatComponent;
@@ -29,12 +31,15 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	 * 更新物理引擎的时间量
 	 */
 	private float accumulator = 0;
-
 	
+	private ContactEntitPools contactEntitPools;
+
 	public PhysicsSystem(int priority) {
 		super(FamilyTools.physicsF, priority);
 		
 		PhysicsManager.world.setContactListener(this); // 碰撞监听
+		
+		contactEntitPools = new ContactEntitPools(64);
 	}
 	
 	/**
@@ -134,6 +139,8 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 				scriptComponent.script.beginContact(contact, ContactEntit.target); // 普通碰撞检测事件
 			}
 		}
+		
+		contactEntitPools.free(ContactEntit);
 	}
 
 	/**
@@ -168,6 +175,8 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 				scriptComponent.script.endContact(contact, ContactEntit.target); // 普通碰撞检测事件
 			}
 		}
+		
+		contactEntitPools.free(ContactEntit);
 	}
 
 	/**
@@ -188,36 +197,6 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 	}
 	
-	
-	/**
-	 * 保存检测碰撞的实体和碰撞的目标实体
-	 * TODO 可以考虑pool池化。可能会频繁创建
-	 * 
-	 * @author D
-	 * @date 2016年10月14日
-	 */
-	private class ContactEntit{
-		
-		/**
-		 * 碰撞检测刚体的实体
-		 */
-		public Entity entity;
-		public Fixture entityFixture;
-		
-		/**
-		 * 碰撞的目标实体
-		 */
-		public Entity target;
-		public Fixture targetFixture;
-		
-		public ContactEntit(Fixture entityFixture, Fixture targetFixture) {
-			this.entityFixture = entityFixture;
-			this.entity = (Entity) entityFixture.getBody().getUserData();
-			this.targetFixture = targetFixture;
-			this.target = (Entity) targetFixture.getBody().getUserData();
-		}
-	}
-	
 	/**
 	 * 获得碰撞检测实体和碰撞目标
 	 * 
@@ -229,14 +208,78 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		ContactEntit contactEntit = null;
 		
 		// 碰撞检测刚体的isSensor是true。另一个就是碰撞的目标
-		if(contact.getFixtureA().isSensor())
-			contactEntit = new ContactEntit(contact.getFixtureA(), contact.getFixtureB());
-		else if(contact.getFixtureB().isSensor())
-			contactEntit = new ContactEntit(contact.getFixtureB(), contact.getFixtureA());
-		
-		if(contactEntit == null || contactEntit.entity == contactEntit.target)
+		if(contact.getFixtureA().isSensor()){
+			contactEntit = contactEntitPools.obtain();
+			contactEntit.setEntityFixture(contact.getFixtureA());
+			contactEntit.setTargetFixture(contact.getFixtureB());
+		}
+		else if(contact.getFixtureB().isSensor()){
+			contactEntit = contactEntitPools.obtain();
+			contactEntit.setEntityFixture(contact.getFixtureB());
+			contactEntit.setTargetFixture(contact.getFixtureA());
+		}
+		if(contactEntit == null || contactEntit.entity == contactEntit.target){
+			contactEntitPools.free(contactEntit);
 			return null;
+		}
 		
 		return contactEntit;
+	}
+	
+	/**
+	 * 保存检测碰撞的实体和碰撞的目标实体
+	 * 
+	 * @author D
+	 * @date 2016年10月14日
+	 */
+	private class ContactEntit implements Poolable{
+		
+		/**
+		 * 碰撞检测刚体的实体
+		 */
+		public Entity entity;
+		public Fixture entityFixture;
+		
+		/**
+		 * 碰撞的目标实体
+		 */
+		public Entity target;
+//		public Fixture targetFixture;
+		
+		public void setEntityFixture(Fixture entityFixture) {
+			this.entityFixture = entityFixture;
+			this.entity = (Entity) entityFixture.getBody().getUserData();
+		}
+
+		public void setTargetFixture(Fixture targetFixture) {
+//			this.targetFixture = targetFixture;
+			this.target = (Entity) targetFixture.getBody().getUserData();
+		}
+
+		@Override
+		public void reset() {
+			entity = null;
+			entityFixture = null;
+			target = null;
+//			targetFixture = null;
+		}
+	}
+	
+	/**
+	 * 碰撞数据频繁，做池化
+	 * 
+	 * @author D
+	 * @date 2016年10月24日
+	 */
+	private class ContactEntitPools extends Pool<ContactEntit>  {
+
+		public ContactEntitPools(int initialCapacity) {
+			super(initialCapacity);
+		}
+		
+		@Override
+		protected ContactEntit newObject() {
+			return new ContactEntit();
+		}
 	}
 }

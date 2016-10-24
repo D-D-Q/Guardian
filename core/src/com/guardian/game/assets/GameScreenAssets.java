@@ -20,15 +20,16 @@ public class GameScreenAssets {
 	
 	@Asset(I18NBundle.class)
 	public final static String i18NBundle = "i18n/GameScreenMessage";
-	@Asset(Texture.class)
-	public final static String miniMap = "badlogic.jpg";
+
 	@Asset(TextureAtlas.class)
 	public final static String yx = "res/yx.atlas"; // 英雄
 	@Asset(TextureAtlas.class)
 	public final static String hbws = "res/hbws.atlas"; // 寒冰卫士
 	
 	@Asset(TiledMap.class)
-	public final static String map = "res/map.tmx";
+	public final static String map = "map/map.tmx";
+	@Asset(Texture.class)
+	public final static String miniMap = "map/miniMap.png";
 	
 	@Asset(Skin.class)
 	public final static String default_skin = "skin/defaultUI.json"; // UI皮肤会其他资源都加载之完成之后才能加载

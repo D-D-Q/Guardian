@@ -6,8 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.game.core.component.CameraComponent;
 import com.game.core.component.MapComponent;
 import com.game.core.component.TextureComponent;
@@ -29,7 +27,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 	
 	public final GuardianGame game;
 	
-	public ShapeRenderer shapeRenderer;
+	private MapComponent mapComponent;
 	
 	public RenderingSystem(GuardianGame guardianGame, int priority) {
 		
@@ -48,34 +46,29 @@ public class RenderingSystem extends SortedIteratingSystem {
 		}, priority);
 		
 		this.game = guardianGame;
-		
-		shapeRenderer = new ShapeRenderer();
-		shapeRenderer.setAutoShapeType(true);
-		
 	}
 	
 	@Override
 	public void update(float deltaTime) {
 		
 		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-		
-		MapComponent mapComponent = MapperTools.mapCM.get(GAME.screenEntity);
-		mapComponent.render(cameraComponent); // 把更新数据了的相机，设置给地图显示使用
-
-		mapComponent.renderMini(cameraComponent); // 小地图
-		shapeRenderer.setProjectionMatrix(GAME.UICameraComponent.camera.combined);
-		
 		cameraComponent.update(game.batch);  // 更新相机数据，并设置相机数据给batch
+		
+		mapComponent = MapperTools.mapCM.get(GAME.screenEntity);
+		if(mapComponent != null){
+			mapComponent.render(cameraComponent); // 把更新数据了的相机，设置给地图显示使用
+			mapComponent.renderMiniBegin(cameraComponent); // 小地图
+		}
 		
 		forceSort(); // 绘制排序
 		
 		game.batch.begin();
-		shapeRenderer.begin(ShapeType.Filled);
 		
 		super.update(deltaTime);
 		
 		game.batch.end();
-		shapeRenderer.end();
+		if(mapComponent != null)
+			mapComponent.renderMiniEnd();
 	}
 	
 	@Override
@@ -114,9 +107,8 @@ public class RenderingSystem extends SortedIteratingSystem {
 					transformComponent.rotation);
 		}
 		
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.circle(transformComponent.position.x * 135/MapComponent.height, transformComponent.position.y * 135/MapComponent.height, 2);
-//		Log.info(this, miniMapScale);
-//		shapeRenderer.point(transformComponent.position.x * miniMapScale, transformComponent.position.y * miniMapScale, 100);
+		if(mapComponent != null){
+			mapComponent.miniDraw(Color.RED, transformComponent.position.x, transformComponent.position.y);
+		}
 	}
 }
