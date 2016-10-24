@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.game.core.annotation.Asset;
+import com.guardian.game.data.template.CharactersTemplate;
 
 /**
  * 加载游戏窗口资源
@@ -20,24 +21,24 @@ public class GameScreenAssets {
 	
 	@Asset(I18NBundle.class)
 	public final static String i18NBundle = "i18n/GameScreenMessage";
-
-	@Asset(TextureAtlas.class)
-	public final static String yx = "res/yx.atlas"; // 英雄
-	@Asset(TextureAtlas.class)
-	public final static String hbws = "res/hbws.atlas"; // 寒冰卫士
 	
 	@Asset(TiledMap.class)
 	public final static String map = "map/map.tmx";
 	@Asset(Texture.class)
 	public final static String miniMap = "map/miniMap.png";
 	
+	// DATA资源
+//	@Asset(TextureAtlas.class)
+//	public final static String yx = "res/yx.atlas"; // 英雄
+//	@Asset(TextureAtlas.class)
+//	public final static String hbws = "res/hbws.atlas"; // 寒冰卫士
+	@Asset(CharactersTemplate.class)
+	public final static String data1 = "data/data1.json"; // 英雄
+	@Asset(CharactersTemplate.class)
+	public final static String data2 = "data/data2.json"; // 寒冰卫士
+	
 	@Asset(Skin.class)
 	public final static String default_skin = "skin/defaultUI.json"; // UI皮肤会其他资源都加载之完成之后才能加载
-	
-	// DATA资源
-	public final static String charactersTemplate = "data/data.json"; // 角色资源，会加按json顺序载成数组
-	public final static int yx_index = 0; // 数组中英雄序号
-	public final static int hbws_index = 1; // 数组中英雄序号
 	
 	// UI资源的key
 	public final static String button1 = "button1"; // 主按钮

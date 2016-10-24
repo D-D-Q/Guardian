@@ -103,8 +103,8 @@ public class GuardianGame extends Game {
 		
 		/**--------------------ashley end-------------------------*/
 		
-		DataTemplateDao dataTemplateDao = new DataTemplateDao();
-		dataTemplateDao.load(GameScreenAssets.charactersTemplate);
+//		DataTemplateDao dataTemplateDao = new DataTemplateDao();
+//		dataTemplateDao.load(GameScreenAssets.charactersTemplate);
 		
 		assets.assetManager.finishLoading();
 		

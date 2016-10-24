@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.reflect.Annotation;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Field;
 import com.game.core.annotation.Asset;
+import com.guardian.game.assets.CharacterTemplateLoader;
+import com.guardian.game.data.template.CharactersTemplate;
 import com.guardian.game.logs.Log;
 
 /**
@@ -48,6 +50,7 @@ public class Assets{
 //		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
 //		assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver())); //设置Tiled编辑器地图
+		assetManager.setLoader(CharactersTemplate.class, new CharacterTemplateLoader(assetManager.getFileHandleResolver())); // 角色数据
 		
 		Texture.setAssetManager(assetManager); // 设置游戏切出切回时候，资源管理器可以管理纹理
 	}

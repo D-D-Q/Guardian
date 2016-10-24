@@ -1,0 +1,23 @@
+{
+	fileName: data/hbws.atlas,
+	idleFrames: 6,
+	runFrames: 6,
+	attackFrames: 7,
+	attackFrameIndex: 4,
+	offsetX: 128,
+	offsetY: 128,
+	characterRadius: 30,
+	ATKRange: 70,
+	ATKDistance: 3,
+	campBits: 2,
+	campMaskBits: 1,
+	name: 寒冰卫士,
+	Lv: 1,
+	ATK: 1,
+	DEF: 1,
+	HIT: 1,
+	AVD: 1,
+	VIT: 100,
+	speed: 60,
+	script: com.guardian.game.entityscript.HbwsScript
+}

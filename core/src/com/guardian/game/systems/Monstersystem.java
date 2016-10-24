@@ -4,6 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.game.core.manager.AshleyManager;
 import com.guardian.game.GAME;
+import com.guardian.game.GuardianGame;
+import com.guardian.game.assets.GameScreenAssets;
+import com.guardian.game.data.template.CharactersTemplate;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -54,19 +57,21 @@ public class Monstersystem extends EntitySystem {
 			return;
 		++cur;
 		
-		Entity entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 345, 2080);
+		CharactersTemplate charactersTemplate = GuardianGame.game.assets.assetManager.get(GameScreenAssets.data2, CharactersTemplate.class);
+		
+		Entity entity = AshleyManager.entityDao.createCharactersEntity(charactersTemplate, 345, 2080);
 		AshleyManager.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 		
-		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 690, 2080);
+		entity = AshleyManager.entityDao.createCharactersEntity(charactersTemplate, 690, 2080);
 		AshleyManager.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 		
-		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 1038, 2080);
+		entity = AshleyManager.entityDao.createCharactersEntity(charactersTemplate, 1038, 2080);
 		AshleyManager.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 		
-		entity = AshleyManager.entityDao.createCharactersEntity(GAME.charactersTemplate.get(1), 1383, 2080);
+		entity = AshleyManager.entityDao.createCharactersEntity(charactersTemplate, 1383, 2080);
 		AshleyManager.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 	}

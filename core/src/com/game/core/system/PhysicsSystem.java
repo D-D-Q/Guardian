@@ -218,7 +218,9 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 			contactEntit.setEntityFixture(contact.getFixtureB());
 			contactEntit.setTargetFixture(contact.getFixtureA());
 		}
-		if(contactEntit == null || contactEntit.entity == contactEntit.target){
+		if(contactEntit == null)
+			return null;
+		if(contactEntit.entity == contactEntit.target){
 			contactEntitPools.free(contactEntit);
 			return null;
 		}

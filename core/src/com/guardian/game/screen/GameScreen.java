@@ -20,6 +20,7 @@ import com.guardian.game.GuardianGame;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.ItemComponent;
 import com.guardian.game.components.StateComponent.Orientation;
+import com.guardian.game.data.template.CharactersTemplate;
 import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.ui.AttributesUI;
@@ -61,7 +62,7 @@ public class GameScreen extends ScreenAdapter {
 		gameCameraComponent.camera.position.set(864, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
 		gameCameraComponent.apply();
 		
-		GAME.hero = AshleyManager.entityDao.createHeroEntity(GAME.charactersTemplate.get(0), 864, 480); // 创建英雄
+		GAME.hero = AshleyManager.entityDao.createHeroEntity(GuardianGame.game.assets.assetManager.get(GameScreenAssets.data1, CharactersTemplate.class), 864, 480); // 创建英雄
 		AshleyManager.engine.addEntity(GAME.hero);
 		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
 		

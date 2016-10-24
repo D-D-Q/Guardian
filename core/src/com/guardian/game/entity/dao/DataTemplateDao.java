@@ -33,7 +33,7 @@ public class DataTemplateDao {
 		JsonValue root = jsonReader.parse(fileHandle); // 加载成数组
 		
 		Json json = new Json();
-		for(int i = 0, j =root.size; i<j; ++i)
-			GAME.charactersTemplate.add(json.readValue(CharactersTemplate.class, root.get(i))); // 转换成对象，缓存起来
+//		for(int i = 0, j =root.size; i<j; ++i)
+//			GAME.charactersTemplate.add(json.readValue(CharactersTemplate.class, root.get(i))); // 转换成对象，缓存起来
 	}
 }
