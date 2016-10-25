@@ -46,6 +46,12 @@ public class MapComponent implements Component, Poolable{
 	public static float miniMapScale;
 	
 	/**
+	 * 小地图的上的屏幕框大小 
+	 */
+	private float miniScreenWidth;
+	private float miniScreenHeight;
+	
+	/**
 	 * 小地图绘制
 	 */
 	private ShapeRenderer shapeRenderer;
@@ -68,6 +74,8 @@ public class MapComponent implements Component, Poolable{
 		height = mapLayer.getHeight() * GameConfig.tileSize;
 		
 		miniMapScale = Math.min(GameConfig.miniMapSize/width, GameConfig.miniMapSize/height);
+		miniScreenWidth = GameConfig.width * miniMapScale;
+		miniScreenHeight = GameConfig.hieght * miniMapScale;
 		
 		shapeRenderer = new ShapeRenderer();
 		shapeRenderer.setAutoShapeType(true);
@@ -91,6 +99,7 @@ public class MapComponent implements Component, Poolable{
 		 * 比如cameraComponent.viewport.getScreenX()是-1, 那么程序中绘制0实际对当前坐标就是绘制的-1
 		 * abs(cameraComponent.viewport.getScreenX())就是屏幕两边多出的距离
 		 */
+		// 地图绘制的位置
 		miniMapX = cameraComponent.camera.position.x + (cameraComponent.camera.viewportWidth/2 + cameraComponent.viewport.getScreenX() - GameConfig.miniMapSize);
 		miniMapY = cameraComponent.camera.position.y + (cameraComponent.camera.viewportHeight/2 + cameraComponent.viewport.getScreenY() - GameConfig.miniMapSize);
 		renderer.getBatch().begin();
@@ -98,15 +107,29 @@ public class MapComponent implements Component, Poolable{
 		renderer.getBatch().end();
 		
 		shapeRenderer.setProjectionMatrix(cameraComponent.camera.combined);
-		shapeRenderer.begin(ShapeType.Filled);
+		
+		// 当前相机位置映射到小地图的位置
+		float centerX = cameraComponent.camera.position.x * miniMapScale;
+		float centerY = cameraComponent.camera.position.y * miniMapScale;
+		
+		// 绘制屏幕映射
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(Color.WHITE);
+		shapeRenderer.rect(miniMapX + (centerX - miniScreenWidth/2), miniMapY + (centerY - miniScreenHeight/2), miniScreenWidth, miniScreenHeight);
+		
+		shapeRenderer.set(ShapeType.Filled);
 	}
 	
 	public void renderMiniEnd(){
+		
+		
+		
+		
 		shapeRenderer.end();
 	}
 	
 	/**
-	 * 位置小地图点
+	 * 位置在小地图的点
 	 * 
 	 * @param color
 	 * @param x 在大地图的位置

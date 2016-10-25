@@ -67,8 +67,10 @@ public class RenderingSystem extends SortedIteratingSystem {
 		super.update(deltaTime);
 		
 		game.batch.end();
-		if(mapComponent != null)
+		if(mapComponent != null){
+			
 			mapComponent.renderMiniEnd();
+		}
 	}
 	
 	@Override
@@ -108,7 +110,10 @@ public class RenderingSystem extends SortedIteratingSystem {
 		}
 		
 		if(mapComponent != null){
-			mapComponent.miniDraw(Color.RED, transformComponent.position.x, transformComponent.position.y);
+			if(entity == GAME.hero)
+				mapComponent.miniDraw(Color.WHITE, transformComponent.position.x, transformComponent.position.y);
+			else
+				mapComponent.miniDraw(Color.RED, transformComponent.position.x, transformComponent.position.y);
 		}
 	}
 }
