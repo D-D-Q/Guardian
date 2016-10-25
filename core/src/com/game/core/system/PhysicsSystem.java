@@ -37,7 +37,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	public PhysicsSystem(int priority) {
 		super(FamilyTools.physicsF, priority);
 		
-		PhysicsManager.world.setContactListener(this); // 碰撞监听
+		PhysicsManager.instance.world.setContactListener(this); // 碰撞监听
 		
 		contactEntitPools = new ContactEntitPools(64);
 	}
@@ -53,7 +53,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	    accumulator += frameTime;
 	    
 	    while (accumulator >= PhysicsManager.TIME_STEP) {
-	    	PhysicsManager.world.step(PhysicsManager.TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
+	    	PhysicsManager.instance.world.step(PhysicsManager.TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
 	    	accumulator -= PhysicsManager.TIME_STEP;
 	    }
 	    

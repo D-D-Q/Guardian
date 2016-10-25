@@ -5,10 +5,12 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.game.core.Assets;
 import com.game.core.component.CameraComponent;
 import com.game.core.component.MapComponent;
 import com.game.core.component.TextureComponent;
@@ -44,37 +46,37 @@ public class GameScreen extends ScreenAdapter {
 	public GameScreen() {
 		Log.info(this, "create begin");
 		
-		i18NBundle = GuardianGame.game.assets.getI18NBundle(GameScreenAssets.i18NBundle); // 获得国际化
-		skin = GuardianGame.game.assets.getSkin(GameScreenAssets.default_skin); // 获得皮肤
+		i18NBundle = Assets.instance.get(GameScreenAssets.i18NBundle , I18NBundle.class); // 获得国际化
+		skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
 		UIstage = new Stage(GAME.UICameraComponent.viewport, GuardianGame.game.batch); // 创建UI根节点，注意它会重置相机的位置到(设计分辨率宽/2, 设计分辨率高/2)
 		
-		GAME.screenEntity = AshleyManager.engine.createEntity(); // 表示当前Screen的实体
-		AshleyManager.engine.addEntity(GAME.screenEntity);
+		GAME.screenEntity = AshleyManager.instance.engine.createEntity(); // 表示当前Screen的实体
+		AshleyManager.instance.engine.addEntity(GAME.screenEntity);
 		
-		MapComponent mapComponent = AshleyManager.engine.createComponent(MapComponent.class); // 添加地图组件
-		mapComponent.init(GuardianGame.game.assets.getMap(GameScreenAssets.map), 
-				GuardianGame.game.assets.assetManager.get(GameScreenAssets.miniMap, Texture.class), 
+		MapComponent mapComponent = AshleyManager.instance.engine.createComponent(MapComponent.class); // 添加地图组件
+		mapComponent.init(Assets.instance.get(GameScreenAssets.map, TiledMap.class), 
+				Assets.instance.get(GameScreenAssets.miniMap, Texture.class), 
 				GuardianGame.game.batch); // 初始化地图
 		GAME.screenEntity.add(mapComponent);
 		
-		CameraComponent gameCameraComponent = AshleyManager.engine.createComponent(CameraComponent.class); // 添加相机组件
+		CameraComponent gameCameraComponent = AshleyManager.instance.engine.createComponent(CameraComponent.class); // 添加相机组件
 		GAME.screenEntity.add(gameCameraComponent);
 		gameCameraComponent.camera.position.set(864, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
 		gameCameraComponent.apply();
 		
-		GAME.hero = AshleyManager.entityDao.createHeroEntity(GuardianGame.game.assets.assetManager.get(GameScreenAssets.data1, CharactersTemplate.class), 864, 480); // 创建英雄
-		AshleyManager.engine.addEntity(GAME.hero);
+		GAME.hero = AshleyManager.instance.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), 864, 480); // 创建英雄
+		AshleyManager.instance.engine.addEntity(GAME.hero);
 		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
 		
 		initUI();
 		
-		InputManager.addProcessor(UIstage); // UI事件
-		InputManager.addProcessor(new InputAdapter() { // 拖动屏幕
+		InputManager.instance.addProcessor(UIstage); // UI事件
+		InputManager.instance.addProcessor(new InputAdapter() { // 拖动屏幕
 			
 			private float minGameCameraPositionX = 0 + GameConfig.width/2; // 地图左边边界是x坐标= 0 + 相机在屏幕中间
-			private float maxGameCameraPositionX = mapComponent.width - GameConfig.width/2; // 地图右边边界x坐标=地图宽 - 相机在屏幕中间
+			private float maxGameCameraPositionX = MapComponent.width - GameConfig.width/2; // 地图右边边界x坐标=地图宽 - 相机在屏幕中间
 			private float minGameCameraPositionY = 0 + GameConfig.hieght/2; // 地图下边边界是y坐标=0
-			private float maxGameCameraPositionY = mapComponent.height - GameConfig.hieght/2; // 地图上边边界x坐标=地图高 - 相机在屏幕中间
+			private float maxGameCameraPositionY = MapComponent.height - GameConfig.hieght/2; // 地图上边边界x坐标=地图高 - 相机在屏幕中间
 			
 			private int screenX, screenY;
 			
@@ -138,7 +140,7 @@ public class GameScreen extends ScreenAdapter {
 		GdxAI.getTimepiece().update(delta);
 		
 		// ECS系统
-		AshleyManager.engine.update(delta);
+		AshleyManager.instance.engine.update(delta);
 		
 		UIstage.act(delta);
 		UIstage.draw(); // 它自己会把相机信息设置给SpriteBatch
@@ -158,7 +160,7 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void resume() {
 		
-		if(GuardianGame.game.assets.assetManager.update()){
+		if(Assets.instance.update()){
 			// TODO 恢复完成
 		}
 		
@@ -176,11 +178,11 @@ public class GameScreen extends ScreenAdapter {
 	
 	private Entity gettest(){
 		// 测试添加物品
-		Entity entity = AshleyManager.engine.createEntity();
-		TextureComponent textureComponent = AshleyManager.engine.createComponent(TextureComponent.class);
+		Entity entity = AshleyManager.instance.engine.createEntity();
+		TextureComponent textureComponent = AshleyManager.instance.engine.createComponent(TextureComponent.class);
 		textureComponent.textureRegion = skin.getRegion(GameScreenAssets.item1);
 		entity.add(textureComponent);
-		ItemComponent itemComponent = AshleyManager.engine.createComponent(ItemComponent.class);
+		ItemComponent itemComponent = AshleyManager.instance.engine.createComponent(ItemComponent.class);
 		itemComponent.name = "大剑";
 		itemComponent.subType = 0;
 		entity.add(itemComponent);

@@ -111,9 +111,9 @@ public class StateComponent implements Component, Poolable  {
 				
 				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
 				if(combatComponent != null)
-					MsgManager.sendMessage(entity, combatComponent.target, MessageType.MSG_DEATH, null, false);// 发送角色销毁消息
+					MsgManager.instance.sendMessage(entity, combatComponent.target, MessageType.MSG_DEATH, null, false);// 发送角色销毁消息
 				
-				AshleyManager.engine.removeEntity(entity);
+				AshleyManager.instance.engine.removeEntity(entity);
 			}
 		},
 		

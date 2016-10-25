@@ -290,7 +290,7 @@ public class PathfindingComponent implements QueryCallback, RayCastCallback, Com
 			// 寻找躲避对象
 			Vector2 position = owner.getPosition();
 			float findRadius = owner.getBoundingRadius() + radius;
-			PhysicsManager.world.QueryAABB((QueryCallback)owner, 
+			PhysicsManager.instance.world.QueryAABB((QueryCallback)owner, 
 					position.x - findRadius, position.y - findRadius, position.x + findRadius, position.y + findRadius);
 			
 			int agentCount = agents.size;

@@ -22,20 +22,22 @@ import com.guardian.game.tools.MapperTools;
  */
 public class AshleyManager implements EntityListener{
 	
+	public static AshleyManager instance = new AshleyManager();
+	
 	/**
 	 * ashley组件实体系统引擎
 	 */
-	public static PooledEngine engine;
+	public PooledEngine engine;
 	
 	/**
 	 * 实体生产
 	 */
-	public static EntityDao entityDao = new EntityDao();;
+	public EntityDao entityDao;
 	
-	// 初始化
-	static{
+	public AshleyManager() {
 		engine = new PooledEngine();
-		engine.addEntityListener(new AshleyManager());
+		engine.addEntityListener(this);
+		entityDao = new EntityDao();
 	}
 	
 	@Override
@@ -45,16 +47,16 @@ public class AshleyManager implements EntityListener{
 		CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
 		if(characterComponent != null){
 			characterComponent.entity = entity;
-			PhysicsManager.addCharacterRigidBody(entity);
+			PhysicsManager.instance.addCharacterRigidBody(entity);
 		}
 		
 		// 战斗组件刚体
 		if(MapperTools.combatCM.get(entity) != null)
-			PhysicsManager.addCombatRigidBody(entity);
+			PhysicsManager.instance.addCombatRigidBody(entity);
 		
 		// 添加碰撞检测
 		if(MapperTools.collisionCM.get(entity) != null)
-			PhysicsManager.addCollisionRigidBody(entity);
+			PhysicsManager.instance.addCollisionRigidBody(entity);
 		
 		// 状态组件设置状态机的参数(owner)为实体
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
@@ -69,7 +71,7 @@ public class AshleyManager implements EntityListener{
 		if(messageComponent != null){
 			messageComponent.entity = entity;
 			if(messageComponent.message != null)
-				MsgManager.messageManager.addListeners(messageComponent, messageComponent.message);
+				MsgManager.instance.messageManager.addListeners(messageComponent, messageComponent.message);
 		}
 		
 		// 脚本组件
@@ -77,7 +79,7 @@ public class AshleyManager implements EntityListener{
 		if(scriptComponent != null){
 			scriptComponent.script.entity = entity;
 			if(scriptComponent.script instanceof InputProcessor)
-				InputManager.addProcessor((InputProcessor)scriptComponent.script);
+				InputManager.instance.addProcessor((InputProcessor)scriptComponent.script);
 		}
 		
 		PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
@@ -91,11 +93,11 @@ public class AshleyManager implements EntityListener{
 		// 脚本组件，移出输入监听
 		ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
 		if(scriptComponent != null && scriptComponent.script instanceof InputProcessor)
-			InputManager.removeProcessor((InputProcessor)scriptComponent.script);
+			InputManager.instance.removeProcessor((InputProcessor)scriptComponent.script);
 		
 		// 消息组件，移出消息监听
 		MessageComponent messageComponent = MapperTools.messageCM.get(entity);
 		if(messageComponent != null && messageComponent.message != null)
-			MsgManager.messageManager.removeListener(messageComponent, messageComponent.message);
+			MsgManager.instance.messageManager.removeListener(messageComponent, messageComponent.message);
 	}
 }

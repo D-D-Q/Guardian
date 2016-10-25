@@ -58,6 +58,6 @@ public class CombatSystem extends IteratingSystem  {
 //		}
 		
 		// 发送攻击消息
-		MsgManager.sendMessage(entity, combatComponent.target, MessageType.MSG_ATTACK, null, false);
+		MsgManager.instance.sendMessage(entity, combatComponent.target, MessageType.MSG_ATTACK, null, false);
 	}
 }

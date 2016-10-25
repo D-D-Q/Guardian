@@ -29,6 +29,8 @@ import com.guardian.game.tools.MapperTools;
  */
 public class PhysicsManager {
 	
+	public static PhysicsManager instance = new PhysicsManager();
+	
 	/**
 	 * 物理世界频率, 每秒60
 	 */
@@ -43,24 +45,27 @@ public class PhysicsManager {
 	/**
 	 * box2d的物理世界
 	 */
-	public static World world = new World(new Vector2(0, 0), true); // 参数：无重力和休眠;
+	public World world;
 	
 	/**
 	 * 保证同一个精灵身上的刚体没有碰撞，非线程安全
 	 * groupIndex 取值范围[-1, -32768]
 	 */
-	private static short maxGroupIndex = Short.MIN_VALUE; // -32768
+	private short maxGroupIndex = Short.MIN_VALUE; // -32768
 	
 	/**
 	 * 防止groupIndex重复
 	 */
-	private static Array<Short> groupIndexArray = new Array<Short>(false, 100);
+	private Array<Short> groupIndexArray;
 	
 	/**
 	 * 物理引擎debug绘制对象
 	 */
-	public static Box2DDebugRenderer debugRenderer;
-	static{
+	private Box2DDebugRenderer debugRenderer;
+	
+	public PhysicsManager() {
+		world = new World(new Vector2(0, 0), true);  // 参数：无重力和休眠;
+		groupIndexArray = new Array<Short>(false, 100);
 		if(GameConfig.physicsdebug)
 			debugRenderer = new Box2DDebugRenderer();
 	}
@@ -68,9 +73,9 @@ public class PhysicsManager {
 	/**
 	 * 物理引擎debug绘制
 	 */
-	public static void debugRender(Camera camera){
+	public void debugRender(Camera camera){
 		if(debugRenderer != null){
-	    	debugRenderer.render(PhysicsManager.world, camera.combined);
+	    	debugRenderer.render(world, camera.combined);
 	    }
 	}
 	
@@ -81,7 +86,7 @@ public class PhysicsManager {
 	 * @param entity
 	 * @return
 	 */
-	public static void addCharacterRigidBody(Entity entity){
+	public void addCharacterRigidBody(Entity entity){
 		
 		CharacterComponent physicsComponent = MapperTools.characterCM.get(entity);
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
@@ -117,7 +122,7 @@ public class PhysicsManager {
 	 * @param entity
 	 * @return
 	 */
-	public static void addCombatRigidBody(Entity entity){
+	public void addCombatRigidBody(Entity entity){
 		
 		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
@@ -148,7 +153,7 @@ public class PhysicsManager {
 	 * @param entity
 	 * @return
 	 */
-	public static void addCollisionRigidBody(Entity entity){
+	public void addCollisionRigidBody(Entity entity){
 		
 		CollisionComponent collisionComponent = MapperTools.collisionCM.get(entity);
 		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
@@ -173,7 +178,7 @@ public class PhysicsManager {
 	 * @param position 生成位置
 	 * @return
 	 */
-	private static Body create(BodyType bodyType, Shape shape, Vector2 position){
+	private Body create(BodyType bodyType, Shape shape, Vector2 position){
 		return create(bodyType, shape, false, (short)0, (short)1, (short)-1, position);
 	}
 	
@@ -186,7 +191,7 @@ public class PhysicsManager {
 	 * @param position 生成位置
 	 * @return
 	 */
-	private static Body create(BodyType bodyType, Shape shape, short groupIndex, Vector2 position){
+	private Body create(BodyType bodyType, Shape shape, short groupIndex, Vector2 position){
 		return create(bodyType, shape, false, groupIndex, (short)1, (short)-1, position);
 	}
 	
@@ -201,7 +206,7 @@ public class PhysicsManager {
 	 * @param position 生成位置
 	 * @return
 	 */
-	private static Body create(BodyType bodyType, Shape shape, short groupIndex, short categoryBits, short maskBits, Vector2 position){
+	private Body create(BodyType bodyType, Shape shape, short groupIndex, short categoryBits, short maskBits, Vector2 position){
 		return create(bodyType, shape, false, groupIndex, categoryBits, maskBits, position);
 	}
 	
@@ -213,7 +218,7 @@ public class PhysicsManager {
 	 * @param position 生成位置
 	 * @return
 	 */
-	private static Body createSensor(BodyType bodyType, Shape shape, Vector2 position){
+	private Body createSensor(BodyType bodyType, Shape shape, Vector2 position){
 		return create(bodyType, shape, true, (short)0, (short)1, (short)-1, position);
 	}
 	
@@ -229,7 +234,7 @@ public class PhysicsManager {
 	 * @param position 生成位置
 	 * @return
 	 */
-	private static Body create(BodyType bodyType, Shape shape, boolean isSensor, short groupIndex, short categoryBits, short maskBits, Vector2 position){
+	private Body create(BodyType bodyType, Shape shape, boolean isSensor, short groupIndex, short categoryBits, short maskBits, Vector2 position){
 		
 		BodyDef bodyDef = new BodyDef(); // 刚体属性
 		bodyDef.type = bodyType; // 刚体类型
@@ -261,7 +266,7 @@ public class PhysicsManager {
 	 * 
 	 * @param body
 	 */
-	public static void disposeBody(Body body){
+	public void disposeBody(Body body){
 		
 		if(body == null)
 			return;
@@ -277,7 +282,7 @@ public class PhysicsManager {
 	/**
 	 * 销毁
 	 */
-	public static void dispose(){
+	public void dispose(){
 		
 		while(!world.isLocked()){ // 物理世界锁的时候不能操作。step的时候会
 			world.dispose();

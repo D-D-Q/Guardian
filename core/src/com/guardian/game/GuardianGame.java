@@ -19,7 +19,6 @@ import com.game.core.system.PathfindingSystem;
 import com.game.core.system.PhysicsSystem;
 import com.game.core.system.RenderingSystem;
 import com.guardian.game.assets.GameScreenAssets;
-import com.guardian.game.entity.dao.DataTemplateDao;
 import com.guardian.game.logs.Log;
 import com.guardian.game.screen.GameScreen;
 import com.guardian.game.systems.EquippedSystem;
@@ -43,11 +42,6 @@ public class GuardianGame extends Game {
 	public SpriteBatch batch;
 	
 	/**
-	 * 资源管理
-	 */
-	public Assets assets;
-	
-	/**
 	 * 在控制台输出fps
 	 */
 	FPSLogger fpsLog;
@@ -65,10 +59,9 @@ public class GuardianGame extends Game {
 		
 		Log.info(this, "create begin");
 		
-		assets = new Assets();
 		try {
-//			assets.loadAssets(MainMenuScreenAssets.class);
-			assets.loadAssets(GameScreenAssets.class);
+//			Assets.instance.loadAssets(MainMenuScreenAssets.class);
+			Assets.instance.loadAssets(GameScreenAssets.class);
 		} catch (Exception e) {
 			Log.error(this, "资源加载失败:" + e.getMessage());
 			e.printStackTrace();
@@ -77,38 +70,38 @@ public class GuardianGame extends Game {
 		
 		batch = new SpriteBatch();
 		
-		Gdx.input.setInputProcessor(InputManager.inputMultiplexer); // 监听输入事件
+		Gdx.input.setInputProcessor(InputManager.instance.inputMultiplexer); // 监听输入事件
 		
 		/**--------------------libgdx end-------------------------*/
 		
 		/**--------------------ashley start-------------------------*/
 
-		GAME.UICameraComponent = AshleyManager.engine.createComponent(CameraComponent.class);
+		GAME.UICameraComponent = AshleyManager.instance.engine.createComponent(CameraComponent.class);
 		
 //		engine.addSystem((GAME.itemsSystem = new ItemsSystem(this)));
 //		engine.addSystem((GAME.equippedSystem = new EquippedSystem(this)));
 		GAME.itemsSystem = new ItemsSystem(this);
 		GAME.equippedSystem = new EquippedSystem(this);
 		
-		AshleyManager.engine.addSystem(new GeneralSystem(5));
-		AshleyManager.engine.addSystem(new PhysicsSystem(10));
-		AshleyManager.engine.addSystem(new AnimationSystem(20));
-		AshleyManager.engine.addSystem(new CombatSystem(30));
+		AshleyManager.instance.engine.addSystem(new GeneralSystem(5));
+		AshleyManager.instance.engine.addSystem(new PhysicsSystem(10));
+		AshleyManager.instance.engine.addSystem(new AnimationSystem(20));
+		AshleyManager.instance.engine.addSystem(new CombatSystem(30));
 		
-		AshleyManager.engine.addSystem(new RenderingSystem(this, 50));
+		AshleyManager.instance.engine.addSystem(new RenderingSystem(this, 50));
 		
-		AshleyManager.engine.addSystem(new PathfindingSystem(0.4f, 60));
-		AshleyManager.engine.addSystem(new MessageHandlingSystem(70));
-		AshleyManager.engine.addSystem(new Monstersystem(80));
+		AshleyManager.instance.engine.addSystem(new PathfindingSystem(0.4f, 60));
+		AshleyManager.instance.engine.addSystem(new MessageHandlingSystem(70));
+		AshleyManager.instance.engine.addSystem(new Monstersystem(80));
 		
 		/**--------------------ashley end-------------------------*/
 		
 //		DataTemplateDao dataTemplateDao = new DataTemplateDao();
 //		dataTemplateDao.load(GameScreenAssets.charactersTemplate);
 		
-		assets.assetManager.finishLoading();
+		Assets.instance.finishLoading();
 		
-		Log.info(this, "资源加载进度:" + assets.assetManager.getProgress() * 100);
+		Log.info(this, "资源加载进度:" + Assets.instance.getProgress() * 100);
 		
 //		setScreen(new MainMenuScreen(this));
 		setScreen(new GameScreen());
@@ -126,7 +119,7 @@ public class GuardianGame extends Game {
 		if(GameConfig.physicsdebug){
 			CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
 			if(cameraComponent != null)
-				PhysicsManager.debugRender(cameraComponent.camera);
+				PhysicsManager.instance.debugRender(cameraComponent.camera);
 		}
 		
 		if(GameConfig.fpsDebug)
@@ -152,10 +145,10 @@ public class GuardianGame extends Game {
 		
 		game = null;
 		
-		AshleyManager.engine.clearPools();
-		PhysicsManager.dispose();
+		AshleyManager.instance.engine.clearPools();
+		PhysicsManager.instance.dispose();
 		
 		batch.dispose();
-		assets.dispose();
+		Assets.instance.dispose();
 	}
 }

@@ -246,9 +246,9 @@ public class CombatComponent implements Component, Poolable{
 	
 	@Override
 	public void reset() {
-		PhysicsManager.disposeBody(rangeBody);
+		PhysicsManager.instance.disposeBody(rangeBody);
 		ATKRange = 0f;
-		PhysicsManager.disposeBody(distanceBody);
+		PhysicsManager.instance.disposeBody(distanceBody);
 		ATKDistance = 0f;
 		campBits = 0x0001;
 		campMaskBits = -1;

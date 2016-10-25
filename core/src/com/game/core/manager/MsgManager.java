@@ -13,10 +13,16 @@ import com.guardian.game.tools.MapperTools;
  */
 public class MsgManager {
 	
+	public static MsgManager instance = new MsgManager();
+	
 	/**
 	 * 真正的消息处理管理器
 	 */
-	public static MessageManager messageManager = MessageManager.getInstance();
+	public MessageManager messageManager;
+	
+	public MsgManager() {
+		 messageManager = MessageManager.getInstance();
+	}
 	
 	/**
 	 * 发送消息
@@ -27,7 +33,7 @@ public class MsgManager {
 	 * @param extraInfo 携带对象
 	 * @param needsReturnReceipt 是否需要回执
 	 */
-	public static void sendMessage(Entity sender, Entity receiver, int msg, Object extraInfo, boolean needsReturnReceipt) {
+	public void sendMessage(Entity sender, Entity receiver, int msg, Object extraInfo, boolean needsReturnReceipt) {
 		
 		MessageComponent senderMessageComponent = MapperTools.messageCM.get(sender);
 		MessageComponent receiverMessageComponent = MapperTools.messageCM.get(receiver);

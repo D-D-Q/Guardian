@@ -25,6 +25,6 @@ public class PhysicsComponent  implements Component, Poolable {
 	 */
 	@Override
 	public void reset() {
-		PhysicsManager.disposeBody(rigidBody);
+		PhysicsManager.instance.disposeBody(rigidBody);
 	}
 }	

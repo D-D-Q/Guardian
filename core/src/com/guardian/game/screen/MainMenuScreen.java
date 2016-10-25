@@ -3,8 +3,9 @@ package com.guardian.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.game.core.Assets;
 import com.guardian.game.GAME;
 import com.guardian.game.GuardianGame;
 import com.guardian.game.assets.GameScreenAssets;
@@ -23,7 +24,7 @@ public class MainMenuScreen extends ScreenAdapter{
 	
 	private Stage UIstage;
 	
-	private TextureRegion login;
+	private Texture login;
 	
 	public MainMenuScreen(GuardianGame guardianGame) {
 		this.game = guardianGame;
@@ -31,7 +32,7 @@ public class MainMenuScreen extends ScreenAdapter{
 		UIstage = new Stage(GAME.UICameraComponent.viewport, game.batch);
 		Gdx.input.setInputProcessor(UIstage);
 		
-		login = guardianGame.assets.getTextureRegion(MainMenuScreenAssets.login);
+		login = Assets.instance.get(MainMenuScreenAssets.login, Texture.class);
 		
 		Gdx.input.setInputProcessor(new InputAdapter() {
 			

@@ -99,8 +99,8 @@ public class CharacterComponent  implements Component, Poolable {
 	 */
 	@Override
 	public void reset() {
-		PhysicsManager.disposeBody(dynamicBody);
-		PhysicsManager.disposeBody(staticBody);
+		PhysicsManager.instance.disposeBody(dynamicBody);
+		PhysicsManager.instance.disposeBody(staticBody);
 		radius = 0f;
 	}
 }

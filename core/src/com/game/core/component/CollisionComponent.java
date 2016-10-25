@@ -31,7 +31,7 @@ public class CollisionComponent implements Component, Poolable{
 	 */
 	@Override
 	public void reset() {
-		PhysicsManager.disposeBody(rigidBody);
+		PhysicsManager.instance.disposeBody(rigidBody);
 		radius = 0f;
 	}
 }

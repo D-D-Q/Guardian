@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Constructor;
+import com.game.core.Assets;
 import com.guardian.game.GuardianGame;
 import com.guardian.game.logs.Log;
 
@@ -29,7 +30,7 @@ public class SwitchScreen extends ScreenAdapter {
 		
 		 // 开始加载资源
 		try {
-			game.assets.loadAssets(screenAssets);
+			Assets.instance.loadAssets(screenAssets);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.error(this, "资源加载失败:" + e.getMessage());
@@ -40,7 +41,7 @@ public class SwitchScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		
-		if(game.assets.assetManager.update()){ // 判断加载完成
+		if(Assets.instance.update()){ // 判断加载完成
 			Screen instance = null;
 			try {
 				// 用libgdx的反射实现，可以支持GWT编译成html。用java的反射不能
@@ -58,7 +59,7 @@ public class SwitchScreen extends ScreenAdapter {
 		// TODO 加载中...
 //		game.batch.begin();
 		
-		Log.info(this, game.assets.assetManager.getProgress());
+		Log.info(this, Assets.instance.getProgress());
 		
 //		game.batch.end();
 	}

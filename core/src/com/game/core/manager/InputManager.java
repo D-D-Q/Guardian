@@ -10,17 +10,23 @@ import com.badlogic.gdx.InputProcessor;
  * @date 2016年10月14日
  */
 public class InputManager {
-
+	
+	public static InputManager instance = new InputManager();
+	
 	/**
 	 * libgdx的事件链
 	 */
-	public static InputMultiplexer inputMultiplexer = new InputMultiplexer(); //事件处理链
+	public InputMultiplexer inputMultiplexer = new InputMultiplexer(); //事件处理链
 	
-	public static void addProcessor (InputProcessor processor) {
+	public InputManager() {
+		inputMultiplexer = new InputMultiplexer();
+	}
+	
+	public void addProcessor (InputProcessor processor) {
 		inputMultiplexer.addProcessor(processor);
 	}
 	
-	public static void removeProcessor (InputProcessor processor) {
+	public void removeProcessor (InputProcessor processor) {
 		inputMultiplexer.removeProcessor(processor);
 	}
 }
