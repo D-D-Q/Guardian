@@ -11,7 +11,7 @@ import com.guardian.game.logs.Log;
 
 /**
  * 加载精灵配置数据
- * TODO 可修改成使用Assets自定义加载
+ * 已修改成使用Assets自定义加载
  * 
  * @author D
  * @date 2016年9月19日 下午9:36:29

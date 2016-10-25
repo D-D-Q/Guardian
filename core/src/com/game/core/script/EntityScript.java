@@ -34,7 +34,7 @@ public abstract class EntityScript  {
 			AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
 			AttributesComponent senderAttributesComponent = MapperTools.attributesCM.get(sender);
 			
-			// TODO 伤害公式
+			// TODO 伤害公式和技能计算
 			float damage = senderAttributesComponent.ATK * (senderAttributesComponent.ATK / (senderAttributesComponent.ATK + attributesComponent.DEF));
 			attributesComponent.VIT -= Math.max(1, damage); // 最低伤害 1
 		}

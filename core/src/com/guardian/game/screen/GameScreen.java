@@ -39,6 +39,9 @@ public class GameScreen extends ScreenAdapter {
 	
 	private I18NBundle i18NBundle;
 	
+	/**
+	 * UI根节点
+	 */
 	private Stage UIstage;
 	
 	private Skin skin;

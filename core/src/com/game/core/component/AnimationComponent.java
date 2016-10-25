@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.States;
 
 /**
@@ -19,6 +18,8 @@ public class AnimationComponent implements Component, Poolable {
 	 * 根据状态和方向存储的动画数组
 	 */
 	public ObjectMap<States, Animation[]> animations;
+	
+	// TODO 效果动画和字幕动画
 	
 	/**
 	 * 当前动画已播放帧时间
