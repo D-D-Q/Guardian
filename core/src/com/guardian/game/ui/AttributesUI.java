@@ -9,6 +9,7 @@ import com.guardian.game.GAME;
 import com.guardian.game.GameConfig;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.AttributesComponent;
+import com.guardian.game.logs.Log;
 import com.guardian.game.tools.AttributesEnum;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.ui.event.UpButtonListener;
@@ -64,22 +65,13 @@ public class AttributesUI extends Table {
 		table.add(DEFButton).right();
 		
 		table.row();
-		table.add(new Label(i18NBundle.get("HIT"), skin)).left();
-		table.add(new Label(String.valueOf(attributesComponent.HIT) , skin)).right();
+		table.add(new Label(i18NBundle.get("AGI"), skin)).left();
+		table.add(new Label(String.valueOf(attributesComponent.AGI) , skin)).right();
 		table.add(new Label("+10" , skin)).left();
 		Button HITButton = new Button(skin, GameScreenAssets.button1);
-		HITButton.setName("HITButton");
-		HITButton.addListener(new UpButtonListener(AttributesEnum.HIT));
+		HITButton.setName("AGIButton");
+		HITButton.addListener(new UpButtonListener(AttributesEnum.AGI));
 		table.add(HITButton).right();
-		
-		table.row();
-		table.add(new Label(i18NBundle.get("AVD"), skin)).left();
-		table.add(new Label(String.valueOf(attributesComponent.AVD) , skin)).right();
-		table.add(new Label("+10" , skin)).left();
-		Button AVDButton = new Button(skin, GameScreenAssets.button1);
-		AVDButton.setName("AVDButton");
-		AVDButton.addListener(new UpButtonListener(AttributesEnum.AVD));
-		table.add(AVDButton).right();
 		
 		table.row();
 		table.add(new Label(i18NBundle.get("VIT"), skin)).left();

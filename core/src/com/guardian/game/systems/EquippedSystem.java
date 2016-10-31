@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.game.core.component.TextureComponent;
-import com.guardian.game.GuardianGame;
 import com.guardian.game.components.ItemComponent;
 import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
@@ -18,13 +17,7 @@ import com.guardian.game.ui.CharacterUI;
  */
 public class EquippedSystem extends EntitySystem {
 
-	public final GuardianGame game;
-	
 	private CharacterUI ui;
-	
-	public EquippedSystem(GuardianGame guardianGame) {
-		this.game = guardianGame;
-	}
 	
 	public void setUi(CharacterUI ui) {
 		this.ui = ui;

@@ -1,9 +1,10 @@
 package com.game.core.script;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.game.core.component.AnimationComponent;
 import com.guardian.game.components.AttributesComponent;
-import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.tools.MessageType;
 
@@ -13,7 +14,7 @@ import com.guardian.game.tools.MessageType;
  * @author D
  * @date 2016年10月14日
  */
-public abstract class EntityScript  {
+public class EntityScript  {
 
 	/**
 	 * 该脚本属于的实体
@@ -34,14 +35,29 @@ public abstract class EntityScript  {
 			AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
 			AttributesComponent senderAttributesComponent = MapperTools.attributesCM.get(sender);
 			
-			// TODO 伤害公式和技能计算
-			float damage = senderAttributesComponent.ATK * (senderAttributesComponent.ATK / (senderAttributesComponent.ATK + attributesComponent.DEF));
-			attributesComponent.VIT -= Math.max(1, damage); // 最低伤害 1
+			AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
+			
+			// 计算命中
+			float hit = Math.max(0.2f, (senderAttributesComponent.AGI + 1)/(attributesComponent.AGI + 1) * 0.6f); // 最低命中0.2
+			if(hit >= MathUtils.random()){
+				
+				// 伤害浮动
+				float atk = senderAttributesComponent.ATK * MathUtils.random(0.9f, 1f);
+				float def = attributesComponent.DEF * MathUtils.random(0.9f, 1f);
+				
+				float damage = Math.max(1, atk * ((atk + 1)/(atk + def + 1))); // 最低伤害 1
+				
+				attributesComponent.VIT -= damage; 
+				
+				animationComponent.addSubtitle(String.format("%.0f", damage));
+			}
+			else{
+				// 未命中
+				animationComponent.addSubtitle("miss");
+			}
 		}
 		if(messageType == MessageType.MSG_DEATH){
 			
-			// TODO 加经验升级
-			Log.info(this, "干掉一个");
 		}
 		
 		return true;
@@ -120,5 +136,6 @@ public abstract class EntityScript  {
 	 * 
 	 * @param deltaTime
 	 */
-	public abstract void update(float deltaTime);
+	public void update(float deltaTime){}
+	
 }

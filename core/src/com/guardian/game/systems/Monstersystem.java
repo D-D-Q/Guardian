@@ -28,7 +28,24 @@ public class Monstersystem extends EntitySystem {
 	 */
 	private float accumulator;
 	
-	public int tolat = 10;
+	/**
+	 * 总波数
+	 */
+	public int times = 3;
+	
+	/**
+	 * 当前波数
+	 */
+	public int curTimes = 0;
+	
+	/**
+	 * 每波的总批数
+	 */
+	public int tolat = 2;
+	
+	/**
+	 * 当前批数
+	 */
 	public int cur = 0;
 
 	public Monstersystem (int priority) {
@@ -53,25 +70,37 @@ public class Monstersystem extends EntitySystem {
 	 */
 	protected void updateInterval (){
 		
-		if(cur > tolat)
+		// 最后一批
+		if(cur >= tolat){
+			// 最后一波
+			if(curTimes >= times){
+				this.setProcessing(false);
+			}
+			else{
+				cur = 0;
+				interval = 10; // 波数间隔秒数
+			}
 			return;
+		}
+		// 第一批
+		else if(cur == 0){
+			interval = 3; // 批次间隔秒数
+			++curTimes;
+		}
 		++cur;
 		
-		CharactersTemplate charactersTemplate = Assets.instance.get(GameScreenAssets.data2, CharactersTemplate.class);
+		CharactersTemplate data2Template = Assets.instance.get(GameScreenAssets.data2, CharactersTemplate.class);
+		CharactersTemplate data3Template = Assets.instance.get(GameScreenAssets.data3, CharactersTemplate.class);
 		
-		Entity entity = AshleyManager.instance.entityDao.createCharactersEntity(charactersTemplate, 345, 2080);
+		Entity entity = AshleyManager.instance.entityDao.createCharactersEntity(data2Template, 520, 2080);
 		AshleyManager.instance.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 		
-		entity = AshleyManager.instance.entityDao.createCharactersEntity(charactersTemplate, 690, 2080);
+		entity = AshleyManager.instance.entityDao.createCharactersEntity(data3Template, 1040, 2080);
 		AshleyManager.instance.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 		
-		entity = AshleyManager.instance.entityDao.createCharactersEntity(charactersTemplate, 1038, 2080);
-		AshleyManager.instance.engine.addEntity(entity);
-		MapperTools.combatCM.get(entity).target = GAME.hero;
-		
-		entity = AshleyManager.instance.entityDao.createCharactersEntity(charactersTemplate, 1383, 2080);
+		entity = AshleyManager.instance.entityDao.createCharactersEntity(data2Template, 1560, 2080);
 		AshleyManager.instance.engine.addEntity(entity);
 		MapperTools.combatCM.get(entity).target = GAME.hero;
 	}

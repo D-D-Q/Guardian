@@ -29,7 +29,7 @@ public class CharactersTemplate{
 	public int attackFrames;
 	
 	/**
-	 * 触发攻击事件的攻击帧
+	 * 触发攻击事件的攻击帧, 从0算
 	 */
 	public int attackFrameIndex;
 	
@@ -39,6 +39,11 @@ public class CharactersTemplate{
 	 */
 	public float offsetX = 128;
 	public float offsetY = 128;
+	
+	/**
+	 * 精灵身高
+	 */
+	public float spriteHeight;
 	
 	/**
 	 * 刚体大小。表示物体
@@ -99,14 +104,9 @@ public class CharactersTemplate{
 	public int DEF;
 	
 	/**
-	 * 命中
+	 * 敏捷
 	 */
-	public int HIT;
-	
-	/**
-	 * 闪避
-	 */
-	public int AVD;
+	public int AGI;
 	
 	/**
 	 * 体力
@@ -126,5 +126,5 @@ public class CharactersTemplate{
 	/**
 	 * 脚本类名。包名.类名
 	 */
-	public String script;
+	public String script = "com.game.core.script.EntityScript";
 }

@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
+import com.game.core.component.AnimationComponent;
 import com.game.core.component.CharacterComponent;
 import com.game.core.component.MessageComponent;
 import com.game.core.component.PathfindingComponent;
@@ -82,6 +83,12 @@ public class AshleyManager implements EntityListener{
 				InputManager.instance.addProcessor((InputProcessor)scriptComponent.script);
 		}
 		
+		// 动画组件
+		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
+		if(animationComponent != null)
+			animationComponent.entity = entity;
+		
+		// 寻路组件
 		PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
 		if(pathfindingComponent != null)
 			pathfindingComponent.entity = entity;

@@ -2,7 +2,6 @@ package com.guardian.game.assets;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -36,6 +35,8 @@ public class GameScreenAssets {
 	public final static String data1 = "data/data1.json"; // 英雄
 	@Asset(CharactersTemplate.class)
 	public final static String data2 = "data/data2.json"; // 寒冰卫士
+	@Asset(CharactersTemplate.class)
+	public final static String data3 = "data/data3.json"; // 猴子
 	
 	@Asset(Skin.class)
 	public final static String default_skin = "skin/defaultUI.json"; // UI皮肤会其他资源都加载之完成之后才能加载

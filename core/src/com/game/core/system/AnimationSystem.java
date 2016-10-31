@@ -4,8 +4,14 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.game.core.component.AnimationComponent;
+import com.game.core.component.CameraComponent;
 import com.game.core.component.TextureComponent;
+import com.guardian.game.GAME;
+import com.guardian.game.GuardianGame;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
@@ -18,7 +24,7 @@ import com.guardian.game.tools.MapperTools;
  * @date 2016年8月28日 上午10:52:12
  */
 public class AnimationSystem extends IteratingSystem {
-
+	
 	/**
 	 * @param priority 系统调用优先级
 	 */

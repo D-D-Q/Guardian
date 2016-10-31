@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.I18NBundle;
 import com.guardian.game.GAME;
 import com.guardian.game.GameConfig;
 import com.guardian.game.assets.GameScreenAssets;
+import com.guardian.game.logs.Log;
 
 /**
  * 角色信息UI
@@ -65,23 +66,19 @@ public class CharacterUI extends Table{
 	    table2.row().spaceTop(15);
 	    table2.add(new Label(i18NBundle.get("ATK") + " : " , skin));
 	    table2.add(new Label("100" , skin));
-	    table2.add(new Label("+10" , skin));
+//	    table2.add(new Label("+10" , skin));
 	    table2.row();
 	    table2.add(new Label(i18NBundle.get("DEF") + " : " , skin));
 	    table2.add(new Label("100" , skin));
-	    table2.add(new Label("+10" , skin));
+//	    table2.add(new Label("+10" , skin));
 	    table2.row();
-	    table2.add(new Label(i18NBundle.get("HIT") + " : " , skin));
+	    table2.add(new Label(i18NBundle.get("AGI") + " : " , skin));
 	    table2.add(new Label("100" , skin));
-	    table2.add(new Label("+10" , skin));
-	    table2.row();
-	    table2.add(new Label(i18NBundle.get("AVD") + " : " , skin));
-	    table2.add(new Label("100" , skin));
-	    table2.add(new Label("+10" , skin));
+//	    table2.add(new Label("+10" , skin));
 	    table2.row();
 	    table2.add(new Label(i18NBundle.get("VIT") + " : " , skin));
 	    table2.add(new Label("100" , skin));
-	    table2.add(new Label("+10" , skin));
+//	    table2.add(new Label("+10" , skin));
 	    
 	    table3 = new Table(); // 装备面板表格
 	    this.add(table3).width((GameConfig.width - bpad * 2 - 10)/2).fill();

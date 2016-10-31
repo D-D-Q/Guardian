@@ -20,12 +20,7 @@ public enum AttributesEnum {
 	/**
 	 * 命中
 	 */
-	HIT,
-	
-	/**
-	 * 闪避
-	 */
-	AVD,
+	AGI,
 	
 	/**
 	 * 体力

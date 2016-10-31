@@ -35,27 +35,22 @@ public class AttributesComponent implements Component, Poolable{
 	/**
 	 * 攻击
 	 */
-	public int ATK;
+	public float ATK;
 	
 	/**
 	 * 防御
 	 */
-	public int DEF;
+	public float DEF;
 	
 	/**
-	 * 命中
+	 * 敏捷 影响命中和闪避
 	 */
-	public int HIT;
-	
-	/**
-	 * 闪避
-	 */
-	public int AVD;
+	public float AGI;
 	
 	/**
 	 * 体力
 	 */
-	public int VIT;
+	public float VIT;
 	
 	/**
 	 * 移动速度
@@ -67,7 +62,7 @@ public class AttributesComponent implements Component, Poolable{
 	 * @param type
 	 * @param value 正加，负减
 	 */
-	public int update(AttributesEnum type, int value){
+	public float update(AttributesEnum type, int value){
 
 		switch (type) {
 			case Lv:
@@ -82,14 +77,10 @@ public class AttributesComponent implements Component, Poolable{
 				this.DEF += value;
 				Log.info(this, "修改防御" + value);
 				return this.DEF;
-			case HIT:
-				this.HIT += value;
-				Log.info(this, "修改命中" + value);
-				return this.HIT;
-			case AVD:
-				this.AVD += value;
-				Log.info(this, "修改闪避" + value);
-				return this.AVD;
+			case AGI:
+				this.AGI += value;
+				Log.info(this, "修改敏捷" + value);
+				return this.AGI;
 			case VIT:
 				this.VIT += value;
 				Log.info(this, "修改体力" + value);
@@ -106,8 +97,7 @@ public class AttributesComponent implements Component, Poolable{
 		Lv = 0;
 		ATK = 0;
 		DEF = 0;
-		HIT = 0;
-		AVD = 0;
+		AGI = 0;
 		VIT = 0;
 		speed = 0;
 	}

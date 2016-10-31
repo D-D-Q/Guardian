@@ -28,7 +28,7 @@ public class TransformComponent implements Component, Poolable  {
 	public int index_z = 1;
 	
 	/**
-	 * 精灵画布大小，非图像大小
+	 * 画布大小，非精灵大小
 	 */
 	private float width;
 	private float height;
@@ -40,6 +40,11 @@ public class TransformComponent implements Component, Poolable  {
 	 */
 	private float offsetX;
 	private float offsetY;
+	
+	/**
+	 * 精灵身高
+	 */
+	public float spriteHeight;
 	
 //-------------------------------------------------------------暂时没用
 	/**
@@ -73,12 +78,13 @@ public class TransformComponent implements Component, Poolable  {
 	 * @param offsetY
 	 * @param index_z
 	 */
-	public void init(float width, float height, float offsetX, float offsetY, int index_z){
+	public void init(float width, float height, float offsetX, float offsetY, int index_z, float spriteHeight){
 		this.width = width;
 		this.height = height;
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
 		this.index_z = index_z;
+		this.spriteHeight = spriteHeight;
 	}
 	
 	/**
@@ -149,6 +155,8 @@ public class TransformComponent implements Component, Poolable  {
 		height = 0;
 		offsetX = 0;
 		offsetY = 0;
+		spriteHeight = 0;
+		
 		origin.setZero();
 		scale.set(1.0f, 1.0f);
 		rotation = 0.0f;

@@ -65,7 +65,7 @@ public class EntityDao {
 		entity.add(animationComponent);
 		
 		TransformComponent transformComponent = AshleyManager.instance.engine.createComponent(TransformComponent.class);
-		transformComponent.init(frames.get(0).getWidth(), frames.get(0).getHeight(), template.offsetX, template.offsetY, 100); // 初始化画布大小和锚点
+		transformComponent.init(frames.get(0).getWidth(), frames.get(0).getHeight(), template.offsetX, template.offsetY, 100, template.spriteHeight); // 初始化画布大小和锚点
 //		transformComponent.setMapPosition(positionX, positionY); // 初始化tile位置, z是绘制优先级
 		transformComponent.position.set(positionX, positionY); // 初始化位置, z是绘制优先级
 		entity.add(transformComponent);
@@ -75,8 +75,7 @@ public class EntityDao {
 		attributesComponent.Lv = template.Lv;
 		attributesComponent.ATK = template.ATK;
 		attributesComponent.DEF = template.DEF;
-		attributesComponent.HIT = template.HIT;
-		attributesComponent.AVD = template.AVD;
+		attributesComponent.AGI = template.AGI;
 		attributesComponent.VIT = template.VIT;
 		attributesComponent.speed = template.speed;
 		entity.add(attributesComponent);

@@ -6,12 +6,14 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.game.core.component.AnimationComponent;
 import com.game.core.component.CameraComponent;
 import com.game.core.component.MapComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.component.TransformComponent;
 import com.guardian.game.GAME;
-import com.guardian.game.GuardianGame;
 import com.guardian.game.logs.Log;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
@@ -25,11 +27,17 @@ import com.guardian.game.tools.MapperTools;
  */
 public class RenderingSystem extends SortedIteratingSystem {
 	
-	public final GuardianGame game;
-	
+	/**
+	 * 地图
+	 */
 	private MapComponent mapComponent;
 	
-	public RenderingSystem(GuardianGame guardianGame, int priority) {
+	/**
+	 * 效果字幕 
+	 */
+	private Stage subtitleStage;
+	
+	public RenderingSystem(int priority) {
 		
 		super(FamilyTools.renderingF, new Comparator<Entity>(){
 			@Override
@@ -45,14 +53,15 @@ public class RenderingSystem extends SortedIteratingSystem {
 	        }
 		}, priority);
 		
-		this.game = guardianGame;
+		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
+		subtitleStage = new Stage(cameraComponent.viewport, GAME.batch);
 	}
 	
 	@Override
 	public void update(float deltaTime) {
 		
 		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-		cameraComponent.update(game.batch);  // 更新相机数据，并设置相机数据给batch
+		cameraComponent.update(GAME.batch);  // 更新相机数据，并设置相机数据给batch
 		
 		mapComponent = MapperTools.mapCM.get(GAME.screenEntity);
 		if(mapComponent != null){
@@ -62,13 +71,18 @@ public class RenderingSystem extends SortedIteratingSystem {
 		
 		forceSort(); // 绘制排序
 		
-		game.batch.begin();
+		GAME.batch.begin();
 		
 		super.update(deltaTime);
 		
-		game.batch.end();
+		GAME.batch.end();
+		
+		// 字幕
+		subtitleStage.act();
+		subtitleStage.draw();
+		
+		// 地图
 		if(mapComponent != null){
-			
 			mapComponent.renderMiniEnd();
 		}
 	}
@@ -90,7 +104,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 		if(textureComponent.textureRegion instanceof Sprite){ // 绘制精灵
 			Sprite sprite = (Sprite)textureComponent.textureRegion;
 			sprite.setPosition(transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY());
-			sprite.draw(game.batch);
+			sprite.draw(GAME.batch);
 		}
 		else{  // 绘制纹理
 	        /*
@@ -101,7 +115,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 	         *  float scaleX, float scaleY, 缩放，1是原始大小。从锚点向四周缩放
 	         *  float rotation, 旋转，正数是逆时针。以锚点为圆心旋转
 	         */
-			game.batch.draw(textureComponent.textureRegion, 
+			GAME.batch.draw(textureComponent.textureRegion, 
 					transformComponent.getRenderPositionX(), transformComponent.getRenderPositionY(), 
 					transformComponent.origin.x, transformComponent.origin.y,
 					transformComponent.getWidth(), transformComponent.getHeight(),
@@ -114,6 +128,13 @@ public class RenderingSystem extends SortedIteratingSystem {
 				mapComponent.miniDraw(Color.WHITE, transformComponent.position.x, transformComponent.position.y);
 			else
 				mapComponent.miniDraw(Color.RED, transformComponent.position.x, transformComponent.position.y);
+		}
+		
+		Actor actor;
+		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
+		while(animationComponent.subtitle.size != 0){
+			actor = animationComponent.subtitle.pop();
+			subtitleStage.addActor(actor);
 		}
 	}
 }

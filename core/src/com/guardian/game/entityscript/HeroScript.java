@@ -1,11 +1,14 @@
 package com.guardian.game.entityscript;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.script.EntityScript;
+import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
+import com.guardian.game.tools.MessageType;
 
 /**
  * 英雄脚本
@@ -14,6 +17,20 @@ import com.guardian.game.tools.MapperTools;
  * @date 2016年10月13日 下午9:56:24
  */
 public class HeroScript extends EntityScript implements InputProcessor{
+	
+	@Override
+	public boolean message(int messageType, Entity sender, Object extraInfo) {
+		
+		super.message(messageType, sender, extraInfo);
+		
+		if(messageType == MessageType.MSG_DEATH){
+				
+			// TODO 加经验升级
+			Log.info(this, "干掉一个");
+		}
+	
+		return true;
+	}
 	
 	@Override
 	public boolean keyDown (int keycode) {
