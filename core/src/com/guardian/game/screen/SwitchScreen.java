@@ -5,13 +5,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Constructor;
 import com.game.core.Assets;
 import com.guardian.game.GAME;
+import com.guardian.game.GameConfig;
 import com.guardian.game.logs.Log;
 
 /**
@@ -26,11 +32,7 @@ public class SwitchScreen extends ScreenAdapter {
 	private Class<Screen> screen;
 	
 	private Stage UIstage;
-	private Skin skin;
 	private ProgressBar progressBar;
-	
-	private boolean isNotLoadding = true;
-	
 	
 	@SuppressWarnings("unchecked")
 	public <T extends Screen> SwitchScreen(Game game, Class<T> screen, Class<?> screenAssets) {
@@ -48,17 +50,25 @@ public class SwitchScreen extends ScreenAdapter {
 		}
 		
 		UIstage = new Stage(GAME.UIViewport, GAME.batch);
-//		skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
+//		Skin skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
 		
-		SpriteDrawable drawable1 = new SpriteDrawable();
-		drawable1.tint(Color.WHITE);
+		Pixmap pixmap1 = new Pixmap(1, 16, Format.RGBA8888);
+		pixmap1.setColor(Color.WHITE);
+		pixmap1.fill();
 		
-		SpriteDrawable drawable2 = new SpriteDrawable();
-		drawable2.tint(Color.BLUE);
+		Pixmap pixmap2 = new Pixmap(1, 16, Format.RGBA8888);
+		pixmap2.setColor(Color.BLUE);
+		pixmap2.fill();
 		
-		ProgressBarStyle progressBarStyle = new ProgressBarStyle(drawable1, drawable2);
-		progressBar = new ProgressBar(0, 100, 1, false, progressBarStyle);
-		progressBar.setPosition(100, 100);
+		ProgressBarStyle progressBarStyle = new ProgressBarStyle();
+		progressBarStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap1)));
+		progressBarStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap2)));
+		progressBarStyle.knobBefore = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap2)));
+		
+		progressBar = new ProgressBar(0, 1, 0.01f, false, progressBarStyle);
+		progressBar.setAnimateDuration(0.1f);
+		progressBar.setSize(GameConfig.width * 0.8f, 16);
+		progressBar.setPosition((GameConfig.width - progressBar.getWidth())/2, 100);
 		
 		UIstage.addActor(progressBar);
 	}
@@ -66,27 +76,26 @@ public class SwitchScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		
-		progressBar.setValue(Assets.instance.getProgress() * 100);
-		Log.info(this, "资源加载进度:" + Assets.instance.getProgress() * 100);
-		UIstage.act(delta);
-		UIstage.draw();
-		
-		if(Assets.instance.update()){ // 判断加载完成
+		if(Assets.instance.update() && progressBar.getVisualValue() == 1){ // 判断加载完成 && 也显示100%
 			Screen instance = null;
 			try {
 				// 用libgdx的反射实现，可以支持GWT编译成html。用java的反射不能
 //				Constructor constructor = ClassReflection.getConstructor(screen, GuardianGame.class);
 //				instance = (Screen) constructor.newInstance(game);
-//				Constructor constructor = ClassReflection.getConstructor(screen);
-//				instance = (Screen) constructor.newInstance();
+				Constructor constructor = ClassReflection.getConstructor(screen);
+				instance = (Screen) constructor.newInstance();
 			} 
 			catch (Exception e) {
 				e.printStackTrace();
 				Log.error(this, "screen切换失败:" + e.getMessage());
 				Gdx.app.exit();
 			} 
-//			game.setScreen(instance);
+			game.setScreen(instance);
 		}
+		
+		progressBar.setValue(Assets.instance.getProgress());
+		UIstage.act(delta);
+		UIstage.draw();
 	}
 	
 	@Override
