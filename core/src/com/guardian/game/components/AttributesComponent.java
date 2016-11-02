@@ -26,6 +26,11 @@ public class AttributesComponent implements Component, Poolable{
 	 * 名称
 	 */
 	public String name;
+	
+	/**
+	 * 移动速度
+	 */
+	public float speed;
 
 	/**
 	 * 等级
@@ -48,14 +53,30 @@ public class AttributesComponent implements Component, Poolable{
 	public float AGI;
 	
 	/**
-	 * 体力
+	 * 最大体力
 	 */
-	public float VIT;
+	public float maxVit;
 	
 	/**
-	 * 移动速度
+	 * 当前体力
 	 */
-	public float speed;
+	public float curVit;
+	
+	/**
+	 * 升级所需经验
+	 * TODO 暂固定为10
+	 */
+	public int levelUpExp = 10;
+	
+	/**
+	 * 当前经验
+	 */
+	public int curExp;
+	
+	/**
+	 * 当前剩余属性点
+	 */
+	public int curAttrs;
 	
 	/**
 	 * 修改某属性值
@@ -82,9 +103,9 @@ public class AttributesComponent implements Component, Poolable{
 				Log.info(this, "修改敏捷" + value);
 				return this.AGI;
 			case VIT:
-				this.VIT += value;
+				this.maxVit += value * 10; // 1属性10体力
 				Log.info(this, "修改体力" + value);
-				return this.VIT;
+				return this.maxVit;
 	
 			default:
 				return 0;
@@ -94,11 +115,16 @@ public class AttributesComponent implements Component, Poolable{
 	@Override
 	public void reset() {
 		name = null;
+		speed = 0;
 		Lv = 0;
 		ATK = 0;
 		DEF = 0;
 		AGI = 0;
-		VIT = 0;
-		speed = 0;
+		maxVit = 0;
+		curVit = 0;
+		
+		levelUpExp = 0;
+		curExp = 0;
+		curAttrs = 0;
 	}
 }

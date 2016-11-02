@@ -76,7 +76,8 @@ public class EntityDao {
 		attributesComponent.ATK = template.ATK;
 		attributesComponent.DEF = template.DEF;
 		attributesComponent.AGI = template.AGI;
-		attributesComponent.VIT = template.VIT;
+		attributesComponent.maxVit = template.VIT;
+		attributesComponent.curVit = template.VIT;
 		attributesComponent.speed = template.speed;
 		entity.add(attributesComponent);
 		

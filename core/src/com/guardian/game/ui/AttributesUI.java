@@ -9,7 +9,6 @@ import com.guardian.game.GAME;
 import com.guardian.game.GameConfig;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.AttributesComponent;
-import com.guardian.game.logs.Log;
 import com.guardian.game.tools.AttributesEnum;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.ui.event.UpButtonListener;
@@ -75,7 +74,7 @@ public class AttributesUI extends Table {
 		
 		table.row();
 		table.add(new Label(i18NBundle.get("VIT"), skin)).left();
-		table.add(new Label(String.valueOf(attributesComponent.VIT) , skin)).right();
+		table.add(new Label(String.valueOf(attributesComponent.maxVit) , skin)).right();
 		table.add(new Label("+10" , skin)).left();
 		Button VITButton = new Button(skin, GameScreenAssets.button1);
 		VITButton.setName("VITButton");

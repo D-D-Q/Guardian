@@ -131,7 +131,7 @@ public class StateComponent implements Component, Poolable  {
 					return;
 				
 				AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
-				if(attributesComponent.VIT <= 0)
+				if(attributesComponent.curVit <= 0)
 					MapperTools.stateCM.get(entity).entityState.changeState(States.death);
 			}
 		};

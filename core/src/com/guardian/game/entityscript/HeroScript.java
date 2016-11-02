@@ -6,7 +6,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.script.EntityScript;
-import com.guardian.game.logs.Log;
+import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.tools.MessageType;
 
@@ -23,10 +23,18 @@ public class HeroScript extends EntityScript implements InputProcessor{
 		
 		super.message(messageType, sender, extraInfo);
 		
+		// 加经验升级
 		if(messageType == MessageType.MSG_DEATH){
+			AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
+			attributesComponent.curExp += 1; // TODO 暂固定一个怪加1
+			
+			while(attributesComponent.curExp >= attributesComponent.levelUpExp){
 				
-			// TODO 加经验升级
-			Log.info(this, "干掉一个");
+				attributesComponent.Lv += 1;
+				attributesComponent.curAttrs += 4; // 每级加4属性点
+				attributesComponent.curVit += 10; // 每级加10体力 
+				attributesComponent.curExp -= attributesComponent.levelUpExp;
+			}
 		}
 	
 		return true;
