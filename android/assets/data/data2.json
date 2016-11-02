@@ -1,5 +1,5 @@
 {
-	fileName: data/hbws.atlas,
+	fileName: res/hbws.atlas,
 	idleFrames: 6,
 	runFrames: 6,
 	attackFrames: 7,
@@ -7,6 +7,7 @@
 	offsetX: 128,
 	offsetY: 128,
 	spriteHeight: 66,
+	spriteWidth: 60,
 	characterRadius: 30,
 	ATKRange: 70,
 	ATKDistance: 3,
@@ -17,7 +18,7 @@
 	ATK: 10,
 	DEF: 10,
 	AGI: 10,
-	VIT: 16,
+	VIT: 20,
 	speed: 60,
 	script: com.guardian.game.entityscript.MonsterScript
 }

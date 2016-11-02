@@ -52,11 +52,11 @@ public class SwitchScreen extends ScreenAdapter {
 		UIstage = new Stage(GAME.UIViewport, GAME.batch);
 //		Skin skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
 		
-		Pixmap pixmap1 = new Pixmap(1, 16, Format.RGBA8888);
+		Pixmap pixmap1 = new Pixmap(1, 16, Format.RGB888);
 		pixmap1.setColor(Color.WHITE);
 		pixmap1.fill();
 		
-		Pixmap pixmap2 = new Pixmap(1, 16, Format.RGBA8888);
+		Pixmap pixmap2 = new Pixmap(1, 16, Format.RGB888);
 		pixmap2.setColor(Color.BLUE);
 		pixmap2.fill();
 		

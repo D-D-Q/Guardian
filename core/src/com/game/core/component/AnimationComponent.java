@@ -72,9 +72,9 @@ public class AnimationComponent implements Component, Poolable {
 		label.setPosition(transformComponent.position.x - label.getWidth()/2, transformComponent.position.y + transformComponent.spriteHeight/2 - label.getHeight()/2);
 		label.setOrigin(Align.center);
 		label.setColor(Color.RED);
+		
 		label.setScale(0.1f);
 		label.setFontScale(0.1f);
-		
 		RepeatAction repeatAction = Actions.forever(null);
 		repeatAction.setAction(Actions.run(new Runnable() {
 			public void run() {
@@ -85,7 +85,7 @@ public class AnimationComponent implements Component, Poolable {
 			}
 		}));
 		label.addAction(
-				Actions.parallel(Actions.moveBy(0, transformComponent.spriteHeight / 2, 0.4f, Interpolation.bounceOut),
+				Actions.parallel(Actions.moveBy(0, transformComponent.spriteHeight, 0.4f, Interpolation.bounceOut),
 						Actions.scaleTo(1, 1, 0.4f, Interpolation.bounceOut), repeatAction));
 		label.addAction(Actions.after(Actions.delay(0.2f, Actions.run(new Runnable() {
 			public void run() {

@@ -40,7 +40,7 @@ public class UpButtonListener extends ClickListener {
 		Label label = (Label)cell.getActor(); 
 		
 		attributesComponent.curAttrs -= 1;
-		String newValue = String.format("%0.f", attributesComponent.update(type, 1));
+		String newValue = String.format("%.0f", attributesComponent.update(type, 1));
 		
 		if(AttributesEnum.VIT == type)
 			label.setText(newValue);

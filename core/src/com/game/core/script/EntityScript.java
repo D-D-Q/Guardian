@@ -47,7 +47,7 @@ public class EntityScript  {
 				
 				float damage = Math.max(1, atk * ((atk + 1)/(atk + def + 1))); // 最低伤害 1
 				
-				attributesComponent.maxVit -= damage; 
+				attributesComponent.curVit -= damage; 
 				
 				animationComponent.addSubtitle(String.format("%.0f", damage));
 			}

@@ -1,5 +1,5 @@
 {
-	fileName: data/houzi.atlas,
+	fileName: res/houzi.atlas,
 	idleFrames: 8,
 	runFrames: 8,
 	attackFrames: 10,
@@ -7,6 +7,7 @@
 	offsetX: 128,
 	offsetY: 128,
 	spriteHeight: 64,
+	spriteWidth: 60,
 	characterRadius: 30,
 	ATKRange: 70,
 	ATKDistance: 3,
@@ -17,7 +18,7 @@
 	ATK: 10,
 	DEF: 10,
 	AGI: 10,
-	VIT: 10,
+	VIT: 20,
 	speed: 60,
 	script: com.guardian.game.entityscript.MonsterScript
 }

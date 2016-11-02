@@ -30,23 +30,28 @@ public class TransformComponent implements Component, Poolable  {
 	/**
 	 * 画布大小，非精灵大小
 	 */
-	private float width;
-	private float height;
+	public float width;
+	public float height;
 	
 	/**
 	 * 精灵定位锚点。保证精灵定位锚点绘制到this.position位置绘制的偏移量
 	 * 以画布大小为世界，画布左下角为原点0,0
 	 * 绘制显示时，会把该点显示在position所指的位置上
 	 */
-	private float offsetX;
-	private float offsetY;
+	public float offsetX;
+	public float offsetY;
 	
 	/**
 	 * 精灵身高
 	 */
 	public float spriteHeight;
 	
-//-------------------------------------------------------------暂时没用
+	/**
+	 * 精灵身宽
+	 */
+	public float spriteWidth;
+	
+//-------------------------------------------------------------暂时没用start
 	/**
 	 * 引擎锚点位置，缩放、旋转使用
 	 */
@@ -67,25 +72,7 @@ public class TransformComponent implements Component, Poolable  {
 	 */
 	public boolean isHidden = false;
 	
-//-------------------------------------------------------------暂时没用
-	
-	/**
-	 * 设置画布大小，非图像大小。设置定位锚点百分比。设定z抽
-	 * 
-	 * @param width
-	 * @param height
-	 * @param offsetX
-	 * @param offsetY
-	 * @param index_z
-	 */
-	public void init(float width, float height, float offsetX, float offsetY, int index_z, float spriteHeight){
-		this.width = width;
-		this.height = height;
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
-		this.index_z = index_z;
-		this.spriteHeight = spriteHeight;
-	}
+//-------------------------------------------------------------暂时没用end
 	
 	/**
 	 * 设置角色在地图的位置，按tiled块算

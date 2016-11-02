@@ -44,7 +44,7 @@ public class CharacterComponent  implements Component, Poolable {
 	public Body staticBody;
 	
 	/**
-	 * 半径
+	 * 角色刚体大小半径。如果不配置，默认取值spriteWidth/2
 	 */
 	public float radius;
 	

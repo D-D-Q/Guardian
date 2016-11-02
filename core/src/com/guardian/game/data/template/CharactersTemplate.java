@@ -46,12 +46,17 @@ public class CharactersTemplate{
 	public float spriteHeight;
 	
 	/**
-	 * 刚体大小。表示物体
+	 * 精灵身宽
+	 */
+	public float spriteWidth;
+	
+	/**
+	 * 物体刚体大小半径。
 	 */
 	public float physicsRadius;
 	
 	/**
-	 * 精灵刚体大小。表示角色
+	 * 角色刚体大小半径。如果不配置，默认取值spriteWidth/2
 	 */
 	public float characterRadius;
 	
@@ -75,11 +80,12 @@ public class CharactersTemplate{
 	
 	/**
 	 * 阵营
+	 * 取值 1, 2, 4, 8, ...。默认0x00000001
 	 */
 	public int campBits = 0x0001;
 	
 	/**
-	 * 攻击攻击的和
+	 * 可攻击的阵营的和, 默认所有
 	 */
 	public int campMaskBits = -1;
 	

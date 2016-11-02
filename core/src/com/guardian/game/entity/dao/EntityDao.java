@@ -19,6 +19,7 @@ import com.game.core.component.TextureComponent;
 import com.game.core.component.TransformComponent;
 import com.game.core.manager.AshleyManager;
 import com.game.core.script.EntityScript;
+import com.guardian.game.GameConfig;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.Orientation;
@@ -51,6 +52,8 @@ public class EntityDao {
 		entity.add(stateComponent);
 		
 		TextureComponent textureComponent = AshleyManager.instance.engine.createComponent(TextureComponent.class);
+		textureComponent.vitBar.setVisible(true);
+		textureComponent.vitBar.setSize(template.spriteWidth, 1); // 高是无效值
 		entity.add(textureComponent);
 		
 		AnimationComponent animationComponent = AshleyManager.instance.engine.createComponent(AnimationComponent.class);
@@ -65,8 +68,13 @@ public class EntityDao {
 		entity.add(animationComponent);
 		
 		TransformComponent transformComponent = AshleyManager.instance.engine.createComponent(TransformComponent.class);
-		transformComponent.init(frames.get(0).getWidth(), frames.get(0).getHeight(), template.offsetX, template.offsetY, 100, template.spriteHeight); // 初始化画布大小和锚点
-//		transformComponent.setMapPosition(positionX, positionY); // 初始化tile位置, z是绘制优先级
+		transformComponent.width = frames.get(0).getWidth();
+		transformComponent.height = frames.get(0).getHeight();
+		transformComponent.offsetX = template.offsetX;
+		transformComponent.offsetY = template.offsetY;
+		transformComponent.index_z = 100;
+		transformComponent.spriteHeight = template.spriteHeight;
+		transformComponent.spriteWidth = template.spriteWidth;
 		transformComponent.position.set(positionX, positionY); // 初始化位置, z是绘制优先级
 		entity.add(transformComponent);
 		
@@ -98,7 +106,10 @@ public class EntityDao {
 		entity.add(messageComponent);
 		
 		CharacterComponent characterComponent = AshleyManager.instance.engine.createComponent(CharacterComponent.class);
-		characterComponent.radius = template.characterRadius;
+		if(template.characterRadius == 0)
+			characterComponent.radius = template.spriteWidth/2;
+		else
+			characterComponent.radius = template.characterRadius;
 		entity.add(characterComponent);
 		
 		if(template.collisionRadius != 0){

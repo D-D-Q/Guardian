@@ -14,6 +14,7 @@ import com.game.core.component.MapComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.component.TransformComponent;
 import com.guardian.game.GAME;
+import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.logs.Log;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
@@ -33,7 +34,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 	private MapComponent mapComponent;
 	
 	/**
-	 * 效果字幕 
+	 * 显示效果
 	 */
 	private Stage subtitleStage;
 	
@@ -121,6 +122,16 @@ public class RenderingSystem extends SortedIteratingSystem {
 					transformComponent.getWidth(), transformComponent.getHeight(),
 					transformComponent.scale.x, transformComponent.scale.y,
 					transformComponent.rotation);
+		}
+		
+		if(textureComponent.vitBar.isVisible()){
+			AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
+			textureComponent.vitBar.setPosition(transformComponent.position.x - transformComponent.spriteWidth/2, transformComponent.position.y + transformComponent.spriteHeight);
+			textureComponent.vitBar.setRange(0, attributesComponent.maxVit);
+			textureComponent.vitBar.setValue(attributesComponent.curVit);
+//			textureComponent.vitBar.act(deltaTime);
+//			textureComponent.vitBar.draw(GAME.batch, 1);
+			subtitleStage.addActor(textureComponent.vitBar);
 		}
 		
 		if(mapComponent != null){
