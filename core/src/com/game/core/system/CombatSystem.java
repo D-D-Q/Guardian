@@ -2,7 +2,12 @@ package com.game.core.system;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.game.core.Skill;
+import com.game.core.Skill.EffectType;
+import com.game.core.Skill.SkillType;
+import com.game.core.component.AnimationComponent;
 import com.game.core.component.CombatComponent;
+import com.game.core.component.SkillsComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.manager.MsgManager;
 import com.guardian.game.components.StateComponent;
@@ -13,7 +18,6 @@ import com.guardian.game.tools.MessageType;
 
 /**
  * 战斗系统
- * 	ContactListener
  * 
  * @author D
  * @date 2016年9月18日 下午9:59:11
@@ -45,6 +49,49 @@ public class CombatSystem extends IteratingSystem  {
 			return;
 		combatComponent.isSendAttackMessage = true;
 		
+		SkillsComponent skillsComponent = MapperTools.skillsCM.get(entity);
+		if(skillsComponent.curSkill == null)
+			return;
+			
+		// 攻击方技能
+		skillsComponent.curSkill.befor(entity, combatComponent.target);
+		for(Skill skill : skillsComponent.getSkillsPipeline(EffectType.passiveTrigger)){
+			if(skill.skillType == SkillType.attack){
+				skill.befor(entity, combatComponent.target);
+			}
+		}
+		
+		float damage = skillsComponent.curSkill.execute(entity, combatComponent.target, 0); // 伤害
+		for(Skill skill : skillsComponent.getSkillsPipeline(EffectType.passiveTrigger)){
+			if(skill.skillType == SkillType.attack){
+				damage = skill.execute(entity, combatComponent.target, damage);
+			}
+		}
+		
+		skillsComponent.curSkill.after(entity, combatComponent.target);
+		for(Skill skill : skillsComponent.getSkillsPipeline(EffectType.passiveTrigger)){
+			if(skill.skillType == SkillType.attack){
+				skill.after(entity, combatComponent.target);
+			}
+		}
+		
+		// 防御方技能
+		SkillsComponent targetSkillsComponent = MapperTools.skillsCM.get(combatComponent.target);
+		if(targetSkillsComponent != null){
+			for(Skill targetSkill : targetSkillsComponent.getSkillsPipeline(EffectType.passiveTrigger)){
+				if(targetSkill.skillType == SkillType.defense){
+					damage = targetSkill.execute(combatComponent.target, entity, damage);
+				}
+			}
+		}
+		
+		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
+		
+		if(damage > 0)
+			animationComponent.addSubtitle(String.format("%.0f", damage));
+		else
+			animationComponent.addSubtitle("miss"); // 未命中
+		
 //		根据tile计算目标的代码，不用tile方式了
 //		TransformComponent transformComponent = MapperTools.transformCM.get(entity);
 //		Vector2 vector = new Vector2(transformComponent.getMapPosition()); 
@@ -58,6 +105,7 @@ public class CombatSystem extends IteratingSystem  {
 //		}
 		
 		// 发送攻击消息
-		MsgManager.instance.sendMessage(entity, combatComponent.target, MessageType.MSG_ATTACK, null, false);
+		MsgManager.instance.sendMessage(combatComponent.target, entity, MessageType.MSG_ATTACK, damage, false);
+		MsgManager.instance.sendMessage(entity, combatComponent.target, MessageType.MSG_ATTACKED, damage, false);
 	}
 }

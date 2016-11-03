@@ -15,16 +15,17 @@ import com.game.core.component.CombatComponent;
 import com.game.core.component.MessageComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.component.ScriptComponent;
+import com.game.core.component.SkillsComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.component.TransformComponent;
 import com.game.core.manager.AshleyManager;
 import com.game.core.script.EntityScript;
-import com.guardian.game.GameConfig;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.data.template.CharactersTemplate;
+import com.guardian.game.skills.NormalAttack;
 import com.guardian.game.util.AtlasUtil;
 
 /**
@@ -127,6 +128,11 @@ public class EntityDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		SkillsComponent skillsComponent = AshleyManager.instance.engine.createComponent(SkillsComponent.class);
+		skillsComponent.addSkill(NormalAttack.getInstance());
+		skillsComponent.curSkill = NormalAttack.getInstance();
+		entity.add(skillsComponent);
 		
 		Assets.instance.finishLoading();
 		

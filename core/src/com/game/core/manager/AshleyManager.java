@@ -10,6 +10,7 @@ import com.game.core.component.CharacterComponent;
 import com.game.core.component.MessageComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.component.ScriptComponent;
+import com.game.core.component.SkillsComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.entity.dao.EntityDao;
@@ -92,6 +93,11 @@ public class AshleyManager implements EntityListener{
 		PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
 		if(pathfindingComponent != null)
 			pathfindingComponent.entity = entity;
+		
+		// 技能组件
+		SkillsComponent skillsComponent = MapperTools.skillsCM.get(entity);
+		if(skillsComponent != null)
+			skillsComponent.entity = entity;
 	}
 
 	@Override

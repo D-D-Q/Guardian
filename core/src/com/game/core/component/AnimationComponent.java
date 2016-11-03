@@ -5,12 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Interpolation.BounceOut;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
-import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -18,7 +14,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guardian.game.GAME;
 import com.guardian.game.components.StateComponent.States;
-import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
 
 /**
