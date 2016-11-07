@@ -29,14 +29,8 @@ public class GameScreenAssets {
 	// DATA资源
 //	@Asset(TextureAtlas.class)
 //	public final static String yx = "res/yx.atlas"; // 英雄
-//	@Asset(TextureAtlas.class)
-//	public final static String hbws = "res/hbws.atlas"; // 寒冰卫士
 	@Asset(CharactersTemplate.class)
 	public final static String data1 = "data/data1.json"; // 英雄
-	@Asset(CharactersTemplate.class)
-	public final static String data2 = "data/data2.json"; // 寒冰卫士
-	@Asset(CharactersTemplate.class)
-	public final static String data3 = "data/data3.json"; // 猴子
 	
 	@Asset(Skin.class)
 	public final static String default_skin = "skin/defaultUI.json"; // UI皮肤会其他资源都加载之完成之后才能加载

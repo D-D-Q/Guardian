@@ -10,6 +10,7 @@ import com.game.core.component.CombatComponent;
 import com.game.core.component.SkillsComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.manager.MsgManager;
+import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.tools.FamilyTools;
@@ -87,8 +88,12 @@ public class CombatSystem extends IteratingSystem  {
 		
 		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
 		
-		if(damage > 0)
+		if(damage > 0){
+			AttributesComponent targetAttributesComponent = MapperTools.attributesCM.get(combatComponent.target);
+			targetAttributesComponent.curVit -= damage; // 减体力
+			
 			animationComponent.addSubtitle(String.format("%.0f", damage));
+		}
 		else
 			animationComponent.addSubtitle("miss"); // 未命中
 		

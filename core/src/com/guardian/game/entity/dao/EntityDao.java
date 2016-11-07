@@ -53,7 +53,7 @@ public class EntityDao {
 		entity.add(stateComponent);
 		
 		TextureComponent textureComponent = AshleyManager.instance.engine.createComponent(TextureComponent.class);
-		textureComponent.vitBar.setVisible(true);
+		textureComponent.enableVitBar();
 		textureComponent.vitBar.setSize(template.spriteWidth, 1); // 高是无效值
 		entity.add(textureComponent);
 		
@@ -83,11 +83,12 @@ public class EntityDao {
 		attributesComponent.name = template.name;
 		attributesComponent.Lv = template.Lv;
 		attributesComponent.ATK = template.ATK;
+		attributesComponent.ASPD = template.ASPD;
 		attributesComponent.DEF = template.DEF;
 		attributesComponent.AGI = template.AGI;
 		attributesComponent.maxVit = template.VIT;
 		attributesComponent.curVit = template.VIT;
-		attributesComponent.speed = template.speed;
+		attributesComponent.moveSpeed = template.speed;
 		entity.add(attributesComponent);
 		
 		if(template.ATKRange != 0 || template.ATKDistance != 0){

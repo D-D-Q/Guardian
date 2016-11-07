@@ -202,7 +202,7 @@ public class PathfindingComponent implements QueryCallback, RayCastCallback, Com
 
 	@Override
 	public float getMaxLinearSpeed() {
-		return MapperTools.attributesCM.get(entity).speed;
+		return MapperTools.attributesCM.get(entity).moveSpeed;
 	}
 
 	@Override
@@ -211,7 +211,7 @@ public class PathfindingComponent implements QueryCallback, RayCastCallback, Com
 
 	@Override
 	public float getMaxLinearAcceleration() {
-		return MapperTools.attributesCM.get(entity).speed;
+		return MapperTools.attributesCM.get(entity).moveSpeed;
 	}
 
 	@Override

@@ -27,7 +27,16 @@ public class TextureComponent implements Component, Poolable {
 
 	public TextureRegion textureRegion = null;
 	
-	public TextureComponent() {
+	/**
+	 * 启用体力条
+	 * @param isEnable
+	 */
+	public void enableVitBar(){
+		
+		if(vitBar != null){
+			vitBar.setVisible(true);
+			return;
+		}
 		
 		Pixmap pixmap1 = new Pixmap(1, 3, Format.RGB888);
 		pixmap1.setColor(Color.WHITE);
@@ -46,6 +55,10 @@ public class TextureComponent implements Component, Poolable {
 		vitBar.setAnimateDuration(0.1f);
 	}
 	
+	public boolean isEnableVitBar(){
+		return vitBar != null;
+	}
+	
 	/* 
 	 * 对象池回收组件调用
 	 * @see com.badlogic.gdx.utils.Pool.Poolable#reset()
@@ -53,8 +66,11 @@ public class TextureComponent implements Component, Poolable {
 	@Override
 	public void reset() {
 		textureRegion = null;
-		vitBar.remove();
-		vitBar.setVisible(false);
+		
+		if(vitBar != null){
+			vitBar.remove();
+			vitBar.setVisible(false);
+		}
 	}
 
 }
