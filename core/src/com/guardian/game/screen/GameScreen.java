@@ -34,8 +34,6 @@ import com.guardian.game.systems.EquippedSystem;
 import com.guardian.game.systems.ItemsSystem;
 import com.guardian.game.systems.Monstersystem;
 import com.guardian.game.tools.MapperTools;
-import com.guardian.game.ui.AttributesUI;
-import com.guardian.game.ui.CharacterUI;
 import com.guardian.game.ui.GameUI;
 
 /**
@@ -155,14 +153,14 @@ public class GameScreen extends ScreenAdapter {
 	
 	private void initUI(){
 		
-		UIstage.addActor(new CharacterUI(skin, i18NBundle));
-		UIstage.addActor(new AttributesUI(skin, i18NBundle));
+//		UIstage.addActor(new CharacterUI(skin, i18NBundle));
+//		UIstage.addActor(new AttributesUI(skin, i18NBundle));
 		UIstage.addActor(new GameUI(skin, i18NBundle));
 		
-		GAME.itemsSystem.addItem(gettest());
-		GAME.itemsSystem.addItem(gettest());
-		GAME.itemsSystem.addItem(gettest());
-		GAME.itemsSystem.addItem(gettest());
+//		GAME.itemsSystem.addItem(gettest());
+//		GAME.itemsSystem.addItem(gettest());
+//		GAME.itemsSystem.addItem(gettest());
+//		GAME.itemsSystem.addItem(gettest());
 	}
 	
 	@Override

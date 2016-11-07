@@ -31,7 +31,7 @@ public class Monstersystem extends EntitySystem {
 	/**
 	 * 总波数
 	 */
-	public int times = 3;
+	public int times = 30;
 	
 	/**
 	 * 当前波数

@@ -27,9 +27,9 @@ public class AttributesUI extends Table {
 		
 		this.setDebug(GameConfig.UIdebug);
 		this.setName("AttributesUI");
-		this.setVisible(false);
-		this.setFillParent(true);
-		this.pad(GameConfig.UIpad, GameConfig.UIpad, GameConfig.UIpad + 90,GameConfig.UIpad); 
+//		this.setVisible(false);
+//		this.setFillParent(true);
+//		this.pad(GameConfig.UIpad, GameConfig.UIpad, GameConfig.UIpad + 90,GameConfig.UIpad); 
 		this.bottom();
 		
 		table = new Table(); // 属性面板表格

@@ -85,7 +85,7 @@ public class CombatSystem extends IteratingSystem  {
 			}
 		}
 		
-		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
+		AnimationComponent animationComponent = MapperTools.animationCM.get(combatComponent.target);
 		
 		if(damage > 0)
 			animationComponent.addSubtitle(String.format("%.0f", damage));

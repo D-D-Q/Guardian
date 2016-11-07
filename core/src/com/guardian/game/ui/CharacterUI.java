@@ -49,8 +49,8 @@ public class CharacterUI extends Table{
 		// 最外层表格
 		this.setDebug(GameConfig.UIdebug); 
 		this.setName("CharacterUI");
-		this.setVisible(false);
-		this.setFillParent(true);
+//		this.setVisible(false);
+//		this.setFillParent(true);
 		this.pad(bpad); // 表格边内补丁
 		this.defaults().width(GameConfig.width - bpad * 2).space(20, 10, 20, 10); // 表格Cell间距
 		this.bottom();
