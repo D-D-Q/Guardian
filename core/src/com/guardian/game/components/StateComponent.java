@@ -8,6 +8,7 @@ import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.game.core.component.AnimationComponent;
 import com.game.core.component.CharacterComponent;
 import com.game.core.component.CombatComponent;
 import com.game.core.manager.AshleyManager;
@@ -68,7 +69,7 @@ public class StateComponent implements Component, Poolable  {
 					StateComponent stateComponent = MapperTools.stateCM.get(entity);
 					
 					// 移动精灵的动态刚体。方向乘以速度
-					characterComponent.dynamicBody.setLinearVelocity(stateComponent.moveOrientationVector.nor().scl(attributesComponent.speed));
+					characterComponent.dynamicBody.setLinearVelocity(stateComponent.moveOrientationVector.nor().scl(attributesComponent.moveSpeed));
 				}
 			}
 			
@@ -89,13 +90,18 @@ public class StateComponent implements Component, Poolable  {
 		attack(2){
 			@Override
 			public void update(Entity entity) {
-				StateComponent stateComponent = MapperTools.stateCM.get(entity);
-				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
 				
-				if(combatComponent == null || combatComponent.seekTarget() != 2)
-					stateComponent.entityState.changeState(States.idle);
-				else if(combatComponent.target != null)
-					stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
+				AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
+				if(animationComponent.stateTime == 0){ // 动画播放结束才转身切换目标
+					
+					StateComponent stateComponent = MapperTools.stateCM.get(entity);
+					CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+					
+					if(combatComponent == null || combatComponent.seekTarget() != 2)
+						stateComponent.entityState.changeState(States.idle);
+					else if(combatComponent.target != null)
+						stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
+				}
 			}
 		},
 		

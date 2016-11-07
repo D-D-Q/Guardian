@@ -35,7 +35,7 @@ public class AnimationComponent implements Component, Poolable {
 	
 	/**
 	 * 当前动画已播放帧时间
-	 * TODO 每次切换动画的时候其实应该重新置0，否则可能不从第一帧播放。暂不做
+	 * 播放结束后置为0
 	 */
 	public float stateTime;
 

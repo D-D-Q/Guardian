@@ -105,6 +105,12 @@ public class CharactersTemplate{
 	public int ATK;
 	
 	/**
+	 * 攻击速度
+	 * 默认 1次/秒，极限5次/秒
+	 */
+	public float ASPD = 1;
+	
+	/**
 	 * 防御
 	 */
 	public int DEF;

@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.badlogic.gdx.utils.Pools;
 import com.game.core.component.CharacterComponent;
 import com.game.core.component.CollisionComponent;
 import com.game.core.component.CombatComponent;
@@ -30,16 +31,20 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	/**
 	 * 更新物理引擎的时间量
 	 */
-	private float accumulator = 0;
+	private float accumulator;
 	
-	private ContactEntitPools contactEntitPools;
+	/**
+	 * 碰撞数据频繁，做池化
+	 */
+	private Pool<ContactEntit> contactEntitPools;
 
 	public PhysicsSystem(int priority) {
 		super(FamilyTools.physicsF, priority);
 		
-		PhysicsManager.instance.world.setContactListener(this); // 碰撞监听
+		accumulator = 0;
+		contactEntitPools = Pools.get(ContactEntit.class, 64);
 		
-		contactEntitPools = new ContactEntitPools(64);
+		PhysicsManager.instance.world.setContactListener(this); // 碰撞监听
 	}
 	
 	/**
@@ -180,7 +185,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	}
 
 	/**
-	 * 新碰撞点
+	 * 新碰撞点, 已碰撞之后的移动会触发
 	 * 只给碰撞检测(CollisionComponent)刚体的实体转发碰撞事件
 	 * 
 	 * @see com.badlogic.gdx.physics.box2d.ContactListener#preSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.Manifold)
@@ -190,7 +195,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	}
 
 	/**
-	 * 碰撞点产生力
+	 * 碰撞点产生力, 已碰撞之后的移动会触发
 	 * @see com.badlogic.gdx.physics.box2d.ContactListener#postSolve(com.badlogic.gdx.physics.box2d.Contact, com.badlogic.gdx.physics.box2d.ContactImpulse)
 	 */
 	@Override
@@ -264,24 +269,6 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 			entityFixture = null;
 			target = null;
 //			targetFixture = null;
-		}
-	}
-	
-	/**
-	 * 碰撞数据频繁，做池化
-	 * 
-	 * @author D
-	 * @date 2016年10月24日
-	 */
-	private class ContactEntitPools extends Pool<ContactEntit>  {
-
-		public ContactEntitPools(int initialCapacity) {
-			super(initialCapacity);
-		}
-		
-		@Override
-		protected ContactEntit newObject() {
-			return new ContactEntit();
 		}
 	}
 }

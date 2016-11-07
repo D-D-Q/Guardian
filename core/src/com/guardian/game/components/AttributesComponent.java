@@ -28,22 +28,22 @@ public class AttributesComponent implements Component, Poolable{
 	public String name;
 	
 	/**
-	 * 移动速度
-	 */
-	public float speed;
-
-	/**
 	 * 等级
 	 */
 	public int Lv;
 	
 	/**
-	 * 攻击
+	 * 攻击力
 	 */
 	public float ATK;
 	
 	/**
-	 * 防御
+	 * 攻击速度
+	 */
+	public float ASPD;
+	
+	/**
+	 * 防御力
 	 */
 	public float DEF;
 	
@@ -61,6 +61,11 @@ public class AttributesComponent implements Component, Poolable{
 	 * 当前体力
 	 */
 	public float curVit;
+	
+	/**
+	 * 移动速度
+	 */
+	public float moveSpeed;
 	
 	/**
 	 * 升级所需经验
@@ -115,7 +120,7 @@ public class AttributesComponent implements Component, Poolable{
 	@Override
 	public void reset() {
 		name = null;
-		speed = 0;
+		moveSpeed = 0;
 		Lv = 0;
 		ATK = 0;
 		DEF = 0;

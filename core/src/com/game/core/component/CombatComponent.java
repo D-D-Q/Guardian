@@ -34,7 +34,8 @@ public class CombatComponent implements Component, Poolable{
 	public Body distanceBody;
 	
 	/**
-	 * 攻击距离半径，即可攻击目标的距离
+	 * 攻击距离，即可攻击目标的距离。不包含基本攻击距离
+	 * characterComponent.radius * 2 是一个身位大小，是基本攻击距离
 	 */
 	public float ATKDistance;
 	
