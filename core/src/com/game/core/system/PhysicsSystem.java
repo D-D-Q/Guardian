@@ -239,7 +239,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	 * @author D
 	 * @date 2016年10月14日
 	 */
-	private class ContactEntit implements Poolable{
+	public static class ContactEntit implements Poolable{
 		
 		/**
 		 * 碰撞检测刚体的实体

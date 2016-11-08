@@ -74,10 +74,10 @@ public class GameScreen extends ScreenAdapter {
 				GAME.batch); // 初始化地图
 		GAME.screenEntity.add(mapComponent);
 		
+		// TODO 可以不必使用CameraComponent
 		CameraComponent gameCameraComponent = AshleyManager.instance.engine.createComponent(CameraComponent.class); // 添加相机组件
 		GAME.screenEntity.add(gameCameraComponent);
-		gameCameraComponent.camera.position.set(1040, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
-		gameCameraComponent.apply();
+//		gameCameraComponent.apply();
 		
 		GAME.hero = AshleyManager.instance.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), 1040, 480); // 创建英雄
 		AshleyManager.instance.engine.addEntity(GAME.hero);
@@ -100,7 +100,6 @@ public class GameScreen extends ScreenAdapter {
 		AshleyManager.instance.engine.addSystem(new MessageHandlingSystem(70));
 		AshleyManager.instance.engine.addSystem(new Monstersystem(80));
 
-		
 		initUI();
 		
 		InputManager.instance.addProcessor(UIstage); // UI事件
@@ -145,6 +144,8 @@ public class GameScreen extends ScreenAdapter {
 			}
 			
 		});
+		
+		gameCameraComponent.camera.position.set(1040, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
 	}
 	
 	/**
@@ -175,6 +176,7 @@ public class GameScreen extends ScreenAdapter {
 		// ECS系统
 		AshleyManager.instance.engine.update(delta);
 		
+		GAME.UIViewport.apply();
 		UIstage.act(delta);
 		UIstage.draw(); // 它自己会把相机信息设置给SpriteBatch
 	}

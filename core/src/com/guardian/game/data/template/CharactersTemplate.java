@@ -102,7 +102,7 @@ public class CharactersTemplate{
 	/**
 	 * 攻击
 	 */
-	public int ATK;
+	public int ATK = 10;
 	
 	/**
 	 * 攻击速度
@@ -113,22 +113,22 @@ public class CharactersTemplate{
 	/**
 	 * 防御
 	 */
-	public int DEF;
+	public int DEF = 10;
 	
 	/**
 	 * 敏捷
 	 */
-	public int AGI;
+	public int AGI = 10;
 	
 	/**
 	 * 体力
 	 */
-	public int VIT;
+	public int VIT = 10;
 	
 	/**
 	 * 移动速度
 	 */
-	public float speed = 0;
+	public float speed = 60;
 	
 	/**
 	 * 需要接受的群发消息

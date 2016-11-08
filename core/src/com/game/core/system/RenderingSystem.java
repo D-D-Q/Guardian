@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.game.core.component.AnimationComponent;
 import com.game.core.component.CameraComponent;
@@ -141,11 +140,9 @@ public class RenderingSystem extends SortedIteratingSystem {
 				mapComponent.miniDraw(Color.RED, transformComponent.position.x, transformComponent.position.y);
 		}
 		
-		Actor actor;
 		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
-		while(animationComponent.subtitle.size != 0){
-			actor = animationComponent.subtitle.pop();
-			subtitleStage.addActor(actor);
-		}
+		while(animationComponent.subtitle.size != 0)
+			subtitleStage.addActor(animationComponent.subtitle.pop());
+		
 	}
 }

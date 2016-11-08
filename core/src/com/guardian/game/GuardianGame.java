@@ -48,7 +48,8 @@ public class GuardianGame extends Game {
 		
 		Gdx.input.setInputProcessor(InputManager.instance.inputMultiplexer); // 监听输入事件
 		
-		GAME.UIViewport = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // UI窗口大小等于当前设备
+//		GAME.UIViewport = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // UI窗口大小等于当前设备
+		GAME.UIViewport = new FillViewport(GameConfig.width, GameConfig.hieght);
 		
 		setScreen(new SwitchScreen(this, GameScreen.class, GameScreenAssets.class));
 	}

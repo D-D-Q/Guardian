@@ -94,6 +94,7 @@ public class SwitchScreen extends ScreenAdapter {
 		}
 		
 		progressBar.setValue(Assets.instance.getProgress());
+		UIstage.getViewport().apply();
 		UIstage.act(delta);
 		UIstage.draw();
 	}

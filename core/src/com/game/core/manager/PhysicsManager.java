@@ -135,8 +135,7 @@ public class PhysicsManager {
 				new Vector2(transformComponent.position.x, transformComponent.position.y));
 		rangeBody.setUserData(entity); // 刚体携带实体
 		
-		// characterComponent.radius * 2 是一个身位大小，是基本攻击距离
-		circle.setRadius(characterComponent.radius * 2 + combatComponent.ATKDistance);
+		circle.setRadius(characterComponent.radius + combatComponent.ATKDistance);
 		Body distanceBody = createSensor(BodyType.KinematicBody, circle,
 				new Vector2(transformComponent.position.x, transformComponent.position.y));
 		distanceBody.setUserData(entity); // 刚体携带实体
