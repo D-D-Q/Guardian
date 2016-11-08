@@ -81,7 +81,7 @@ public class AttributesComponent implements Component, Poolable{
 	/**
 	 * 当前剩余属性点
 	 */
-	public int curAttrs;
+	public int curAttrs = 10000;
 	
 	/**
 	 * 修改某属性值

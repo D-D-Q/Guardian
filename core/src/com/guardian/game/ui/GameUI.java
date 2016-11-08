@@ -1,6 +1,7 @@
 package com.guardian.game.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -10,9 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.guardian.game.GAME;
 import com.guardian.game.GameConfig;
 import com.guardian.game.assets.GameScreenAssets;
+import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.logs.Log;
+import com.guardian.game.tools.MapperTools;
 
 /**
  * 游戏主窗口UI
@@ -115,6 +119,30 @@ public class GameUI extends Table{
 		
 		Button button = new Button(skin, GameScreenAssets.button1);
 		button.setName("1");
+		button.setTransform(true);
+		button.addListener(new ClickListener(){
+
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				Actor actor = event.getListenerActor();
+				actor.setScale(0.9f);
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				Actor actor = event.getListenerActor();
+				actor.setScale(1f);
+				super.touchUp(event, x, y, pointer, button);
+			}
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				
+				AttributesComponent attributesComponent = MapperTools.attributesCM.get(GAME.hero);
+				attributesComponent.curVit = MathUtils.clamp(attributesComponent.curVit + 100, 0, attributesComponent.maxVit);
+			}
+		});
 		this.add(button).expandX().center();
 		
 		button = new Button(skin, GameScreenAssets.button1);

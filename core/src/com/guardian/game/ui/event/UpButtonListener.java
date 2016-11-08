@@ -1,10 +1,6 @@
 package com.guardian.game.ui.event;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.guardian.game.GAME;
 import com.guardian.game.components.AttributesComponent;
@@ -32,19 +28,22 @@ public class UpButtonListener extends ClickListener {
 		if(attributesComponent.curAttrs <= 0)
 			return;
 		
-		Actor target = event.getTarget();
-		
-		Table table = (Table)target.getParent();
-		Cell<Actor> targetCell = table.getCell(target);
-		Cell<?> cell = table.getCells().get(targetCell.getRow() * table.getColumns() + 1);// 属性值列的index是1
-		Label label = (Label)cell.getActor(); 
-		
 		attributesComponent.curAttrs -= 1;
-		String newValue = String.format("%.0f", attributesComponent.update(type, 1));
+		attributesComponent.update(type, 1);
 		
-		if(AttributesEnum.VIT == type)
-			label.setText(newValue);
-		else
-			label.setText(newValue);
+//		Actor target = event.getTarget();
+//		
+//		Table table = (Table)target.getParent();
+//		Cell<Actor> targetCell = table.getCell(target);
+//		Cell<?> cell = table.getCells().get(targetCell.getRow() * table.getColumns() + 1);// 属性值列的index是1
+//		Label label = (Label)cell.getActor(); 
+//		
+//		attributesComponent.curAttrs -= 1;
+//		String newValue = String.format("%.0f", attributesComponent.update(type, 1));
+//		
+//		if(AttributesEnum.VIT == type)
+//			label.setText(newValue);
+//		else
+//			label.setText(newValue);
 	}
 }

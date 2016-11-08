@@ -46,7 +46,8 @@ public class NormalAttack extends Skill {
 			float atk = entityAttributesComponent.ATK * MathUtils.random(0.9f, 1f);
 			float def = targetAttributesComponent.DEF * MathUtils.random(0.9f, 1f);
 			
-			damage = Math.max(1, atk * ((atk + 1)/(atk + def + 1))); // 最低伤害 1
+//			damage = Math.max(1, atk * ((atk + 1)/(atk + def + 1))); // 最低伤害 1
+			damage = atk * ((atk + 1)/(atk + def + 1));
 		}
 		
 		return damage;
