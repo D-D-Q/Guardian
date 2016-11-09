@@ -14,11 +14,11 @@
 	campBits: 2,
 	campMaskBits: 1,
 	name: 寒冰卫士,
-	Lv: 1,
-	ATK: 10,
-	DEF: 10,
-	AGI: 10,
-	VIT: 10,
+	Lv: 15,
+	ATK: 150,
+	DEF: 150,
+	AGI: 150,
+	VIT: 150,
 	speed: 60,
 	script: com.guardian.game.entityscript.MonsterScript
 }

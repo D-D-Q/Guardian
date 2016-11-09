@@ -13,6 +13,7 @@ import com.game.core.component.CharacterComponent;
 import com.game.core.component.CombatComponent;
 import com.game.core.manager.AshleyManager;
 import com.game.core.manager.MsgManager;
+import com.guardian.game.GAME;
 import com.guardian.game.tools.MapperTools;
 import com.guardian.game.tools.MessageType;
 
@@ -137,7 +138,7 @@ public class StateComponent implements Component, Poolable  {
 					return;
 				
 				AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
-				if(attributesComponent.curVit <= 0)
+				if(attributesComponent.curVit <= 0 && entity != GAME.hero)
 					MapperTools.stateCM.get(entity).entityState.changeState(States.death);
 			}
 		};

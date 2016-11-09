@@ -1,10 +1,12 @@
 package com.guardian.game.ui;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.guardian.game.GAME;
 import com.guardian.game.GameConfig;
@@ -27,6 +29,7 @@ public class AttributesUI extends Table {
 	private Label lv_label;
 	private Label attr_label;
 	private Label atk_label;
+	private Label aspd_label;
 	private Label def_label;
 	private Label agi_label;
 	private Label vit_label;
@@ -51,7 +54,7 @@ public class AttributesUI extends Table {
 		table.add(new Label(i18NBundle.get("Lv"), skin)).left();
 		lv_label = new Label(String.valueOf(attributesComponent.Lv) , skin);
 		table.add(lv_label).width(100).right();
-		table.add(new Label("attr", skin)).left();
+		table.add(new Label(i18NBundle.get("Statpoints"), skin)).left();
 		attr_label = new Label(String.valueOf(attributesComponent.curAttrs) , skin);
 		table.add(attr_label).expandX().right();
 		
@@ -64,6 +67,26 @@ public class AttributesUI extends Table {
 		ATKButton.setName("ATKButton");
 		ATKButton.addListener(new UpButtonListener(AttributesEnum.ATK));
 		table.add(ATKButton).right();
+		
+		table.row();
+		table.add(new Label(i18NBundle.get("ASPD"), skin)).left();
+		aspd_label = new Label(String.format("%.3f", attributesComponent.ASPD) + "/" + i18NBundle.get("/s"), skin);
+		table.add(aspd_label).right();
+		table.add(new Label("" , skin)).left();
+		Button ASPDButton = new Button(skin, GameScreenAssets.button1);
+		ASPDButton.setName("ATKButton");
+		ASPDButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				AttributesComponent attributesComponent = MapperTools.attributesCM.get(GAME.hero);
+				if(attributesComponent.curAttrs <= 0)
+					return;
+				
+				attributesComponent.curAttrs -= 1;
+				attributesComponent.ASPD += 0.004;
+			}
+		});
+		table.add(ASPDButton).right();
 		
 		table.row();
 		table.add(new Label(i18NBundle.get("DEF"), skin)).left();
@@ -104,6 +127,7 @@ public class AttributesUI extends Table {
 		lv_label.setText(String.valueOf(attributesComponent.Lv));
 		attr_label.setText(String.valueOf(attributesComponent.curAttrs));
 		atk_label.setText(String.format("%.0f", attributesComponent.ATK));
+		aspd_label.setText(String.format("%.0f", attributesComponent.ASPD));
 		def_label.setText(String.format("%.0f", attributesComponent.DEF));
 		agi_label.setText(String.format("%.0f", attributesComponent.AGI));
 		vit_label.setText(String.format("%.0f", attributesComponent.curVit) + "/" + String.format("%.0f", attributesComponent.maxVit));

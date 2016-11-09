@@ -30,7 +30,7 @@ public class GameScreenAssets {
 //	@Asset(TextureAtlas.class)
 //	public final static String yx = "res/yx.atlas"; // 英雄
 	@Asset(CharactersTemplate.class)
-	public final static String data1 = "data/data1.json"; // 英雄
+	public final static String data1 = "data/data.json"; // 英雄
 	
 	@Asset(Skin.class)
 	public final static String default_skin = "skin/defaultUI.json"; // UI皮肤会其他资源都加载之完成之后才能加载

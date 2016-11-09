@@ -71,7 +71,7 @@ public class AttributesComponent implements Component, Poolable{
 	 * 升级所需经验
 	 * TODO 暂固定为10
 	 */
-	public int levelUpExp = 10;
+	public int levelUpExp = 18;
 	
 	/**
 	 * 当前经验

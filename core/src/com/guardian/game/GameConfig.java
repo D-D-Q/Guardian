@@ -31,7 +31,7 @@ public class GameConfig {
 	/**
 	 * UI的debug模式
 	 */
-	public final static boolean UIdebug = true;
+	public final static boolean UIdebug = false;
 	
 	/**
 	 * 物理引擎的debug模式
@@ -41,5 +41,5 @@ public class GameConfig {
 	/**
 	 * fps
 	 */
-	public final static boolean fpsDebug = true;
+	public final static boolean fpsDebug = false;
 }

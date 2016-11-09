@@ -1,9 +1,12 @@
 package com.guardian.game.screen;
 
+import java.util.Locale;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.ai.GdxAI;
+import com.badlogic.gdx.assets.loaders.I18NBundleLoader.I18NBundleParameter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
@@ -55,6 +58,8 @@ public class GameScreen extends ScreenAdapter {
 	
 	public GameScreen() {
 		Log.info(this, "create begin");
+		
+		// TODO 可以添加语言切换功能
 		
 		// -----资源
 		i18NBundle = Assets.instance.get(GameScreenAssets.i18NBundle , I18NBundle.class); // 获得国际化
@@ -167,6 +172,8 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		
+		delta *= 2; // TODO 2倍速度
+		
 		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
 		cameraComponent.apply();
 		
@@ -189,6 +196,12 @@ public class GameScreen extends ScreenAdapter {
 		cameraComponent.viewport.update(width, height, false); // 设置屏幕宽高。必须！
 	}
 	
+	
+	@Override
+	public void pause() {
+		super.pause();
+	}
+	
 	/**
 	 * 游戏切出去过，资源可能被回收。需要重新判断加载
 	 */
@@ -200,6 +213,11 @@ public class GameScreen extends ScreenAdapter {
 		}
 		
 		// loadding
+	}
+	
+	@Override
+	public void show() {
+		super.show();
 	}
 	
 	/**

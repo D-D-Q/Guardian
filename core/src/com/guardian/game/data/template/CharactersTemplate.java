@@ -80,9 +80,9 @@ public class CharactersTemplate{
 	
 	/**
 	 * 阵营
-	 * 取值 1, 2, 4, 8, ...。默认0x00000001
+	 * 取值 1, 2, 4, 8, ...。默认1
 	 */
-	public int campBits = 0x0001;
+	public int campBits = 1;
 	
 	/**
 	 * 可攻击的阵营的和, 默认所有

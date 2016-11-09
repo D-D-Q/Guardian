@@ -14,11 +14,11 @@
 	campBits: 2,
 	campMaskBits: 1,
 	name: 猴子,
-	Lv: 1,
-	ATK: 10,
-	DEF: 10,
-	AGI: 10,
-	VIT: 20,
+	Lv: 3,
+	ATK: 30,
+	DEF: 30,
+	AGI: 30,
+	VIT: 30,
 	speed: 60,
 	script: com.guardian.game.entityscript.MonsterScript
 }
