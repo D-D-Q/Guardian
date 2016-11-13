@@ -1,11 +1,13 @@
 package com.guardian.game.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -26,29 +28,40 @@ import com.guardian.game.tools.MapperTools;
  */
 public class GameUI extends Table{
 	
+	public static GameUI instance = new GameUI(GAME.skin, GAME.i18NBundle);
+	
+	public Label next_time;
+	
 	public AttributesUI attributesUI;
 	
 	public CharacterUI characterUI;
 
-	public GameUI(Skin skin, I18NBundle i18NBundle) {
+	private GameUI(Skin skin, I18NBundle i18NBundle) {
 		
 		this.setDebug(GameConfig.UIdebug);
 		this.setName("GameUI");
-		this.setOrigin(Align.center);
-//		this.setFillParent(true);
-		this.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//		this.setOrigin(Align.center);
+		this.setFillParent(true);
+//		this.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.pad(8); 
 		this.bottom().defaults();
 		
 		attributesUI = new AttributesUI(skin, i18NBundle);
 		characterUI = new CharacterUI(skin, i18NBundle);
 		
+		
+		// TODO 计时
+		next_time = new Label("00:00" , skin);
+		next_time.setColor(Color.YELLOW);
+		this.add(next_time).colspan(5).expandY().top();
+		
 		// -----------------------------------------row
+		this.row().bottom();
+		
 		Table panel = new Table(); // 表格
 		panel.setDebug(GameConfig.UIdebug);
 		panel.pad(8);
 		panel.setVisible(false);
-		this.add(panel).colspan(5).fill(); // fill会拉伸子元素，只有子元素是table不怕拉伸
 		
 		Cell<?> panelView = panel.add().colspan(4).fill(); // 切换展示页
 		
@@ -113,6 +126,8 @@ public class GameUI extends Table{
 		panel_button = new Button(skin, GameScreenAssets.button1);
 		panel_button.setName("p4");
 		panel.add(panel_button).expandX().center();
+		
+		this.add(panel).colspan(5).fill(); // fill会拉伸子元素，只有子元素是table不怕拉伸
 		
 		// ---------------------------------------- row
 		this.row();

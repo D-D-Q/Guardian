@@ -1,12 +1,10 @@
 package com.guardian.game.screen;
 
-import java.util.Locale;
-
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.ai.GdxAI;
-import com.badlogic.gdx.assets.loaders.I18NBundleLoader.I18NBundleParameter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
@@ -47,14 +45,16 @@ import com.guardian.game.ui.GameUI;
  */
 public class GameScreen extends ScreenAdapter {
 	
-	private I18NBundle i18NBundle;
-	
 	/**
 	 * UI根节点
 	 */
 	private Stage UIstage;
 	
-	private Skin skin;
+	/**
+	 * 子屏幕，可以快速切换的
+	 */
+	private Screen subScreen;
+	
 	
 	public GameScreen() {
 		Log.info(this, "create begin");
@@ -62,12 +62,9 @@ public class GameScreen extends ScreenAdapter {
 		// TODO 可以添加语言切换功能
 		
 		// -----资源
-		i18NBundle = Assets.instance.get(GameScreenAssets.i18NBundle , I18NBundle.class); // 获得国际化
-		skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
+		GAME.i18NBundle = Assets.instance.get(GameScreenAssets.i18NBundle , I18NBundle.class); // 获得国际化
+		GAME.skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
 		UIstage = new Stage(GAME.UIViewport, GAME.batch); // 创建UI根节点，注意它会重置相机的位置到(设计分辨率宽/2, 设计分辨率高/2)
-		
-		GAME.i18NBundle = i18NBundle;
-		GAME.skin = skin;
 		
 		// ----当前screen数据
 		GAME.screenEntity = AshleyManager.instance.engine.createEntity(); // 表示当前Screen的实体
@@ -161,7 +158,7 @@ public class GameScreen extends ScreenAdapter {
 		
 //		UIstage.addActor(new CharacterUI(skin, i18NBundle));
 //		UIstage.addActor(new AttributesUI(skin, i18NBundle));
-		UIstage.addActor(new GameUI(skin, i18NBundle));
+		UIstage.addActor(GameUI.instance);
 		
 //		GAME.itemsSystem.addItem(gettest());
 //		GAME.itemsSystem.addItem(gettest());
@@ -172,7 +169,8 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 		
-		delta *= 2; // TODO 2倍速度
+		// 游戏速度
+		delta *= GameConfig.gameSpeed;
 		
 		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
 		cameraComponent.apply();
@@ -233,7 +231,7 @@ public class GameScreen extends ScreenAdapter {
 		// 测试添加物品
 		Entity entity = AshleyManager.instance.engine.createEntity();
 		TextureComponent textureComponent = AshleyManager.instance.engine.createComponent(TextureComponent.class);
-		textureComponent.textureRegion = skin.getRegion(GameScreenAssets.item1);
+		textureComponent.textureRegion = GAME.skin.getRegion(GameScreenAssets.item1);
 		entity.add(textureComponent);
 		ItemComponent itemComponent = AshleyManager.instance.engine.createComponent(ItemComponent.class);
 		itemComponent.name = "大剑";

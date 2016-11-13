@@ -80,9 +80,9 @@ public class AnimationComponent implements Component, Poolable {
 			}
 		}));
 		label.addAction(
-				Actions.parallel(Actions.moveBy(0, transformComponent.spriteHeight, 0.4f, Interpolation.bounceOut),
-						Actions.scaleTo(1, 1, 0.4f, Interpolation.bounceOut), repeatAction));
-		label.addAction(Actions.after(Actions.delay(0.2f, Actions.run(new Runnable() {
+				Actions.parallel(Actions.moveBy(0, transformComponent.spriteHeight, 0.2f, Interpolation.bounceOut),
+						Actions.scaleTo(1, 1, 0.2f, Interpolation.bounceOut), repeatAction));
+		label.addAction(Actions.after(Actions.delay(0.1f, Actions.run(new Runnable() {
 			public void run() {
 				label.remove();
 			}

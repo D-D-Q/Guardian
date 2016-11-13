@@ -32,7 +32,8 @@ public class HeroScript extends EntityScript implements InputProcessor{
 				
 				attributesComponent.Lv += 1;
 				attributesComponent.curAttrs += 4; // 每级加4属性点
-				attributesComponent.curVit += 10; // 每级加10体力 
+				attributesComponent.maxVit += 10; // 每级加10体力
+				attributesComponent.curVit += 10;
 				attributesComponent.curExp -= attributesComponent.levelUpExp;
 			}
 		}

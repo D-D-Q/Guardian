@@ -89,12 +89,12 @@ public class CombatSystem extends IteratingSystem  {
 		AnimationComponent animationComponent = MapperTools.animationCM.get(combatComponent.target);
 		
 		if(damage > 0){
-			damage = Math.max(1, damage); // 最低伤害 1
-			
-			AttributesComponent targetAttributesComponent = MapperTools.attributesCM.get(combatComponent.target);
-			targetAttributesComponent.curVit -= damage; // 减体力
-			
-			animationComponent.addSubtitle(String.format("%.0f", damage));
+			if(damage >= 1){ // 低于1伤害忽略
+				AttributesComponent targetAttributesComponent = MapperTools.attributesCM.get(combatComponent.target);
+				targetAttributesComponent.curVit -= damage; // 减体力
+				
+				animationComponent.addSubtitle(String.format("%.0f", damage));
+			}
 		}
 		else
 			animationComponent.addSubtitle("miss"); // 未命中

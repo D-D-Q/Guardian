@@ -40,7 +40,7 @@ public class Assets extends AssetManager{
 	 */
 //	private Array<String> repeated = new Array<String>(4);
 	
-	public Assets() {
+	private Assets() {
 		
 		// FreeType在android下会加载失败
 //		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assetManager.getFileHandleResolver())); // 设置ttf字体扩展的Loader

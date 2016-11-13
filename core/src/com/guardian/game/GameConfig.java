@@ -28,6 +28,12 @@ public class GameConfig {
 	 */
 	public final static byte characterTileSize = 64; 
 	
+	
+	/**
+	 * 游戏速度
+	 */
+	public final static float gameSpeed = 2;
+	
 	/**
 	 * UI的debug模式
 	 */

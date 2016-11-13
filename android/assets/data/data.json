@@ -13,12 +13,12 @@
 	ATKDistance: 3,
 	campBits: 1,
 	name: 英雄,
-	Lv: 2,
-	ATK: 22,
+	Lv: 1,
+	ATK: 100,
 	ASPD: 1,
-	DEF: 22,
-	AGI: 22,
-	VIT: 1000,
+	DEF: 100,
+	AGI: 15,
+	VIT: 100,
 	speed: 80,
 	script: com.guardian.game.entityscript.HeroScript
 }

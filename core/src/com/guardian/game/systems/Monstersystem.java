@@ -7,6 +7,7 @@ import com.game.core.manager.AshleyManager;
 import com.guardian.game.GAME;
 import com.guardian.game.data.template.CharactersTemplate;
 import com.guardian.game.tools.MapperTools;
+import com.guardian.game.ui.GameUI;
 
 /**
  * 出怪系统
@@ -116,6 +117,10 @@ public class Monstersystem extends EntitySystem {
 	public final void update (float deltaTime) {
 		accumulator += deltaTime;
 
+		if(curTimes == 0){
+			GameUI.instance.next_time.setText(String.format("%02d", (int)(interval - accumulator)));
+		}
+		
 		while (accumulator >= interval) {
 			accumulator -= interval;
 			if(updateInterval())
@@ -207,7 +212,7 @@ public class Monstersystem extends EntitySystem {
 		/**
 		 * 次数间隔，秒
 		 */
-		public float timesInterval = 3;
+		public float timesInterval = 2;
 	
 		/**
 		 * 开始时提示信息
