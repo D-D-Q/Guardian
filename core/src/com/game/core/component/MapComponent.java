@@ -1,7 +1,9 @@
 package com.game.core.component;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.guardian.game.GameConfig;
 
 /**
@@ -84,33 +87,35 @@ public class MapComponent implements Component, Poolable{
 	/**
 	 * 绘制
 	 */
-	public void render(CameraComponent cameraComponent){
-		renderer.setView(cameraComponent.camera);
+	public void render(Viewport viewport){
+		renderer.setView((OrthographicCamera)viewport.getCamera());
 		renderer.render();
 	}
 	
 	/**
 	 * 开始绘制小地图，右上角
 	 */
-	public void renderMiniBegin(CameraComponent cameraComponent){
+	public void renderMiniBegin(Viewport viewport){
 		/*
-		 * cameraComponent.viewport.getScreenX()和 cameraComponent.viewport.getScreenY()
+		 * viewport.getScreenX()和 viewport.getScreenY()
 		 * 是viewport缩放之后的偏移量，因为缩放之后居中，所以偏移量是真正缩放差/2
-		 * 比如cameraComponent.viewport.getScreenX()是-1, 那么程序中绘制0实际对当前坐标就是绘制的-1
-		 * abs(cameraComponent.viewport.getScreenX())就是屏幕两边多出的距离
+		 * 比如viewport.getScreenX()是-1, 那么程序中绘制0实际对当前坐标就是绘制的-1
+		 * abs(viewport.getScreenX())就是屏幕两边多出的距离
 		 */
+		Camera camera = viewport.getCamera();
+		
 		// 地图绘制的位置
-		miniMapX = cameraComponent.camera.position.x + (cameraComponent.camera.viewportWidth/2 + cameraComponent.viewport.getScreenX() - GameConfig.miniMapSize);
-		miniMapY = cameraComponent.camera.position.y + (cameraComponent.camera.viewportHeight/2 + cameraComponent.viewport.getScreenY() - GameConfig.miniMapSize);
+		miniMapX = camera.position.x + (camera.viewportWidth/2 + viewport.getScreenX() - GameConfig.miniMapSize);
+		miniMapY = camera.position.y + (camera.viewportHeight/2 + viewport.getScreenY() - GameConfig.miniMapSize);
 		renderer.getBatch().begin();
 		renderer.getBatch().draw(miniMap, miniMapX, miniMapY);
 		renderer.getBatch().end();
 		
-		shapeRenderer.setProjectionMatrix(cameraComponent.camera.combined);
+		shapeRenderer.setProjectionMatrix(camera.combined);
 		
 		// 当前相机位置映射到小地图的位置
-		float centerX = cameraComponent.camera.position.x * miniMapScale;
-		float centerY = cameraComponent.camera.position.y * miniMapScale;
+		float centerX = camera.position.x * miniMapScale;
+		float centerY = camera.position.y * miniMapScale;
 		
 		// 绘制屏幕映射
 		shapeRenderer.begin(ShapeType.Line);

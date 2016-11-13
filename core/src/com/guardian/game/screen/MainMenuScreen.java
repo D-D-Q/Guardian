@@ -6,6 +6,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.game.core.Assets;
+import com.game.core.SwitchScreen;
 import com.guardian.game.GAME;
 import com.guardian.game.GuardianGame;
 import com.guardian.game.assets.GameScreenAssets;

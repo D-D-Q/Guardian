@@ -8,6 +8,7 @@ import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.game.core.GlobalInline;
 import com.game.core.component.AnimationComponent;
 import com.game.core.component.CharacterComponent;
 import com.game.core.component.CombatComponent;
@@ -120,7 +121,7 @@ public class StateComponent implements Component, Poolable  {
 				if(combatComponent != null)
 					MsgManager.instance.sendMessage(entity, combatComponent.target, MessageType.MSG_DEATH, null, false);// 发送角色销毁消息
 				
-				AshleyManager.instance.engine.removeEntity(entity);
+				GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
 			}
 		},
 		
@@ -317,6 +318,7 @@ public class StateComponent implements Component, Poolable  {
 	 */
 	@Override
 	public void reset() {
+		entity = null;
 		entityState.setInitialState(States.idle);
 		orientation = Orientation.d2;
 	}

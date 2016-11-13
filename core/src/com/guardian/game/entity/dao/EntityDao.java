@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.game.core.Assets;
+import com.game.core.GlobalInline;
 import com.game.core.component.AnimationComponent;
 import com.game.core.component.CharacterComponent;
 import com.game.core.component.CollisionComponent;
@@ -46,18 +47,20 @@ public class EntityDao {
 	 */
 	public Entity createHeroEntity(CharactersTemplate template, int positionX, int positionY){
 		
-		Entity entity = AshleyManager.instance.engine.createEntity();
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+		
+		Entity entity = ashleyManager.engine.createEntity();
 		entity.flags = 1; // 设置成有效
 		
-		StateComponent stateComponent = AshleyManager.instance.engine.createComponent(StateComponent.class);
+		StateComponent stateComponent = ashleyManager.engine.createComponent(StateComponent.class);
 		entity.add(stateComponent);
 		
-		TextureComponent textureComponent = AshleyManager.instance.engine.createComponent(TextureComponent.class);
+		TextureComponent textureComponent = ashleyManager.engine.createComponent(TextureComponent.class);
 		textureComponent.enableVitBar();
 		textureComponent.vitBar.setSize(template.spriteWidth, 1); // 高是无效值
 		entity.add(textureComponent);
 		
-		AnimationComponent animationComponent = AshleyManager.instance.engine.createComponent(AnimationComponent.class);
+		AnimationComponent animationComponent = ashleyManager.engine.createComponent(AnimationComponent.class);
 		Array<Sprite> frames = Assets.instance.getFrames(template.fileName); // 所有动画帧
 		int index = 0;
 		animationComponent.addAnimation(States.idle, AtlasUtil.stateAnimation(frames, index, template.idleFrames));
@@ -68,7 +71,7 @@ public class EntityDao {
 		animationComponent.addAnimation(States.attack, animations);
 		entity.add(animationComponent);
 		
-		TransformComponent transformComponent = AshleyManager.instance.engine.createComponent(TransformComponent.class);
+		TransformComponent transformComponent = ashleyManager.engine.createComponent(TransformComponent.class);
 		transformComponent.width = frames.get(0).getWidth();
 		transformComponent.height = frames.get(0).getHeight();
 		transformComponent.offsetX = template.offsetX;
@@ -79,7 +82,7 @@ public class EntityDao {
 		transformComponent.position.set(positionX, positionY); // 初始化位置, z是绘制优先级
 		entity.add(transformComponent);
 		
-		AttributesComponent attributesComponent = AshleyManager.instance.engine.createComponent(AttributesComponent.class); // 变量属性信息
+		AttributesComponent attributesComponent = ashleyManager.engine.createComponent(AttributesComponent.class); // 变量属性信息
 		attributesComponent.name = template.name;
 		attributesComponent.Lv = template.Lv;
 		attributesComponent.ATK = template.ATK;
@@ -92,7 +95,7 @@ public class EntityDao {
 		entity.add(attributesComponent);
 		
 		if(template.ATKRange != 0 || template.ATKDistance != 0){
-			CombatComponent combatComponent = AshleyManager.instance.engine.createComponent(CombatComponent.class);
+			CombatComponent combatComponent = ashleyManager.engine.createComponent(CombatComponent.class);
 			for(Orientation direction : Orientation.values()){
 				combatComponent.attackTextureRegion[direction.value] = animations[direction.value].getKeyFrames()[template.attackFrameIndex]; // 攻击事件的关键帧
 			}
@@ -103,11 +106,11 @@ public class EntityDao {
 			entity.add(combatComponent);
 		}
 		
-		MessageComponent messageComponent = AshleyManager.instance.engine.createComponent(MessageComponent.class);
+		MessageComponent messageComponent = ashleyManager.engine.createComponent(MessageComponent.class);
 		messageComponent.message = template.message;
 		entity.add(messageComponent);
 		
-		CharacterComponent characterComponent = AshleyManager.instance.engine.createComponent(CharacterComponent.class);
+		CharacterComponent characterComponent = ashleyManager.engine.createComponent(CharacterComponent.class);
 		if(template.characterRadius == 0)
 			characterComponent.radius = template.spriteWidth/2;
 		else
@@ -115,12 +118,12 @@ public class EntityDao {
 		entity.add(characterComponent);
 		
 		if(template.collisionRadius != 0){
-			CollisionComponent collisionComponent = AshleyManager.instance.engine.createComponent(CollisionComponent.class);
+			CollisionComponent collisionComponent = ashleyManager.engine.createComponent(CollisionComponent.class);
 			collisionComponent.radius = template.collisionRadius;
 			entity.add(collisionComponent);
 		}
 		
-		ScriptComponent scriptComponent = AshleyManager.instance.engine.createComponent(ScriptComponent.class);
+		ScriptComponent scriptComponent = ashleyManager.engine.createComponent(ScriptComponent.class);
 		try {
 			Class<?> scriptClass = ClassReflection.forName(template.script);
 			Constructor<?> constructor = scriptClass.getConstructor();
@@ -130,7 +133,7 @@ public class EntityDao {
 			e.printStackTrace();
 		}
 		
-		SkillsComponent skillsComponent = AshleyManager.instance.engine.createComponent(SkillsComponent.class);
+		SkillsComponent skillsComponent = ashleyManager.engine.createComponent(SkillsComponent.class);
 		skillsComponent.addSkill(NormalAttack.getInstance());
 		skillsComponent.curSkill = NormalAttack.getInstance();
 		entity.add(skillsComponent);
@@ -148,9 +151,11 @@ public class EntityDao {
 	 */
 	public Entity createCharactersEntity(CharactersTemplate template, int positionX, int positionY){
 		
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+		
 		Entity entity = createHeroEntity(template, positionX, positionY);
 		
-		PathfindingComponent pathfindingComponent = AshleyManager.instance.engine.createComponent(PathfindingComponent.class);
+		PathfindingComponent pathfindingComponent = ashleyManager.engine.createComponent(PathfindingComponent.class);
 		entity.add(pathfindingComponent);
 		
 		Assets.instance.finishLoading();

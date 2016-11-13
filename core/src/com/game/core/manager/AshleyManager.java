@@ -24,7 +24,7 @@ import com.guardian.game.tools.MapperTools;
  */
 public class AshleyManager implements EntityListener{
 	
-	public static AshleyManager instance = new AshleyManager();
+//	public static AshleyManager instance = new AshleyManager();
 	
 	/**
 	 * ashley组件实体系统引擎

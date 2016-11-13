@@ -22,15 +22,15 @@ public class GAME {
 	public static SpriteBatch batch;
 	
 	/**
+	 * 游戏窗口相机
+	 */
+	public static Viewport gameViewport;
+	
+	/**
 	 * UI相机组件 
 	 */
 	public static Viewport UIViewport;
 
-	/**
-	 * 当前世界实体
-	 */
-	public static Entity screenEntity;
-	
 	/**
 	 * 英雄
 	 */

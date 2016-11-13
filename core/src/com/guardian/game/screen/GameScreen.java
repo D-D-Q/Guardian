@@ -11,8 +11,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.game.core.Assets;
-import com.game.core.component.CameraComponent;
+import com.game.core.GlobalInline;
+import com.game.core.ScreenProxy;
 import com.game.core.component.MapComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.manager.AshleyManager;
@@ -55,34 +57,36 @@ public class GameScreen extends ScreenAdapter {
 	 */
 	private Screen subScreen;
 	
+	private Screen xiuLianScreen;
 	
 	public GameScreen() {
 		Log.info(this, "create begin");
+
+		GlobalInline.instance.enter(this);
 		
 		// TODO 可以添加语言切换功能
 		
-		// -----资源
+		// 游戏视口，分辨率匹配
+		GAME.gameViewport = new FillViewport(GameConfig.width, GameConfig.hieght); // 默认扩大显示
+		
+		// 资源
 		GAME.i18NBundle = Assets.instance.get(GameScreenAssets.i18NBundle , I18NBundle.class); // 获得国际化
 		GAME.skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
 		UIstage = new Stage(GAME.UIViewport, GAME.batch); // 创建UI根节点，注意它会重置相机的位置到(设计分辨率宽/2, 设计分辨率高/2)
 		
-		// ----当前screen数据
-		GAME.screenEntity = AshleyManager.instance.engine.createEntity(); // 表示当前Screen的实体
-		AshleyManager.instance.engine.addEntity(GAME.screenEntity);
+		AshleyManager ashleyManager = new AshleyManager();
+		GlobalInline.instance.putAshleyManager(ashleyManager);
 		
-		MapComponent mapComponent = AshleyManager.instance.engine.createComponent(MapComponent.class); // 添加地图组件
+		// 地图
+		MapComponent mapComponent = ashleyManager.engine.createComponent(MapComponent.class); // 添加地图组件
 		mapComponent.init(Assets.instance.get(GameScreenAssets.map, TiledMap.class), 
 				Assets.instance.get(GameScreenAssets.miniMap, Texture.class), 
 				GAME.batch); // 初始化地图
-		GAME.screenEntity.add(mapComponent);
+		GlobalInline.instance.put("map", mapComponent);
 		
-		// TODO 可以不必使用CameraComponent
-		CameraComponent gameCameraComponent = AshleyManager.instance.engine.createComponent(CameraComponent.class); // 添加相机组件
-		GAME.screenEntity.add(gameCameraComponent);
-//		gameCameraComponent.apply();
-		
-		GAME.hero = AshleyManager.instance.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), 1040, 480); // 创建英雄
-		AshleyManager.instance.engine.addEntity(GAME.hero);
+		// 英雄
+		GAME.hero = ashleyManager.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), 1040, 480); // 创建英雄
+		ashleyManager.engine.addEntity(GAME.hero);
 		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
 		
 		// ----要使用的系统
@@ -91,16 +95,16 @@ public class GameScreen extends ScreenAdapter {
 		GAME.itemsSystem = new ItemsSystem();
 		GAME.equippedSystem = new EquippedSystem();
 		
-		AshleyManager.instance.engine.addSystem(new GeneralSystem(5));
-		AshleyManager.instance.engine.addSystem(new PhysicsSystem(10));
-		AshleyManager.instance.engine.addSystem(new AnimationSystem(20));
-		AshleyManager.instance.engine.addSystem(new CombatSystem(30));
+		ashleyManager.engine.addSystem(new GeneralSystem(5));
+		ashleyManager.engine.addSystem(new PhysicsSystem(10));
+		ashleyManager.engine.addSystem(new AnimationSystem(20));
+		ashleyManager.engine.addSystem(new CombatSystem(30));
 		
-		AshleyManager.instance.engine.addSystem(new RenderingSystem(50));
+		ashleyManager.engine.addSystem(new RenderingSystem(50));
 		
-		AshleyManager.instance.engine.addSystem(new PathfindingSystem(0.4f, 60));
-		AshleyManager.instance.engine.addSystem(new MessageHandlingSystem(70));
-		AshleyManager.instance.engine.addSystem(new Monstersystem(80));
+		ashleyManager.engine.addSystem(new PathfindingSystem(0.4f, 60));
+		ashleyManager.engine.addSystem(new MessageHandlingSystem(70));
+		ashleyManager.engine.addSystem(new Monstersystem(80));
 
 		initUI();
 		
@@ -132,12 +136,12 @@ public class GameScreen extends ScreenAdapter {
 			public boolean touchDragged(int screenX, int screenY, int pointer) { // X,Y是鼠标新位置的坐标,以右上角为0,0。是屏幕坐标系不是游戏世界坐标系，
 				
 				// 显示相机范围，不能超地图
-				gameCameraComponent.camera.position.x = MathUtils.clamp(gameCameraComponent.camera.position.x - (screenX - this.screenX), 
+				GAME.gameViewport.getCamera().position.x = MathUtils.clamp(GAME.gameViewport.getCamera().position.x - (screenX - this.screenX), 
 						minGameCameraPositionX, maxGameCameraPositionX);
-				gameCameraComponent.camera.position.y = MathUtils.clamp(gameCameraComponent.camera.position.y + (screenY - this.screenY), 
+				GAME.gameViewport.getCamera().position.y = MathUtils.clamp(GAME.gameViewport.getCamera().position.y + (screenY - this.screenY), 
 						minGameCameraPositionY, maxGameCameraPositionY);
 				
-				Log.debug(this, "gameCamera move to：" + gameCameraComponent.camera.position.x + "," + gameCameraComponent.camera.position.y);
+				Log.debug(this, "gameCamera move to：" + GAME.gameViewport.getCamera().position.x + "," + GAME.gameViewport.getCamera().position.y);
 				
 				this.screenX = screenX;
 				this.screenY = screenY;
@@ -147,7 +151,12 @@ public class GameScreen extends ScreenAdapter {
 			
 		});
 		
-		gameCameraComponent.camera.position.set(1040, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
+		GAME.gameViewport.getCamera().position.set(1040, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
+		
+		xiuLianScreen = ScreenProxy.instance.createScreen(GameScreenSub1.class);
+		subScreen = xiuLianScreen;
+		
+		GlobalInline.instance.exit();
 	}
 	
 	/**
@@ -172,14 +181,17 @@ public class GameScreen extends ScreenAdapter {
 		// 游戏速度
 		delta *= GameConfig.gameSpeed;
 		
-		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-		cameraComponent.apply();
+		GAME.gameViewport.apply();
 		
 		// AI时间
 		GdxAI.getTimepiece().update(delta);
 		
 		// ECS系统
-		AshleyManager.instance.engine.update(delta);
+		GlobalInline.instance.getAshleyManager().engine.update(delta);
+		
+		if(subScreen != null){
+			subScreen.render(delta);
+		}
 		
 		GAME.UIViewport.apply();
 		UIstage.act(delta);
@@ -190,10 +202,8 @@ public class GameScreen extends ScreenAdapter {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		
-		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-		cameraComponent.viewport.update(width, height, false); // 设置屏幕宽高。必须！
+		GAME.gameViewport.update(width, height, false); // 设置屏幕宽高。必须！
 	}
-	
 	
 	@Override
 	public void pause() {
@@ -228,12 +238,15 @@ public class GameScreen extends ScreenAdapter {
 	}
 	
 	private Entity gettest(){
+		
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+		
 		// 测试添加物品
-		Entity entity = AshleyManager.instance.engine.createEntity();
-		TextureComponent textureComponent = AshleyManager.instance.engine.createComponent(TextureComponent.class);
+		Entity entity = ashleyManager.engine.createEntity();
+		TextureComponent textureComponent = ashleyManager.engine.createComponent(TextureComponent.class);
 		textureComponent.textureRegion = GAME.skin.getRegion(GameScreenAssets.item1);
 		entity.add(textureComponent);
-		ItemComponent itemComponent = AshleyManager.instance.engine.createComponent(ItemComponent.class);
+		ItemComponent itemComponent = ashleyManager.engine.createComponent(ItemComponent.class);
 		itemComponent.name = "大剑";
 		itemComponent.subType = 0;
 		entity.add(itemComponent);

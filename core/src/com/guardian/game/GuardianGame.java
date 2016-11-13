@@ -8,15 +8,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.game.core.Assets;
-import com.game.core.component.CameraComponent;
+import com.game.core.GlobalInline;
+import com.game.core.SwitchScreen;
 import com.game.core.manager.AshleyManager;
 import com.game.core.manager.InputManager;
 import com.game.core.manager.PhysicsManager;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.logs.Log;
 import com.guardian.game.screen.GameScreen;
-import com.guardian.game.screen.SwitchScreen;
-import com.guardian.game.tools.MapperTools;
 
 /**
  * 游戏主运行类
@@ -63,11 +62,8 @@ public class GuardianGame extends Game {
 		
 		super.render();
 		
-		if(GameConfig.physicsdebug){
-			CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-			if(cameraComponent != null)
-				PhysicsManager.instance.debugRender(cameraComponent.camera);
-		}
+		if(GameConfig.physicsdebug && GAME.gameViewport != null)
+			PhysicsManager.instance.debugRender(GAME.gameViewport.getCamera());
 		
 		if(GameConfig.fpsDebug)
 			fpsLog.log();
@@ -92,7 +88,7 @@ public class GuardianGame extends Game {
 		
 		game = null;
 		
-		AshleyManager.instance.engine.clearPools();
+		GlobalInline.instance.disabledALL();
 		PhysicsManager.instance.dispose();
 		
 		GAME.batch.dispose();

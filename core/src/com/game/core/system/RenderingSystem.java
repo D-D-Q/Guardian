@@ -7,8 +7,8 @@ import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.game.core.GlobalInline;
 import com.game.core.component.AnimationComponent;
-import com.game.core.component.CameraComponent;
 import com.game.core.component.MapComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.component.TransformComponent;
@@ -53,20 +53,20 @@ public class RenderingSystem extends SortedIteratingSystem {
 	        }
 		}, priority);
 		
-		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-		subtitleStage = new Stage(cameraComponent.viewport, GAME.batch);
+		subtitleStage = new Stage(GAME.gameViewport, GAME.batch);
 	}
 	
 	@Override
 	public void update(float deltaTime) {
 		
-		CameraComponent cameraComponent = MapperTools.cameraCM.get(GAME.screenEntity);
-		cameraComponent.update(GAME.batch);  // 更新相机数据，并设置相机数据给batch
+		// 更新相机数据，并设置相机数据给batch
+		GAME.gameViewport.getCamera().update();
+		GAME.batch.setProjectionMatrix(GAME.gameViewport.getCamera().combined);
 		
-		mapComponent = MapperTools.mapCM.get(GAME.screenEntity);
+		mapComponent = GlobalInline.instance.get("map");
 		if(mapComponent != null){
-			mapComponent.render(cameraComponent); // 把更新数据了的相机，设置给地图显示使用
-			mapComponent.renderMiniBegin(cameraComponent); // 小地图
+			mapComponent.render(GAME.gameViewport); // 把更新数据了的相机，设置给地图显示使用
+			mapComponent.renderMiniBegin(GAME.gameViewport); // 小地图
 		}
 		
 		forceSort(); // 绘制排序

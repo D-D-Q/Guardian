@@ -14,6 +14,7 @@ import com.guardian.game.GameConfig;
  * @author D
  * @date 2016年9月16日 上午7:13:25
  */
+@Deprecated
 public class CameraComponent implements Component, Poolable{
 	
 	/**

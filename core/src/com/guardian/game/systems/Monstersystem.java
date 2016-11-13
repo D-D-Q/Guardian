@@ -3,6 +3,7 @@ package com.guardian.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.game.core.Assets;
+import com.game.core.GlobalInline;
 import com.game.core.manager.AshleyManager;
 import com.guardian.game.GAME;
 import com.guardian.game.data.template.CharactersTemplate;
@@ -141,21 +142,22 @@ public class Monstersystem extends EntitySystem {
 		
 		++curTimes;
 		
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		CharactersTemplate dataTemplate = Assets.instance.get(monsterConfig[curBatch].monsterData, CharactersTemplate.class);
 		
 		if((monsterConfig[curBatch].location & 0b100) == 0b100){
-			Entity entity = AshleyManager.instance.entityDao.createCharactersEntity(dataTemplate, 520, 2080);
-			AshleyManager.instance.engine.addEntity(entity);
+			Entity entity = ashleyManager.entityDao.createCharactersEntity(dataTemplate, 520, 2080);
+			ashleyManager.engine.addEntity(entity);
 			MapperTools.combatCM.get(entity).target = GAME.hero;
 		}
 		if((monsterConfig[curBatch].location & 0b010) == 0b010){
-			Entity entity = AshleyManager.instance.entityDao.createCharactersEntity(dataTemplate, 1040, 2080);
-			AshleyManager.instance.engine.addEntity(entity);
+			Entity entity = ashleyManager.entityDao.createCharactersEntity(dataTemplate, 1040, 2080);
+			ashleyManager.engine.addEntity(entity);
 			MapperTools.combatCM.get(entity).target = GAME.hero;
 		}
 		if((monsterConfig[curBatch].location & 0b001) == 0b001){
-			Entity entity = AshleyManager.instance.entityDao.createCharactersEntity(dataTemplate, 1560, 2080);
-			AshleyManager.instance.engine.addEntity(entity);
+			Entity entity = ashleyManager.entityDao.createCharactersEntity(dataTemplate, 1560, 2080);
+			ashleyManager.engine.addEntity(entity);
 			MapperTools.combatCM.get(entity).target = GAME.hero;
 		}
 		

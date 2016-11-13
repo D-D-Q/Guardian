@@ -1,4 +1,4 @@
-package com.guardian.game.screen;
+package com.game.core;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -13,9 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.Constructor;
-import com.game.core.Assets;
 import com.guardian.game.GAME;
 import com.guardian.game.GameConfig;
 import com.guardian.game.logs.Log;
@@ -29,15 +26,14 @@ import com.guardian.game.logs.Log;
 public class SwitchScreen extends ScreenAdapter {
 	
 	private Game game;
-	private Class<Screen> screen;
+	private Class<? extends Screen> screen;
 	
 	private Stage UIstage;
 	private ProgressBar progressBar;
 	
-	@SuppressWarnings("unchecked")
-	public <T extends Screen> SwitchScreen(Game game, Class<T> screen, Class<?> screenAssets) {
+	public SwitchScreen(Game game, Class<? extends Screen> screen, Class<?> screenAssets) {
 		this.game = game;
-		this.screen = (Class<Screen>) screen;
+		this.screen = screen;
 		
 		 // 开始加载资源
 		try {
@@ -79,16 +75,12 @@ public class SwitchScreen extends ScreenAdapter {
 		if(Assets.instance.update() && progressBar.getVisualValue() == 1){ // 判断加载完成 && 也显示100%
 			Screen instance = null;
 			try {
-				// 用libgdx的反射实现，可以支持GWT编译成html。用java的反射不能
-//				Constructor constructor = ClassReflection.getConstructor(screen, GuardianGame.class);
-//				instance = (Screen) constructor.newInstance(game);
-				Constructor constructor = ClassReflection.getConstructor(screen);
-				instance = (Screen) constructor.newInstance();
+				instance = ScreenProxy.instance.createScreen(screen);
 			} 
 			catch (Exception e) {
 				e.printStackTrace();
 				Log.error(this, "screen切换失败:" + e.getMessage());
-				Gdx.app.exit();
+//				Gdx.app.exit();
 			} 
 			game.setScreen(instance);
 		}
@@ -102,6 +94,8 @@ public class SwitchScreen extends ScreenAdapter {
 	@Override
 	public void hide() {
 		Log.info(this, "dispose begin");
+		game = null;
+		screen = null;
 		UIstage.dispose();
 	}
 }
