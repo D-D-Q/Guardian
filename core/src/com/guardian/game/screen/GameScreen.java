@@ -5,6 +5,8 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.ai.GdxAI;
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.MathUtils;
@@ -19,6 +21,8 @@ import com.game.core.component.MapComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.manager.AshleyManager;
 import com.game.core.manager.InputManager;
+import com.game.core.manager.MsgManager;
+import com.game.core.manager.PhysicsManager;
 import com.game.core.system.AnimationSystem;
 import com.game.core.system.CombatSystem;
 import com.game.core.system.GeneralSystem;
@@ -45,7 +49,9 @@ import com.guardian.game.ui.GameUI;
  * @author D
  * @date 2016年8月29日 下午9:40:56
  */
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends ScreenAdapter implements Telegraph {
+	
+	public static final int MSG_SHOW_XIU_LIAN = 1;
 	
 	/**
 	 * UI根节点
@@ -62,8 +68,6 @@ public class GameScreen extends ScreenAdapter {
 	public GameScreen() {
 		Log.info(this, "create begin");
 
-		GlobalInline.instance.enter(this);
-		
 		// TODO 可以添加语言切换功能
 		
 		// 游戏视口，分辨率匹配
@@ -74,22 +78,10 @@ public class GameScreen extends ScreenAdapter {
 		GAME.skin = Assets.instance.get(GameScreenAssets.default_skin, Skin.class); // 获得皮肤
 		UIstage = new Stage(GAME.UIViewport, GAME.batch); // 创建UI根节点，注意它会重置相机的位置到(设计分辨率宽/2, 设计分辨率高/2)
 		
+		// ECS系统
 		AshleyManager ashleyManager = new AshleyManager();
 		GlobalInline.instance.putAshleyManager(ashleyManager);
 		
-		// 地图
-		MapComponent mapComponent = ashleyManager.engine.createComponent(MapComponent.class); // 添加地图组件
-		mapComponent.init(Assets.instance.get(GameScreenAssets.map, TiledMap.class), 
-				Assets.instance.get(GameScreenAssets.miniMap, Texture.class), 
-				GAME.batch); // 初始化地图
-		GlobalInline.instance.put("map", mapComponent);
-		
-		// 英雄
-		GAME.hero = ashleyManager.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), 1040, 480); // 创建英雄
-		ashleyManager.engine.addEntity(GAME.hero);
-		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
-		
-		// ----要使用的系统
 //		engine.addSystem((GAME.itemsSystem = new ItemsSystem(this)));
 //		engine.addSystem((GAME.equippedSystem = new EquippedSystem(this)));
 		GAME.itemsSystem = new ItemsSystem();
@@ -105,7 +97,20 @@ public class GameScreen extends ScreenAdapter {
 		ashleyManager.engine.addSystem(new PathfindingSystem(0.4f, 60));
 		ashleyManager.engine.addSystem(new MessageHandlingSystem(70));
 		ashleyManager.engine.addSystem(new Monstersystem(80));
-
+		
+		// 地图
+		MapComponent mapComponent = ashleyManager.engine.createComponent(MapComponent.class); // 添加地图组件
+		mapComponent.init(Assets.instance.get(GameScreenAssets.map, TiledMap.class), 
+				Assets.instance.get(GameScreenAssets.miniMap, Texture.class), 
+				GAME.batch); // 初始化地图
+		GlobalInline.instance.put("map", mapComponent);
+		
+		// 英雄
+		GAME.hero = ashleyManager.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), 1040, 480); // 创建英雄
+		ashleyManager.engine.addEntity(GAME.hero);
+		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
+		
+		// UI
 		initUI();
 		
 		InputManager.instance.addProcessor(UIstage); // UI事件
@@ -151,12 +156,12 @@ public class GameScreen extends ScreenAdapter {
 			
 		});
 		
-		GAME.gameViewport.getCamera().position.set(1040, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
+		// 注册消息, 使用代理对象注册
+		MsgManager.instance.addListener(ScreenProxy.instance.getProxy(this.getClass()), MSG_SHOW_XIU_LIAN);
 		
 		xiuLianScreen = ScreenProxy.instance.createScreen(GameScreenSub1.class);
-		subScreen = xiuLianScreen;
 		
-		GlobalInline.instance.exit();
+		GAME.gameViewport.getCamera().position.set(1040, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
 	}
 	
 	/**
@@ -193,6 +198,11 @@ public class GameScreen extends ScreenAdapter {
 			subScreen.render(delta);
 		}
 		
+		if(GameConfig.physicsdebug && GAME.gameViewport != null){
+			PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
+			physicsSystem.physicsManager.debugRender(GAME.gameViewport.getCamera());
+		}
+		
 		GAME.UIViewport.apply();
 		UIstage.act(delta);
 		UIstage.draw(); // 它自己会把相机信息设置给SpriteBatch
@@ -222,10 +232,30 @@ public class GameScreen extends ScreenAdapter {
 		
 		// loadding
 	}
-	
+
+	/**
+	 * 处理UI消息
+	 */
 	@Override
-	public void show() {
-		super.show();
+	public boolean handleMessage(Telegram msg) {
+		
+		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
+		
+		switch (msg.message) {
+		case MSG_SHOW_XIU_LIAN:
+			
+			ashleyManager.removeForCopy(GAME.hero);
+			ashleyManager.engine.getSystem(RenderingSystem.class).setProcessing(false);
+			subScreen = xiuLianScreen;
+			subScreen.show();
+			
+			break;
+
+		default:
+			break;
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -235,6 +265,10 @@ public class GameScreen extends ScreenAdapter {
 	public void hide() {
 		Log.info(this, "dispose begin");
 		UIstage.dispose();
+		
+		GlobalInline.instance.getAshleyManager().disabled();
+		
+		xiuLianScreen.dispose();
 	}
 	
 	private Entity gettest(){

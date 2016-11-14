@@ -17,7 +17,8 @@ import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.manager.PhysicsManager;
+import com.game.core.GlobalInline;
+import com.game.core.system.PhysicsSystem;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.MapperTools;
 
@@ -287,10 +288,12 @@ public class PathfindingComponent implements QueryCallback, RayCastCallback, Com
 			
 			agents.clear();
 			
+			PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
+			
 			// 寻找躲避对象
 			Vector2 position = owner.getPosition();
 			float findRadius = owner.getBoundingRadius() + radius;
-			PhysicsManager.instance.world.QueryAABB((QueryCallback)owner, 
+			physicsSystem.physicsManager.world.QueryAABB((QueryCallback)owner, 
 					position.x - findRadius, position.y - findRadius, position.x + findRadius, position.y + findRadius);
 			
 			int agentCount = agents.size;

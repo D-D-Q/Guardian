@@ -10,9 +10,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.game.core.Assets;
 import com.game.core.GlobalInline;
 import com.game.core.SwitchScreen;
-import com.game.core.manager.AshleyManager;
 import com.game.core.manager.InputManager;
-import com.game.core.manager.PhysicsManager;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.logs.Log;
 import com.guardian.game.screen.GameScreen;
@@ -55,15 +53,11 @@ public class GuardianGame extends Game {
 
 	@Override
 	public void render () {
-		Log.debug(this, "render");
 		
 		Gdx.gl.glClearColor(0, 0, 0, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		super.render();
-		
-		if(GameConfig.physicsdebug && GAME.gameViewport != null)
-			PhysicsManager.instance.debugRender(GAME.gameViewport.getCamera());
 		
 		if(GameConfig.fpsDebug)
 			fpsLog.log();
@@ -89,7 +83,6 @@ public class GuardianGame extends Game {
 		game = null;
 		
 		GlobalInline.instance.disabledALL();
-		PhysicsManager.instance.dispose();
 		
 		GAME.batch.dispose();
 		Assets.instance.dispose();

@@ -29,7 +29,7 @@ import com.guardian.game.tools.MapperTools;
  */
 public class PhysicsManager {
 	
-	public static PhysicsManager instance = new PhysicsManager();
+//	public static PhysicsManager instance = new PhysicsManager();
 	
 	/**
 	 * 物理世界频率, 每秒60

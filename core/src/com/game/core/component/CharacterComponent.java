@@ -5,7 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.manager.PhysicsManager;
+import com.game.core.GlobalInline;
+import com.game.core.system.PhysicsSystem;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.components.StateComponent.States;
@@ -99,8 +100,9 @@ public class CharacterComponent  implements Component, Poolable {
 	 */
 	@Override
 	public void reset() {
-		PhysicsManager.instance.disposeBody(dynamicBody);
-		PhysicsManager.instance.disposeBody(staticBody);
+		PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
+		physicsSystem.physicsManager.disposeBody(dynamicBody);
+		physicsSystem.physicsManager.disposeBody(staticBody);
 		radius = 0f;
 	}
 }

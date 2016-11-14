@@ -37,6 +37,8 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	 * 碰撞数据频繁，做池化
 	 */
 	private Pool<ContactEntit> contactEntitPools;
+	
+	public PhysicsManager physicsManager = new PhysicsManager();
 
 	public PhysicsSystem(int priority) {
 		super(FamilyTools.physicsF, priority);
@@ -44,7 +46,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		accumulator = 0;
 		contactEntitPools = Pools.get(ContactEntit.class, 64);
 		
-		PhysicsManager.instance.world.setContactListener(this); // 碰撞监听
+		physicsManager.world.setContactListener(this); // 碰撞监听
 	}
 	
 	/**
@@ -58,7 +60,7 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 	    accumulator += frameTime;
 	    
 	    while (accumulator >= PhysicsManager.TIME_STEP) {
-	    	PhysicsManager.instance.world.step(PhysicsManager.TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
+	    	physicsManager.world.step(PhysicsManager.TIME_STEP, PhysicsManager.VELOCITY_ITERATIONS, PhysicsManager.POSITION_ITERATIONS); // 更新
 	    	accumulator -= PhysicsManager.TIME_STEP;
 	    }
 	    

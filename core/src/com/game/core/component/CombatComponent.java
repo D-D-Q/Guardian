@@ -7,7 +7,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.manager.PhysicsManager;
+import com.game.core.GlobalInline;
+import com.game.core.system.PhysicsSystem;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -247,9 +248,12 @@ public class CombatComponent implements Component, Poolable{
 	
 	@Override
 	public void reset() {
-		PhysicsManager.instance.disposeBody(rangeBody);
+		
+		PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
+		physicsSystem.physicsManager.disposeBody(rangeBody);
+		physicsSystem.physicsManager.disposeBody(distanceBody);
+		
 		ATKRange = 0f;
-		PhysicsManager.instance.disposeBody(distanceBody);
 		ATKDistance = 0f;
 		campBits = 0x0001;
 		campMaskBits = -1;

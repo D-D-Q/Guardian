@@ -1,27 +1,22 @@
 package com.game.core.manager;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.ai.msg.MessageManager;
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.game.core.component.MessageComponent;
 import com.guardian.game.tools.MapperTools;
 
 /**
  * 消息处理管理器
+ * 不使用MessageManager了, 直接继承MessageDispatcher
  * 
  * @author D
  * @date 2016年10月13日 下午10:38:33
  */
-public class MsgManager {
+public class MsgManager extends MessageDispatcher{
 	
-	public static MsgManager instance = new MsgManager();
+	public static final MsgManager instance = new MsgManager();
 	
-	/**
-	 * 真正的消息处理管理器
-	 */
-	public MessageManager messageManager;
-	
-	public MsgManager() {
-		 messageManager = MessageManager.getInstance();
+	private MsgManager() {
 	}
 	
 	/**
@@ -38,6 +33,7 @@ public class MsgManager {
 		MessageComponent senderMessageComponent = MapperTools.messageCM.get(sender);
 		MessageComponent receiverMessageComponent = MapperTools.messageCM.get(receiver);
 		
-		messageManager.dispatchMessage(0f, senderMessageComponent, receiverMessageComponent, msg, extraInfo, needsReturnReceipt);
+		dispatchMessage(0f, senderMessageComponent, receiverMessageComponent, msg, extraInfo, needsReturnReceipt);
 	}
+
 }

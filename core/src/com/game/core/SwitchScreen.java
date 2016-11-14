@@ -75,13 +75,14 @@ public class SwitchScreen extends ScreenAdapter {
 		if(Assets.instance.update() && progressBar.getVisualValue() == 1){ // 判断加载完成 && 也显示100%
 			Screen instance = null;
 			try {
-				instance = ScreenProxy.instance.createScreen(screen);
+				instance = ScreenProxy.instance.createScreen(screen); // 创建Screen代理
+				ScreenProxy.instance.disabledProxy(game.getScreen().getClass()); // 销毁原Screen代理
 			} 
 			catch (Exception e) {
+				Log.error(this, "screen切换失败");
 				e.printStackTrace();
-				Log.error(this, "screen切换失败:" + e.getMessage());
-//				Gdx.app.exit();
-			} 
+				Gdx.app.exit();
+			}
 			game.setScreen(instance);
 		}
 		

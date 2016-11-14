@@ -47,6 +47,108 @@ public class EntityDao {
 	 */
 	public Entity createHeroEntity(CharactersTemplate template, int positionX, int positionY){
 		
+		Entity entity = new Entity();
+		entity.flags = 1; // 设置成有效
+		
+		StateComponent stateComponent = new StateComponent();
+		entity.add(stateComponent);
+		
+		TextureComponent textureComponent = new TextureComponent();
+		textureComponent.enableVitBar();
+		textureComponent.vitBar.setSize(template.spriteWidth, 1); // 高是无效值
+		entity.add(textureComponent);
+		
+		AnimationComponent animationComponent = new AnimationComponent();
+		Array<Sprite> frames = Assets.instance.getFrames(template.fileName); // 所有动画帧
+		int index = 0;
+		animationComponent.addAnimation(States.idle, AtlasUtil.stateAnimation(frames, index, template.idleFrames));
+		index += 5 * template.idleFrames;
+		animationComponent.addAnimation(States.run, AtlasUtil.stateAnimation(frames, index, template.runFrames));
+		index += 5 * template.runFrames;
+		Animation[] animations = AtlasUtil.stateAnimation(frames, index, template.attackFrames);
+		animationComponent.addAnimation(States.attack, animations);
+		entity.add(animationComponent);
+		
+		TransformComponent transformComponent = new TransformComponent();
+		transformComponent.width = frames.get(0).getWidth();
+		transformComponent.height = frames.get(0).getHeight();
+		transformComponent.offsetX = template.offsetX;
+		transformComponent.offsetY = template.offsetY;
+		transformComponent.index_z = 100;
+		transformComponent.spriteHeight = template.spriteHeight;
+		transformComponent.spriteWidth = template.spriteWidth;
+		transformComponent.position.set(positionX, positionY); // 初始化位置, z是绘制优先级
+		entity.add(transformComponent);
+		
+		AttributesComponent attributesComponent = new AttributesComponent(); // 变量属性信息
+		attributesComponent.name = template.name;
+		attributesComponent.Lv = template.Lv;
+		attributesComponent.ATK = template.ATK;
+		attributesComponent.ASPD = template.ASPD;
+		attributesComponent.DEF = template.DEF;
+		attributesComponent.AGI = template.AGI;
+		attributesComponent.maxVit = template.VIT;
+		attributesComponent.curVit = template.VIT;
+		attributesComponent.moveSpeed = template.speed;
+		entity.add(attributesComponent);
+		
+		if(template.ATKRange != 0 || template.ATKDistance != 0){
+			CombatComponent combatComponent = new CombatComponent();
+			for(Orientation direction : Orientation.values()){
+				combatComponent.attackTextureRegion[direction.value] = animations[direction.value].getKeyFrames()[template.attackFrameIndex]; // 攻击事件的关键帧
+			}
+			combatComponent.ATKRange = template.ATKRange;
+			combatComponent.ATKDistance = template.ATKDistance;
+			combatComponent.campBits = template.campBits;
+			combatComponent.campMaskBits = template.campMaskBits;
+			entity.add(combatComponent);
+		}
+		
+		MessageComponent messageComponent = new MessageComponent();
+		messageComponent.message = template.message;
+		entity.add(messageComponent);
+		
+		CharacterComponent characterComponent = new CharacterComponent();
+		if(template.characterRadius == 0)
+			characterComponent.radius = template.spriteWidth/2;
+		else
+			characterComponent.radius = template.characterRadius;
+		entity.add(characterComponent);
+		
+		if(template.collisionRadius != 0){
+			CollisionComponent collisionComponent = new CollisionComponent();
+			collisionComponent.radius = template.collisionRadius;
+			entity.add(collisionComponent);
+		}
+		
+		ScriptComponent scriptComponent = new ScriptComponent();
+		try {
+			Class<?> scriptClass = ClassReflection.forName(template.script);
+			Constructor<?> constructor = scriptClass.getConstructor();
+			scriptComponent.script =  (EntityScript) constructor.newInstance();
+			entity.add(scriptComponent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		SkillsComponent skillsComponent = new SkillsComponent();
+		skillsComponent.addSkill(NormalAttack.getInstance());
+		skillsComponent.curSkill = NormalAttack.getInstance();
+		entity.add(skillsComponent);
+		
+		Assets.instance.finishLoading();
+		
+		return entity;
+	}
+
+	/**
+	 * 创建角色实体
+	 * 
+	 * @param template
+	 * @return
+	 */
+	public Entity createCharactersEntity(CharactersTemplate template, int positionX, int positionY){
+		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
 		Entity entity = ashleyManager.engine.createEntity();
@@ -137,23 +239,6 @@ public class EntityDao {
 		skillsComponent.addSkill(NormalAttack.getInstance());
 		skillsComponent.curSkill = NormalAttack.getInstance();
 		entity.add(skillsComponent);
-		
-		Assets.instance.finishLoading();
-		
-		return entity;
-	}
-
-	/**
-	 * 创建角色实体
-	 * 
-	 * @param template
-	 * @return
-	 */
-	public Entity createCharactersEntity(CharactersTemplate template, int positionX, int positionY){
-		
-		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
-		
-		Entity entity = createHeroEntity(template, positionX, positionY);
 		
 		PathfindingComponent pathfindingComponent = ashleyManager.engine.createComponent(PathfindingComponent.class);
 		entity.add(pathfindingComponent);

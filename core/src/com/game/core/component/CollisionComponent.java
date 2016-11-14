@@ -3,7 +3,8 @@ package com.game.core.component;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.manager.PhysicsManager;
+import com.game.core.GlobalInline;
+import com.game.core.system.PhysicsSystem;
 
 /**
  * 碰撞检测, 不包含物理属性。
@@ -31,7 +32,8 @@ public class CollisionComponent implements Component, Poolable{
 	 */
 	@Override
 	public void reset() {
-		PhysicsManager.instance.disposeBody(rigidBody);
+		PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
+		physicsSystem.physicsManager.disposeBody(rigidBody);
 		radius = 0f;
 	}
 }

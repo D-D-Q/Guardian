@@ -20,6 +20,6 @@ public class MessageHandlingSystem extends EntitySystem{
 	
 	@Override
 	public void update(float deltaTime) {
-		MsgManager.instance.messageManager.update(); // 处理消息
+		MsgManager.instance.update(); // 处理消息
 	}
 }
