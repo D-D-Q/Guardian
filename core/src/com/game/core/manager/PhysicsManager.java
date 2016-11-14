@@ -74,7 +74,7 @@ public class PhysicsManager {
 	 * 物理引擎debug绘制
 	 */
 	public void debugRender(Camera camera){
-		if(debugRenderer != null){
+		if(GameConfig.physicsdebug){
 	    	debugRenderer.render(world, camera.combined);
 	    }
 	}
@@ -116,6 +116,21 @@ public class PhysicsManager {
 	}
 	
 	/**
+	 * 销毁精灵刚体
+	 * @param entity
+	 */
+	public void removeCharacterRigidBody(Entity entity){
+		
+		CharacterComponent physicsComponent = MapperTools.characterCM.get(entity);
+		if(physicsComponent == null)
+			return;
+		
+		// 一起添加要一起移除
+		disposeBody(physicsComponent.dynamicBody);
+		disposeBody(physicsComponent.staticBody);
+	}
+	
+	/**
 	 * 添加战斗碰撞检测
 	 * categoryBits是默认值0x0001
 	 * 
@@ -147,6 +162,21 @@ public class PhysicsManager {
 	}
 	
 	/**
+	 * 销毁战斗碰撞检测
+	 * @param entity
+	 */
+	public void removeCombatRigidBody(Entity entity){
+		
+		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+		if(combatComponent == null)
+			return;
+		
+		// 一起添加要一起移除
+		disposeBody(combatComponent.rangeBody);
+		disposeBody(combatComponent.distanceBody);
+	}
+	
+	/**
 	 * 添加碰撞检测
 	 * categoryBits是默认值0x0001
 	 * 
@@ -168,6 +198,19 @@ public class PhysicsManager {
 		collisionComponent.rigidBody = body;
 		
 		circle.dispose();
+	}
+	
+	/**
+	 * 销毁战斗碰撞检测
+	 * @param entity
+	 */
+	public void removeCollisionRigidBody(Entity entity){
+		
+		CollisionComponent collisionComponent = MapperTools.collisionCM.get(entity);
+		if(collisionComponent == null)
+			return;
+		
+		disposeBody(collisionComponent.rigidBody);
 	}
 	
 	/**

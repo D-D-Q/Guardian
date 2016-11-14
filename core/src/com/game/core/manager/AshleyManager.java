@@ -52,6 +52,24 @@ public class AshleyManager{
 	public void addCopy(Entity entity){
 		isCopy = true;
 		engine.addEntity(entity);
+		
+		PhysicsSystem physicsSystem = engine.getSystem(PhysicsSystem.class);
+		if(physicsSystem != null){ // 添加物理
+			
+			// 角色刚体
+			if(MapperTools.characterCM.get(entity) != null){
+				physicsSystem.physicsManager.addCharacterRigidBody(entity);
+			}
+			
+			// 战斗组件刚体
+			if(MapperTools.combatCM.get(entity) != null)
+				physicsSystem.physicsManager.addCombatRigidBody(entity);
+			
+			// 碰撞检测
+			if(MapperTools.collisionCM.get(entity) != null)
+				physicsSystem.physicsManager.addCollisionRigidBody(entity);
+		}
+		
 		isCopy = false;
 	}
 	
@@ -62,6 +80,24 @@ public class AshleyManager{
 	public void removeForCopy(Entity entity){
 		isCopy = true;
 		engine.removeEntity(entity);
+		
+		PhysicsSystem physicsSystem = engine.getSystem(PhysicsSystem.class);
+		if(physicsSystem != null){ // 移除物理
+			
+			// 角色刚体
+			if(MapperTools.characterCM.get(entity) != null){
+				physicsSystem.physicsManager.removeCharacterRigidBody(entity);
+			}
+			
+			// 战斗组件刚体
+			if(MapperTools.combatCM.get(entity) != null)
+				physicsSystem.physicsManager.removeCombatRigidBody(entity);
+			
+			// 碰撞检测
+			if(MapperTools.collisionCM.get(entity) != null)
+				physicsSystem.physicsManager.removeCollisionRigidBody(entity);
+		}
+		
 		isCopy = false;
 	}
 	

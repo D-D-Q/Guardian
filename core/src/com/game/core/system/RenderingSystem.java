@@ -59,6 +59,8 @@ public class RenderingSystem extends SortedIteratingSystem {
 	@Override
 	public void update(float deltaTime) {
 		
+		GlobalInline.instance.mark();
+		
 		// 更新相机数据，并设置相机数据给batch
 		GAME.gameViewport.getCamera().update();
 		GAME.batch.setProjectionMatrix(GAME.gameViewport.getCamera().combined);
@@ -85,6 +87,10 @@ public class RenderingSystem extends SortedIteratingSystem {
 		if(mapComponent != null){
 			mapComponent.renderMiniEnd();
 		}
+		
+		PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
+		if(physicsSystem != null)
+			physicsSystem.physicsManager.debugRender(GAME.gameViewport.getCamera());
 	}
 	
 	@Override
@@ -143,6 +149,5 @@ public class RenderingSystem extends SortedIteratingSystem {
 		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
 		while(animationComponent.subtitle.size != 0)
 			subtitleStage.addActor(animationComponent.subtitle.pop());
-		
 	}
 }

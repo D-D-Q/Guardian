@@ -26,6 +26,9 @@ public class GameScreenAssets {
 	@Asset(Texture.class)
 	public final static String miniMap = "map/miniMap.png";
 	
+	@Asset(TiledMap.class)
+	public final static String map1 = "map/map1.tmx";
+	
 	// DATA资源
 //	@Asset(TextureAtlas.class)
 //	public final static String yx = "res/yx.atlas"; // 英雄

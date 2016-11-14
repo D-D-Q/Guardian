@@ -15,7 +15,6 @@ import com.game.core.system.PathfindingSystem;
 import com.game.core.system.PhysicsSystem;
 import com.game.core.system.RenderingSystem;
 import com.guardian.game.GAME;
-import com.guardian.game.GameConfig;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.tools.MapperTools;
@@ -40,7 +39,7 @@ public class GameScreenSub1 extends ScreenAdapter {
 		
 		// 地图
 		MapComponent mapComponent = ashleyManager.engine.createComponent(MapComponent.class); // 添加地图组件
-		mapComponent.init(Assets.instance.get(GameScreenAssets.map, TiledMap.class), 
+		mapComponent.init(Assets.instance.get(GameScreenAssets.map1, TiledMap.class), 
 				Assets.instance.get(GameScreenAssets.miniMap, Texture.class), 
 				GAME.batch); // 初始化地图
 		GlobalInline.instance.put("map", mapComponent);
@@ -51,11 +50,6 @@ public class GameScreenSub1 extends ScreenAdapter {
 		
 		// ECS系统
 		GlobalInline.instance.getAshleyManager().engine.update(delta);
-		
-		if(GameConfig.physicsdebug && GAME.gameViewport != null){
-			PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
-			physicsSystem.physicsManager.debugRender(GAME.gameViewport.getCamera());
-		}
 	}
 	
 	@Override
@@ -73,10 +67,13 @@ public class GameScreenSub1 extends ScreenAdapter {
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		ashleyManager.removeForCopy(GAME.hero);
 		ashleyManager.engine.removeAllEntities();
+		
+		GlobalInline.instance.clearMark();
 	}
 	
 	@Override
 	public void dispose() {
 		GlobalInline.instance.getAshleyManager().disabled();
+		GlobalInline.instance.disabled(this.getClass());
 	}
 }

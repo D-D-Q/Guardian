@@ -31,12 +31,12 @@ public class MapComponent implements Component, Poolable{
 	/**
 	 * 地图宽（像素）
 	 */
-	public static float width;
+	public float width;
 	
 	/**
 	 * 地图高（像素）
 	 */
-	public static float height;
+	public float height;
 	
 	/**
 	 * 小地图

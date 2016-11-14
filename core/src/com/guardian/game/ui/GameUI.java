@@ -56,7 +56,7 @@ public class GameUI extends Table{
 		next_time.setColor(Color.YELLOW);
 		this.add(next_time).colspan(5).expandY().top();
 		
-		// -----------------------------------------row
+		// ------------------------------------------------------------------------row
 		this.row().bottom();
 		
 		Table panel = new Table(); // 表格
@@ -130,7 +130,55 @@ public class GameUI extends Table{
 		
 		this.add(panel).colspan(5).fill(); // fill会拉伸子元素，只有子元素是table不怕拉伸
 		
-		// ---------------------------------------- row
+		// ------------------------------------------------------------------------------------------ row
+		this.row();
+		
+		Button button_row1 = new Button(skin, GameScreenAssets.button1);
+		button_row1.setName("1");
+		button_row1.setTransform(true);
+		this.add(button_row1).expandX().center();
+		
+		button_row1 = new Button(skin, GameScreenAssets.button1);
+		button_row1.setName("2");
+		button_row1.setTransform(true);
+		this.add(button_row1).expandX().center();
+		
+		button_row1 = new Button(skin, GameScreenAssets.button1);
+		button_row1.setName("3");
+		this.add(button_row1).expandX().center();;
+		
+		button_row1 = new Button(skin, GameScreenAssets.button1);
+		button_row1.setName("4");
+		this.add(button_row1).expandX().center();;
+		
+		button_row1 = new Button(skin, GameScreenAssets.button1);
+		button_row1.setName("5");
+		button_row1.setTransform(true);
+		button_row1.addListener(new ClickListener(){
+
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				Actor actor = event.getListenerActor();
+				actor.setScale(0.9f);
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				Actor actor = event.getListenerActor();
+				actor.setScale(1f);
+				super.touchUp(event, x, y, pointer, button);
+			}
+			
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				MsgManager.instance.dispatchMessage(GameScreen.MSG_BACK);
+			}
+		});
+		this.add(button_row1).expandX().right();
+		
+		
+		// ------------------------------------------------------------------------------------------ row
 		this.row();
 		
 		Button button = new Button(skin, GameScreenAssets.button1);

@@ -41,4 +41,9 @@ public class Log {
 	public static void debug(Object object, Object message){
 		Gdx.app.debug(object.getClass().getSimpleName(), message.toString());
 	}
+	
+	public static void printStackTrace(){
+		for(StackTraceElement s : Thread.currentThread().getStackTrace())
+			Gdx.app.log(s.getClassName(), s.getMethodName());
+	}
 }

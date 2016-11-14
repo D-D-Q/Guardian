@@ -22,7 +22,6 @@ import com.game.core.component.TextureComponent;
 import com.game.core.manager.AshleyManager;
 import com.game.core.manager.InputManager;
 import com.game.core.manager.MsgManager;
-import com.game.core.manager.PhysicsManager;
 import com.game.core.system.AnimationSystem;
 import com.game.core.system.CombatSystem;
 import com.game.core.system.GeneralSystem;
@@ -50,6 +49,8 @@ import com.guardian.game.ui.GameUI;
  * @date 2016年8月29日 下午9:40:56
  */
 public class GameScreen extends ScreenAdapter implements Telegraph {
+	
+	public static final int MSG_BACK = 0;
 	
 	public static final int MSG_SHOW_XIU_LIAN = 1;
 	
@@ -117,9 +118,8 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 		InputManager.instance.addProcessor(new InputAdapter() { // 拖动屏幕
 			
 			private float minGameCameraPositionX = 0 + GameConfig.width/2; // 地图左边边界是x坐标= 0 + 相机在屏幕中间
-			private float maxGameCameraPositionX = MapComponent.width - GameConfig.width/2; // 地图右边边界x坐标=地图宽 - 相机在屏幕中间
-			private float minGameCameraPositionY = 0 + GameConfig.hieght/2; // 地图下边边界是y坐标=0
-			private float maxGameCameraPositionY = MapComponent.height - GameConfig.hieght/2; // 地图上边边界x坐标=地图高 - 相机在屏幕中间
+			
+			private float minGameCameraPositionY = 0 + GameConfig.hieght/2; // 地图下边边界是y坐标=0 + 相机在屏幕中间
 			
 			private int screenX, screenY;
 			
@@ -140,6 +140,10 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) { // X,Y是鼠标新位置的坐标,以右上角为0,0。是屏幕坐标系不是游戏世界坐标系，
 				
+				MapComponent mapComponent = GlobalInline.instance.get("map");
+				float maxGameCameraPositionX = mapComponent.width - GameConfig.width/2; // 地图右边边界x坐标=地图宽 - 相机在屏幕中间
+				float maxGameCameraPositionY = mapComponent.height - GameConfig.hieght/2; // 地图上边边界x坐标=地图高 - 相机在屏幕中间
+				
 				// 显示相机范围，不能超地图
 				GAME.gameViewport.getCamera().position.x = MathUtils.clamp(GAME.gameViewport.getCamera().position.x - (screenX - this.screenX), 
 						minGameCameraPositionX, maxGameCameraPositionX);
@@ -157,7 +161,7 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 		});
 		
 		// 注册消息, 使用代理对象注册
-		MsgManager.instance.addListener(ScreenProxy.instance.getProxy(this.getClass()), MSG_SHOW_XIU_LIAN);
+		MsgManager.instance.addListeners(ScreenProxy.instance.getProxy(this.getClass()), MSG_BACK, MSG_SHOW_XIU_LIAN);
 		
 		xiuLianScreen = ScreenProxy.instance.createScreen(GameScreenSub1.class);
 		
@@ -196,11 +200,6 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 		
 		if(subScreen != null){
 			subScreen.render(delta);
-		}
-		
-		if(GameConfig.physicsdebug && GAME.gameViewport != null){
-			PhysicsSystem physicsSystem = GlobalInline.instance.getAshleyManager().engine.getSystem(PhysicsSystem.class);
-			physicsSystem.physicsManager.debugRender(GAME.gameViewport.getCamera());
 		}
 		
 		GAME.UIViewport.apply();
@@ -242,6 +241,16 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
 		switch (msg.message) {
+		case MSG_BACK:
+			if(subScreen == null)
+				break;
+			subScreen.hide();
+			subScreen = null;
+			ashleyManager.addCopy(GAME.hero);
+			ashleyManager.engine.getSystem(RenderingSystem.class).setProcessing(true);
+			
+			break;
+			
 		case MSG_SHOW_XIU_LIAN:
 			
 			ashleyManager.removeForCopy(GAME.hero);
