@@ -246,7 +246,11 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 				break;
 			subScreen.hide();
 			subScreen = null;
+			
+			MapperTools.transformCM.get(GAME.hero).position.set(1040, 480);
+			GAME.gameViewport.getCamera().position.set(1040, 480, 0);
 			ashleyManager.addCopy(GAME.hero);
+			
 			ashleyManager.engine.getSystem(RenderingSystem.class).setProcessing(true);
 			
 			break;

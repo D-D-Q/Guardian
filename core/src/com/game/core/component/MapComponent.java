@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.guardian.game.GameConfig;
+import com.guardian.game.logs.Log;
 
 /**
  * 地图组件
@@ -46,7 +47,7 @@ public class MapComponent implements Component, Poolable{
 	/**
 	 * 小地图缩放倍数
 	 */
-	public static float miniMapScale;
+	public float miniMapScale;
 	
 	/**
 	 * 小地图的上的屏幕框大小 
@@ -69,14 +70,14 @@ public class MapComponent implements Component, Poolable{
 	 * @param map
 	 */
 	public void init(TiledMap map, Texture miniMap, SpriteBatch batch){
-		this.miniMap = miniMap;
 		this.renderer = new OrthogonalTiledMapRenderer(map, 1f, batch); // 地图绘制，第二个参数缩放，比如要游戏1像素=地图16像素，就是缩小地图16倍，可以传1/16f
+		this.miniMap = miniMap;
 		
 		TiledMapTileLayer mapLayer = (TiledMapTileLayer)map.getLayers().get(0);
 		width = mapLayer.getWidth() * GameConfig.tileSize;
 		height = mapLayer.getHeight() * GameConfig.tileSize;
 		
-		miniMapScale = Math.min(GameConfig.miniMapSize/width, GameConfig.miniMapSize/height);
+		miniMapScale = Math.min(miniMap.getWidth()/width, miniMap.getHeight()/height);
 		miniScreenWidth = GameConfig.width * miniMapScale;
 		miniScreenHeight = GameConfig.hieght * miniMapScale;
 		
@@ -105,8 +106,9 @@ public class MapComponent implements Component, Poolable{
 		Camera camera = viewport.getCamera();
 		
 		// 地图绘制的位置
-		miniMapX = camera.position.x + (camera.viewportWidth/2 + viewport.getScreenX() - GameConfig.miniMapSize);
-		miniMapY = camera.position.y + (camera.viewportHeight/2 + viewport.getScreenY() - GameConfig.miniMapSize);
+		miniMapX = camera.position.x + (camera.viewportWidth/2 + viewport.getScreenX() - miniMap.getWidth());
+		miniMapY = camera.position.y + (camera.viewportHeight/2 + viewport.getScreenY() - miniMap.getHeight());
+		
 		renderer.getBatch().begin();
 		renderer.getBatch().draw(miniMap, miniMapX, miniMapY);
 		renderer.getBatch().end();
@@ -116,6 +118,8 @@ public class MapComponent implements Component, Poolable{
 		// 当前相机位置映射到小地图的位置
 		float centerX = camera.position.x * miniMapScale;
 		float centerY = camera.position.y * miniMapScale;
+		
+		Log.info(this, (camera.position.x) + "_" + (camera.position.y));
 		
 		// 绘制屏幕映射
 		shapeRenderer.begin(ShapeType.Line);

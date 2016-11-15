@@ -16,7 +16,6 @@ import com.game.core.system.PhysicsSystem;
 import com.game.core.system.RenderingSystem;
 import com.guardian.game.GAME;
 import com.guardian.game.assets.GameScreenAssets;
-import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.tools.MapperTools;
 
 public class GameScreenSub1 extends ScreenAdapter {
@@ -58,8 +57,10 @@ public class GameScreenSub1 extends ScreenAdapter {
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
 		// 英雄
+		MapperTools.transformCM.get(GAME.hero).position.set(274, 480);
+		GAME.gameViewport.getCamera().position.set(274, 480, 0);
+		
 		ashleyManager.addCopy(GAME.hero);
-		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
 	}
 	
 	@Override
