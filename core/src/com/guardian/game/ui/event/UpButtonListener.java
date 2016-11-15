@@ -1,8 +1,9 @@
 package com.guardian.game.ui.event;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.guardian.game.GAME;
+import com.game.core.GlobalInline;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.tools.AttributesEnum;
 import com.guardian.game.tools.MapperTools;
@@ -24,7 +25,9 @@ public class UpButtonListener extends ClickListener {
 	@Override
 	public void clicked(InputEvent event, float x, float y) {
 		
-		AttributesComponent attributesComponent = MapperTools.attributesCM.get(GAME.hero);
+		Entity hero = GlobalInline.instance.getGlobal("hero");
+		
+		AttributesComponent attributesComponent = MapperTools.attributesCM.get(hero);
 		if(attributesComponent.curAttrs <= 0)
 			return;
 		

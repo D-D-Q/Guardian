@@ -107,9 +107,11 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 		GlobalInline.instance.put("map", mapComponent);
 		
 		// 英雄
-		GAME.hero = ashleyManager.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), 1040, 480); // 创建英雄
-		ashleyManager.engine.addEntity(GAME.hero);
-		MapperTools.stateCM.get(GAME.hero).orientation = Orientation.d8;
+		Entity hero = ashleyManager.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), 1040, 480); // 创建英雄
+		ashleyManager.engine.addEntity(hero);
+		MapperTools.stateCM.get(hero).orientation = Orientation.d8;
+		GlobalInline.instance.put("hero", hero);
+		GlobalInline.instance.putGlobal("hero", hero);
 		
 		// UI
 		initUI();
@@ -241,27 +243,35 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
 		switch (msg.message) {
-		case MSG_BACK:
-			if(subScreen == null)
+		case MSG_BACK: {
+
+			if (subScreen == null)
 				break;
 			subScreen.hide();
 			subScreen = null;
-			
-			MapperTools.transformCM.get(GAME.hero).position.set(1040, 480);
+
+			Entity hero = GlobalInline.instance.getGlobal("hero");
+			GlobalInline.instance.put("hero", hero);
+
+			MapperTools.transformCM.get(hero).position.set(1040, 480);
 			GAME.gameViewport.getCamera().position.set(1040, 480, 0);
-			ashleyManager.addCopy(GAME.hero);
-			
+			ashleyManager.addCopy(hero);
+
 			ashleyManager.engine.getSystem(RenderingSystem.class).setProcessing(true);
-			
+		}
 			break;
 			
-		case MSG_SHOW_XIU_LIAN:
+		case MSG_SHOW_XIU_LIAN: {
+			if(subScreen == xiuLianScreen)
+				break;
 			
-			ashleyManager.removeForCopy(GAME.hero);
+			Entity hero = GlobalInline.instance.remove("hero");
+			ashleyManager.removeForCopy(hero);
 			ashleyManager.engine.getSystem(RenderingSystem.class).setProcessing(false);
+			
 			subScreen = xiuLianScreen;
 			subScreen.show();
-			
+		}	
 			break;
 
 		default:

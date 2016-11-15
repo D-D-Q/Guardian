@@ -1,5 +1,6 @@
 package com.guardian.game.screen;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -57,16 +58,20 @@ public class GameScreenSub1 extends ScreenAdapter {
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
 		// 英雄
-		MapperTools.transformCM.get(GAME.hero).position.set(274, 480);
+		Entity hero = GlobalInline.instance.getGlobal("hero");
+		GlobalInline.instance.put("hero", hero);
+		
+		MapperTools.transformCM.get(hero).position.set(274, 480);
 		GAME.gameViewport.getCamera().position.set(274, 480, 0);
 		
-		ashleyManager.addCopy(GAME.hero);
+		ashleyManager.addCopy(hero);
 	}
 	
 	@Override
 	public void hide() {
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
-		ashleyManager.removeForCopy(GAME.hero);
+		Entity hero = GlobalInline.instance.remove("hero");
+		ashleyManager.removeForCopy(hero);
 		ashleyManager.engine.removeAllEntities();
 		
 		GlobalInline.instance.clearMark();

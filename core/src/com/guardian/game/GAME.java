@@ -34,7 +34,7 @@ public class GAME {
 	/**
 	 * 英雄
 	 */
-	public static Entity hero;
+//	public static Entity hero;
 
 	/**
 	 * 装备系统

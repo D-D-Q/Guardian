@@ -148,17 +148,17 @@ public class Monstersystem extends EntitySystem {
 		if((monsterConfig[curBatch].location & 0b100) == 0b100){
 			Entity entity = ashleyManager.entityDao.createCharactersEntity(dataTemplate, 520, 2080);
 			ashleyManager.engine.addEntity(entity);
-			MapperTools.combatCM.get(entity).target = GAME.hero;
+//			MapperTools.combatCM.get(entity).target = GlobalInline.instance.get("hero");
 		}
 		if((monsterConfig[curBatch].location & 0b010) == 0b010){
 			Entity entity = ashleyManager.entityDao.createCharactersEntity(dataTemplate, 1040, 2080);
 			ashleyManager.engine.addEntity(entity);
-			MapperTools.combatCM.get(entity).target = GAME.hero;
+//			MapperTools.combatCM.get(entity).target = GlobalInline.instance.get("hero");
 		}
 		if((monsterConfig[curBatch].location & 0b001) == 0b001){
 			Entity entity = ashleyManager.entityDao.createCharactersEntity(dataTemplate, 1560, 2080);
 			ashleyManager.engine.addEntity(entity);
-			MapperTools.combatCM.get(entity).target = GAME.hero;
+//			MapperTools.combatCM.get(entity).target = GlobalInline.instance.get("hero");
 		}
 		
 		// 当前波数最后一次

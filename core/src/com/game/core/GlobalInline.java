@@ -8,7 +8,7 @@ import com.game.core.manager.AshleyManager;
 import com.guardian.game.logs.Log;
 
 /**
- * 存储全局变量。
+ * 存储变量。
  * 可以自定义划分为多个域，多个域之间的变量不冲突 
  * 
  * @author D
@@ -20,16 +20,21 @@ public class GlobalInline<T> {
 	 * 以Screen为域划分的全局变量
 	 */
 	public static final GlobalInline<Class<?>> instance = new GlobalInline<>();
+	
+	/**
+	 * 全局变量
+	 */
+	private final ObjectMap<Object, Object> globalMap = new ObjectMap<>(16);
 
 	/**
 	 * 全局变量根据该map的key划分。划分的key称为"域"
 	 */
-	private ObjectMap<T, ObjectMap<Object, Object>> domainMap = new ObjectMap<>(8);
+	private final ObjectMap<T, ObjectMap<Object, Object>> domainMap = new ObjectMap<>(8);
 	
 	/**
 	 * 域的栈
 	 */
-	private Array<T> domainStack = new Array<>(2);
+	private final Array<T> domainStack = new Array<>(2);
 	
 	/**
 	 * 标记的域
@@ -153,6 +158,31 @@ public class GlobalInline<T> {
 		return domain;
 	}
 	
+	/**
+	 * 添加全局变量
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void putGlobal(Object key, Object value){
+		globalMap.put(key, value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <E> E getGlobal(Object key){
+		return (E)globalMap.get(key);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <E> E removeGlobal(Object key){
+		return (E)globalMap.remove(key);
+	}
+	
+	/**
+	 * 当前域的AshleyManager
+	 * 
+	 * @param ashleyManager
+	 */
 	public void putAshleyManager(AshleyManager ashleyManager){
 		
 		ObjectMap<Object,Object> objectMap = domainMap.get(getCurDomain());
@@ -162,12 +192,24 @@ public class GlobalInline<T> {
 		objectMap.put("ashleyManager", ashleyManager);
 	}
 	
+	/**
+	 * 当前域的AshleyManager
+	 * 
+	 * @return
+	 */
 	public AshleyManager getAshleyManager(){
 		
 		ObjectMap<Object,Object> objectMap = domainMap.get(getCurDomain());
 		return (AshleyManager)objectMap.get("ashleyManager");
 	}
 	
+	/**
+	 * 添加变量，当前域
+	 * 
+	 * @param key
+	 * @param value
+	 * @return
+	 */
 	public Object put(Object key, Object value){
 
 		ObjectMap<Object,Object> objectMap = domainMap.get(getCurDomain());
@@ -177,10 +219,29 @@ public class GlobalInline<T> {
 		return objectMap.put(key, value);
 	}
 	
+	/**
+	 * 获得变量，当前域
+	 * 
+	 * @param key
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public <E> E get(Object key){
 		
 		ObjectMap<Object, Object> objectMap = domainMap.get(getCurDomain());
 		return (E)objectMap.get(key);
+	}
+	
+	/**
+	 * 移出变量，当前域
+	 * 
+	 * @param key
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <E> E remove(Object key){
+		
+		ObjectMap<Object, Object> objectMap = domainMap.get(getCurDomain());
+		return (E)objectMap.remove(key);
 	}
 }

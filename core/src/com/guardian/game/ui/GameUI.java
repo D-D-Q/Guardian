@@ -1,5 +1,6 @@
 package com.guardian.game.ui;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.game.core.GlobalInline;
 import com.game.core.manager.MsgManager;
 import com.guardian.game.GAME;
 import com.guardian.game.GameConfig;
@@ -203,7 +205,9 @@ public class GameUI extends Table{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				
-				AttributesComponent attributesComponent = MapperTools.attributesCM.get(GAME.hero);
+				// 修改成发送消息
+				Entity hero = GlobalInline.instance.getGlobal("hero");
+				AttributesComponent attributesComponent = MapperTools.attributesCM.get(hero);
 				attributesComponent.curVit = MathUtils.clamp(attributesComponent.curVit + 100, 0, attributesComponent.maxVit);
 			}
 		});

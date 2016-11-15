@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.GlobalInline;
 import com.game.core.system.PhysicsSystem;
+import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -184,13 +185,22 @@ public class CombatComponent implements Component, Poolable{
 	 */
 	public void enterATKRange(Contact contact, Entity target) {
 		
+		if(GlobalInline.instance.getGlobal("hero") == target)
+			Log.info(this, "111111111111111111111");
+		
 		if(!isCampTarget(target))
 			return;
 		
+		if(GlobalInline.instance.getGlobal("hero") == target)
+			Log.info(this, "222222222222222222222");
+		
 		rangeTargets.add(target);
 		
-		if(target == null) // 设置为当前目标
+		if(this.target == null){ // 设置为当前目标
 			this.target = target;
+			if(GlobalInline.instance.getGlobal("hero") == target)
+				Log.info(this, "33333333333333333333");
+		}
 	}
 	
 	/**
@@ -242,7 +252,7 @@ public class CombatComponent implements Component, Poolable{
 		
 		// 设置新目标
 		if(this.target == target){
-			this.target = distanceTargets.size == 0 ? target : distanceTargets.first(); 
+			this.target = distanceTargets.size == 0 ? null : distanceTargets.first(); 
 		}
 	}
 	

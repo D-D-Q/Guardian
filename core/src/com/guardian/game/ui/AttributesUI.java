@@ -1,5 +1,6 @@
 package com.guardian.game.ui;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.guardian.game.GAME;
+import com.game.core.GlobalInline;
 import com.guardian.game.GameConfig;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.AttributesComponent;
@@ -49,18 +50,16 @@ public class AttributesUI extends Table {
 		table.pad(15);
 		table.defaults().height(70).space(10);
 		
-		AttributesComponent attributesComponent = MapperTools.attributesCM.get(GAME.hero);
-		
 		table.add(new Label(i18NBundle.get("Lv"), skin)).left();
-		lv_label = new Label(String.valueOf(attributesComponent.Lv) , skin);
+		lv_label = new Label("" , skin);
 		table.add(lv_label).width(100).right();
 		table.add(new Label(i18NBundle.get("Statpoints"), skin)).left();
-		attr_label = new Label(String.valueOf(attributesComponent.curAttrs) , skin);
+		attr_label = new Label("" , skin);
 		table.add(attr_label).expandX().right();
 		
 		table.row().spaceTop(15);
 		table.add(new Label(i18NBundle.get("ATK"), skin)).left();
-		atk_label = new Label(String.format("%.0f", attributesComponent.ATK) , skin);
+		atk_label = new Label("" , skin);
 		table.add(atk_label).right();
 		table.add(new Label("" , skin)).left();
 		Button ATKButton = new Button(skin, GameScreenAssets.button1);
@@ -70,7 +69,7 @@ public class AttributesUI extends Table {
 		
 		table.row();
 		table.add(new Label(i18NBundle.get("ASPD"), skin)).left();
-		aspd_label = new Label(String.format("%.3f", attributesComponent.ASPD) + "/" + i18NBundle.get("/s"), skin);
+		aspd_label = new Label("", skin);
 		table.add(aspd_label).right();
 		table.add(new Label("" , skin)).left();
 		Button ASPDButton = new Button(skin, GameScreenAssets.button1);
@@ -78,7 +77,9 @@ public class AttributesUI extends Table {
 		ASPDButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				AttributesComponent attributesComponent = MapperTools.attributesCM.get(GAME.hero);
+				//TODO 修改成发送消息
+				Entity hero = GlobalInline.instance.getGlobal("hero");
+				AttributesComponent attributesComponent = MapperTools.attributesCM.get(hero);
 				if(attributesComponent.curAttrs <= 0)
 					return;
 				
@@ -90,7 +91,7 @@ public class AttributesUI extends Table {
 		
 		table.row();
 		table.add(new Label(i18NBundle.get("DEF"), skin)).left();
-		def_label = new Label(String.format("%.0f", attributesComponent.DEF) , skin);
+		def_label = new Label("" , skin);
 		table.add(def_label).right();
 		table.add(new Label("" , skin)).left();
 		Button DEFButton = new Button(skin, GameScreenAssets.button1);
@@ -100,7 +101,7 @@ public class AttributesUI extends Table {
 		
 		table.row();
 		table.add(new Label(i18NBundle.get("AGI"), skin)).left();
-		agi_label = new Label(String.format("%.0f", attributesComponent.AGI) , skin);
+		agi_label = new Label("" , skin);
 		table.add(agi_label).right();
 		table.add(new Label("" , skin)).left();
 		Button HITButton = new Button(skin, GameScreenAssets.button1);
@@ -110,7 +111,7 @@ public class AttributesUI extends Table {
 		
 		table.row();
 		table.add(new Label(i18NBundle.get("VIT"), skin)).left();
-		vit_label = new Label(String.format("%.0f", attributesComponent.curVit) + "/" + String.format("%.0f", attributesComponent.maxVit) , skin);
+		vit_label = new Label("" , skin);
 		table.add(vit_label).right();
 		table.add(new Label("" , skin)).left();
 		Button VITButton = new Button(skin, GameScreenAssets.button1);
@@ -122,7 +123,8 @@ public class AttributesUI extends Table {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		
-		AttributesComponent attributesComponent = MapperTools.attributesCM.get(GAME.hero);
+		Entity hero = GlobalInline.instance.getGlobal("hero");
+		AttributesComponent attributesComponent = MapperTools.attributesCM.get(hero);
 		
 		lv_label.setText(String.valueOf(attributesComponent.Lv));
 		attr_label.setText(String.valueOf(attributesComponent.curAttrs));

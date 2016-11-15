@@ -119,8 +119,6 @@ public class MapComponent implements Component, Poolable{
 		float centerX = camera.position.x * miniMapScale;
 		float centerY = camera.position.y * miniMapScale;
 		
-		Log.info(this, (camera.position.x) + "_" + (camera.position.y));
-		
 		// 绘制屏幕映射
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(Color.WHITE);

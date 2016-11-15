@@ -136,11 +136,14 @@ public class PathfindingComponent implements QueryCallback, RayCastCallback, Com
 //					characterComponent.move(steeringOutput.linear.nor());
 //			}
 			
-			CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-			if(combatComponent != null && combatComponent.target != null){
-				stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
-				steeringOutput.linear.add(stateComponent.moveOrientationVector);
-			}
+//			CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+//			if(combatComponent != null && combatComponent.target != null){
+//				stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
+//				steeringOutput.linear.add(stateComponent.moveOrientationVector);
+//			}
+			
+			stateComponent.lookAt(position);
+			steeringOutput.linear.add(stateComponent.moveOrientationVector);
 			
 			characterComponent.move(steeringOutput.linear.nor());
 		}

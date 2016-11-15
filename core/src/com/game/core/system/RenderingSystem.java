@@ -140,7 +140,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 		}
 		
 		if(mapComponent != null){
-			if(entity == GAME.hero)
+			if(entity == GlobalInline.instance.get("hero"))
 				mapComponent.miniDraw(Color.WHITE, transformComponent.position.x, transformComponent.position.y);
 			else
 				mapComponent.miniDraw(Color.RED, transformComponent.position.x, transformComponent.position.y);
