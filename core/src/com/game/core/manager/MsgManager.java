@@ -2,7 +2,7 @@ package com.game.core.manager;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
-import com.game.core.component.MessageComponent;
+import com.game.core.component.ScriptComponent;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -30,10 +30,10 @@ public class MsgManager extends MessageDispatcher{
 	 */
 	public void sendMessage(Entity sender, Entity receiver, int msg, Object extraInfo, boolean needsReturnReceipt) {
 		
-		MessageComponent senderMessageComponent = MapperTools.messageCM.get(sender);
-		MessageComponent receiverMessageComponent = MapperTools.messageCM.get(receiver);
+		ScriptComponent senderScriptComponent = MapperTools.scriptCM.get(sender);
+		ScriptComponent receiverScriptComponent = MapperTools.scriptCM.get(receiver);
 		
-		dispatchMessage(0f, senderMessageComponent, receiverMessageComponent, msg, extraInfo, needsReturnReceipt);
+		dispatchMessage(0f, senderScriptComponent, receiverScriptComponent, msg, extraInfo, needsReturnReceipt);
 	}
 
 }

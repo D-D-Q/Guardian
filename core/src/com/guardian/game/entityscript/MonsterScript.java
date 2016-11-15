@@ -1,13 +1,10 @@
 package com.guardian.game.entityscript;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.game.core.component.CombatComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.script.EntityScript;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.States;
-import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -30,24 +27,12 @@ public class MonsterScript extends EntityScript {
 			pathfindingComponent.isPathfinding = true;
 		}
 		else if(combatComponent.IsDistanceTarget()){
-			Log.info(this, "s222222222222");
 			pathfindingComponent.isPathfinding = false;
 			stateComponent.entityState.changeState(States.attack);
 		}
 		else if(combatComponent.isCampTarget()){
-			Log.info(this, "s33333333333");
 			pathfindingComponent.position.set(MapperTools.transformCM.get(combatComponent.target).position);
 			pathfindingComponent.isPathfinding = true;
 		}
-	}
-	
-	@Override
-	public boolean enterATKRange(Contact contact, Entity target) {
-		return false;
-	}
-	
-	@Override
-	public boolean leaveATKRange(Contact contact, Entity target) {
-		return false;
 	}
 }

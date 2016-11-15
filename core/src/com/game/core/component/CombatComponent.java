@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.GlobalInline;
 import com.game.core.system.PhysicsSystem;
-import com.guardian.game.logs.Log;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -67,6 +67,11 @@ public class CombatComponent implements Component, Poolable{
 	 * 当前攻击目标
 	 */
 	public Entity target;
+	
+	/**
+	 * 攻击自己的目标和伤害
+	 */
+	public ObjectMap<Entity, Float> attackerDamage = new ObjectMap<>(2);
 	
 	/**
 	 * 标记本次动画是否已经发送过攻击消息
@@ -185,22 +190,13 @@ public class CombatComponent implements Component, Poolable{
 	 */
 	public void enterATKRange(Contact contact, Entity target) {
 		
-		if(GlobalInline.instance.getGlobal("hero") == target)
-			Log.info(this, "111111111111111111111");
-		
 		if(!isCampTarget(target))
 			return;
 		
-		if(GlobalInline.instance.getGlobal("hero") == target)
-			Log.info(this, "222222222222222222222");
-		
 		rangeTargets.add(target);
 		
-		if(this.target == null){ // 设置为当前目标
+		if(this.target == null) // 设置为当前目标
 			this.target = target;
-			if(GlobalInline.instance.getGlobal("hero") == target)
-				Log.info(this, "33333333333333333333");
-		}
 	}
 	
 	/**

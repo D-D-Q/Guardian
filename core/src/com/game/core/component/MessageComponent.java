@@ -14,6 +14,7 @@ import com.guardian.game.tools.MapperTools;
  * @author D
  * @date 2016年10月9日 下午9:24:09
  */
+@Deprecated
 public class MessageComponent implements Component, Poolable, Telegraph  {
 	
 	/**

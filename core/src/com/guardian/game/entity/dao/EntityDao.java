@@ -13,7 +13,6 @@ import com.game.core.component.AnimationComponent;
 import com.game.core.component.CharacterComponent;
 import com.game.core.component.CollisionComponent;
 import com.game.core.component.CombatComponent;
-import com.game.core.component.MessageComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.component.ScriptComponent;
 import com.game.core.component.SkillsComponent;
@@ -51,6 +50,7 @@ public class EntityDao {
 		entity.flags = 1; // 设置成有效
 		
 		StateComponent stateComponent = new StateComponent();
+		stateComponent.entity = entity;
 		entity.add(stateComponent);
 		
 		TextureComponent textureComponent = new TextureComponent();
@@ -67,6 +67,7 @@ public class EntityDao {
 		index += 5 * template.runFrames;
 		Animation[] animations = AtlasUtil.stateAnimation(frames, index, template.attackFrames);
 		animationComponent.addAnimation(States.attack, animations);
+		animationComponent.entity = entity;
 		entity.add(animationComponent);
 		
 		TransformComponent transformComponent = new TransformComponent();
@@ -104,15 +105,16 @@ public class EntityDao {
 			entity.add(combatComponent);
 		}
 		
-		MessageComponent messageComponent = new MessageComponent();
-		messageComponent.message = template.message;
-		entity.add(messageComponent);
+//		MessageComponent messageComponent = new MessageComponent();
+//		messageComponent.message = template.message;
+//		entity.add(messageComponent);
 		
 		CharacterComponent characterComponent = new CharacterComponent();
 		if(template.characterRadius == 0)
 			characterComponent.radius = template.spriteWidth/2;
 		else
 			characterComponent.radius = template.characterRadius;
+		characterComponent.entity = entity;
 		entity.add(characterComponent);
 		
 		if(template.collisionRadius != 0){
@@ -123,9 +125,12 @@ public class EntityDao {
 		
 		ScriptComponent scriptComponent = new ScriptComponent();
 		try {
+			scriptComponent.message = template.message;
+			
 			Class<?> scriptClass = ClassReflection.forName(template.script);
 			Constructor<?> constructor = scriptClass.getConstructor();
 			scriptComponent.script =  (EntityScript) constructor.newInstance();
+			scriptComponent.script.entity = entity;
 			entity.add(scriptComponent);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -134,6 +139,7 @@ public class EntityDao {
 		SkillsComponent skillsComponent = new SkillsComponent();
 		skillsComponent.addSkill(NormalAttack.getInstance());
 		skillsComponent.curSkill = NormalAttack.getInstance();
+		skillsComponent.entity = entity;
 		entity.add(skillsComponent);
 		
 		Assets.instance.finishLoading();
@@ -155,6 +161,7 @@ public class EntityDao {
 		entity.flags = 1; // 设置成有效
 		
 		StateComponent stateComponent = ashleyManager.engine.createComponent(StateComponent.class);
+		stateComponent.entity = entity;
 		entity.add(stateComponent);
 		
 		TextureComponent textureComponent = ashleyManager.engine.createComponent(TextureComponent.class);
@@ -171,6 +178,7 @@ public class EntityDao {
 		index += 5 * template.runFrames;
 		Animation[] animations = AtlasUtil.stateAnimation(frames, index, template.attackFrames);
 		animationComponent.addAnimation(States.attack, animations);
+		animationComponent.entity = entity;
 		entity.add(animationComponent);
 		
 		TransformComponent transformComponent = ashleyManager.engine.createComponent(TransformComponent.class);
@@ -208,15 +216,16 @@ public class EntityDao {
 			entity.add(combatComponent);
 		}
 		
-		MessageComponent messageComponent = ashleyManager.engine.createComponent(MessageComponent.class);
-		messageComponent.message = template.message;
-		entity.add(messageComponent);
+//		MessageComponent messageComponent = ashleyManager.engine.createComponent(MessageComponent.class);
+//		messageComponent.message = template.message;
+//		entity.add(messageComponent);
 		
 		CharacterComponent characterComponent = ashleyManager.engine.createComponent(CharacterComponent.class);
 		if(template.characterRadius == 0)
 			characterComponent.radius = template.spriteWidth/2;
 		else
 			characterComponent.radius = template.characterRadius;
+		characterComponent.entity = entity;
 		entity.add(characterComponent);
 		
 		if(template.collisionRadius != 0){
@@ -227,9 +236,12 @@ public class EntityDao {
 		
 		ScriptComponent scriptComponent = ashleyManager.engine.createComponent(ScriptComponent.class);
 		try {
+			scriptComponent.message = template.message;
+			
 			Class<?> scriptClass = ClassReflection.forName(template.script);
 			Constructor<?> constructor = scriptClass.getConstructor();
 			scriptComponent.script =  (EntityScript) constructor.newInstance();
+			scriptComponent.script.entity = entity;
 			entity.add(scriptComponent);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -238,9 +250,11 @@ public class EntityDao {
 		SkillsComponent skillsComponent = ashleyManager.engine.createComponent(SkillsComponent.class);
 		skillsComponent.addSkill(NormalAttack.getInstance());
 		skillsComponent.curSkill = NormalAttack.getInstance();
+		skillsComponent.entity = entity;
 		entity.add(skillsComponent);
 		
 		PathfindingComponent pathfindingComponent = ashleyManager.engine.createComponent(PathfindingComponent.class);
+		pathfindingComponent.entity = entity;
 		entity.add(pathfindingComponent);
 		
 		Assets.instance.finishLoading();

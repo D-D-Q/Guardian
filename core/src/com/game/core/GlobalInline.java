@@ -84,7 +84,7 @@ public class GlobalInline<T> {
 	}
 	
 	/**
-	 * 清楚标记域
+	 * 清楚标记域, 不是本域的标记不会清除成功
 	 * 
 	 * @return
 	 */
@@ -104,21 +104,27 @@ public class GlobalInline<T> {
 	}
 	
 	/**
-	 * 退出域时候调用, 销毁变量
+	 * 销毁当前域所有变量
 	 */
-	public void disabled(T domain){
+	public void disabled(){
 		
-		domainStack.removeValue(domain, true);
-		ObjectMap<Object,Object> objectMap = domainMap.remove(domain);
+		if(domainStack.size == 0)
+			throw new RuntimeException("GlobalInline的enter方法必须先被调用");
 		
+		T domain = domainStack.peek();
+		
+		// 先获取销毁元素
+		ObjectMap<Object,Object> objectMap = domainMap.get(domain);
 		if(objectMap == null){
 			Log.info(this, "not have to disabled " + domain);
 			return;
 		}
-			
+		
 		Object object = objectMap.get("ashleyManager");
 		if(object != null)
-			((AshleyManager)object).engine.clearPools();
+			((AshleyManager)object).disabled();
+		
+		domainMap.remove(domain); // 再移除
 		
 		Log.info(this, "disabled " + domain);
 	}

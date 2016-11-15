@@ -103,6 +103,14 @@ public class StateComponent implements Component, Poolable  {
 						stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
 				}
 			}
+			
+			@Override
+			public void exit(Entity entity) {
+				
+				// TODO 不能清
+				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+				combatComponent.attackerDamage.clear(); // 清除被攻击记录
+			}
 		},
 		
 		/**
@@ -115,6 +123,7 @@ public class StateComponent implements Component, Poolable  {
 			@Override
 			public void enter(Entity entity) {
 				
+				// TODO 结算修改成combatComponent.attackerDamage
 				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
 				if(combatComponent != null)
 					MsgManager.instance.sendMessage(entity, combatComponent.target, MessageType.MSG_DEATH, null, false);// 发送角色销毁消息

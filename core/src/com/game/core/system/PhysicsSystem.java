@@ -131,20 +131,18 @@ public class PhysicsSystem extends IteratingSystem implements ContactListener{
 		
 		// 转发事件
 		ScriptComponent scriptComponent = MapperTools.scriptCM.get(ContactEntit.entity);
-		if(scriptComponent != null){
-			
-			CombatComponent combatComponent = MapperTools.combatCM.get(ContactEntit.entity);
-			if(combatComponent != null && combatComponent.rangeBody == ContactEntit.entityFixture.getBody()){ 
-				if(scriptComponent.script.enterATKRange(contact, ContactEntit.target)) // 攻击范围检测到
-					combatComponent.enterATKRange(contact, ContactEntit.target);
-			}
-			else if(combatComponent != null && combatComponent.distanceBody == ContactEntit.entityFixture.getBody()){
-				if(scriptComponent.script.enterATKDistance(contact, ContactEntit.target)) // 攻击范围检测到
-					combatComponent.enterATKDistance(contact, ContactEntit.target);
-			}
-			else{
-				scriptComponent.script.beginContact(contact, ContactEntit.target); // 普通碰撞检测事件
-			}
+		CombatComponent combatComponent = MapperTools.combatCM.get(ContactEntit.entity);
+		
+		if(combatComponent != null && combatComponent.rangeBody == ContactEntit.entityFixture.getBody()){ 
+			if(scriptComponent != null && scriptComponent.script.enterATKRange(contact, ContactEntit.target)) // 攻击范围检测到
+				combatComponent.enterATKRange(contact, ContactEntit.target);
+		}
+		else if(combatComponent != null && combatComponent.distanceBody == ContactEntit.entityFixture.getBody()){
+			if(scriptComponent != null && scriptComponent.script.enterATKDistance(contact, ContactEntit.target)) // 攻击范围检测到
+				combatComponent.enterATKDistance(contact, ContactEntit.target);
+		}
+		else if(scriptComponent != null){
+			scriptComponent.script.beginContact(contact, ContactEntit.target); // 普通碰撞检测事件
 		}
 		
 		contactEntitPools.free(ContactEntit);

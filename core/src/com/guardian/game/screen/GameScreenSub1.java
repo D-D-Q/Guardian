@@ -79,7 +79,7 @@ public class GameScreenSub1 extends ScreenAdapter {
 	
 	@Override
 	public void dispose() {
-		GlobalInline.instance.getAshleyManager().disabled();
-		GlobalInline.instance.disabled(this.getClass());
+		
+		GlobalInline.instance.disabled();
 	}
 }

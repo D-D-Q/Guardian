@@ -5,12 +5,8 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
-import com.game.core.component.AnimationComponent;
 import com.game.core.component.CharacterComponent;
-import com.game.core.component.MessageComponent;
-import com.game.core.component.PathfindingComponent;
 import com.game.core.component.ScriptComponent;
-import com.game.core.component.SkillsComponent;
 import com.game.core.system.PhysicsSystem;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.States;
@@ -35,6 +31,7 @@ public class AshleyManager{
 	/**
 	 * 实体生产
 	 */
+	// TODO 不用多个 一个就行
 	public EntityDao entityDao;
 	
 	private boolean isCopy = false;
@@ -106,6 +103,10 @@ public class AshleyManager{
 	 */
 	public void disabled(){
 		
+		// 必须回收Entity，在销毁System
+		engine.removeAllEntities();
+		engine.clearPools();
+		
 		// 销毁物理引擎
 		PhysicsSystem physicsSystem = engine.getSystem(PhysicsSystem.class);
 		if(physicsSystem != null)
@@ -130,10 +131,8 @@ public class AshleyManager{
 			
 			// 添加角色刚体
 			CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
-			if(characterComponent != null){
-				characterComponent.entity = entity;
+			if(characterComponent != null)
 				physicsSystem.physicsManager.addCharacterRigidBody(entity);
-			}
 			
 			// 战斗组件刚体
 			if(MapperTools.combatCM.get(entity) != null)
@@ -146,41 +145,27 @@ public class AshleyManager{
 			// 状态组件设置状态机的参数(owner)为实体
 			StateComponent stateComponent = MapperTools.stateCM.get(entity);
 			if(stateComponent != null){
-				stateComponent.entity = entity;
 				if(stateComponent.entityState instanceof DefaultStateMachine)
 					((DefaultStateMachine<Entity, States>)stateComponent.entityState).setOwner(entity);
 			}
 			
 			// 消息组件添加监听
-			MessageComponent messageComponent = MapperTools.messageCM.get(entity);
-			if(messageComponent != null){
-				messageComponent.entity = entity;
-				if(messageComponent.message != null)
-					MsgManager.instance.addListeners(messageComponent, messageComponent.message);
-			}
+//			MessageComponent messageComponent = MapperTools.messageCM.get(entity);
+//			if(messageComponent != null){
+//				messageComponent.entity = entity;
+//				if(messageComponent.message != null)
+//					MsgManager.instance.addListeners(messageComponent, messageComponent.message);
+//			}
 			
 			// 脚本组件
 			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
 			if(scriptComponent != null){
-				scriptComponent.script.entity = entity;
+				if(scriptComponent.message != null)
+					MsgManager.instance.addListeners(scriptComponent, scriptComponent.message); // 消息
+				
 				if(scriptComponent.script instanceof InputProcessor)
-					InputManager.instance.addProcessor((InputProcessor)scriptComponent.script);
+					InputManager.instance.addProcessor((InputProcessor)scriptComponent.script); // 输入事件
 			}
-			
-			// 动画组件
-			AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
-			if(animationComponent != null)
-				animationComponent.entity = entity;
-			
-			// 寻路组件
-			PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
-			if(pathfindingComponent != null)
-				pathfindingComponent.entity = entity;
-			
-			// 技能组件
-			SkillsComponent skillsComponent = MapperTools.skillsCM.get(entity);
-			if(skillsComponent != null)
-				skillsComponent.entity = entity;
 		}
 
 		@Override
@@ -191,13 +176,17 @@ public class AshleyManager{
 			
 			// 脚本组件，移出输入监听
 			ScriptComponent scriptComponent = MapperTools.scriptCM.get(entity);
-			if(scriptComponent != null && scriptComponent.script instanceof InputProcessor)
-				InputManager.instance.removeProcessor((InputProcessor)scriptComponent.script);
+			if(scriptComponent != null){
+				if(scriptComponent.message != null)
+					MsgManager.instance.removeListener(scriptComponent, scriptComponent.message);
+				if(scriptComponent.script instanceof InputProcessor)
+					InputManager.instance.removeProcessor((InputProcessor)scriptComponent.script);
+			}
 			
 			// 消息组件，移出消息监听
-			MessageComponent messageComponent = MapperTools.messageCM.get(entity);
-			if(messageComponent != null && messageComponent.message != null)
-				MsgManager.instance.removeListener(messageComponent, messageComponent.message);
+//			MessageComponent messageComponent = MapperTools.messageCM.get(entity);
+//			if(messageComponent != null && messageComponent.message != null)
+//				MsgManager.instance.removeListener(messageComponent, messageComponent.message);
 		}
 	}
 	

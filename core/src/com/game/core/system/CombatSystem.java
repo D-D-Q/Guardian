@@ -93,6 +93,9 @@ public class CombatSystem extends IteratingSystem  {
 				AttributesComponent targetAttributesComponent = MapperTools.attributesCM.get(combatComponent.target);
 				targetAttributesComponent.curVit -= damage; // 减体力
 				
+				CombatComponent targetCombatComponent = MapperTools.combatCM.get(combatComponent.target);
+				targetCombatComponent.attackerDamage.put(entity, damage); // 记录攻击者和伤害
+				
 				animationComponent.addSubtitle(String.format("%.0f", damage));
 			}
 		}

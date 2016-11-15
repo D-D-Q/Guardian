@@ -289,7 +289,7 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 		Log.info(this, "dispose begin");
 		UIstage.dispose();
 		
-		GlobalInline.instance.getAshleyManager().disabled();
+		GlobalInline.instance.disabled();
 		
 		xiuLianScreen.dispose();
 	}
