@@ -3,18 +3,10 @@ package com.guardian.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
-import com.badlogic.gdx.ai.fsm.State;
-import com.badlogic.gdx.ai.fsm.StateMachine;
-import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.GlobalInline;
-import com.game.core.component.AnimationComponent;
-import com.game.core.component.CharacterComponent;
-import com.game.core.component.CombatComponent;
-import com.game.core.manager.MsgManager;
+import com.guardian.game.ai.CharacterState;
 import com.guardian.game.tools.MapperTools;
-import com.guardian.game.tools.MessageType;
 
 /**
  * 精灵状态组件
@@ -24,156 +16,156 @@ import com.guardian.game.tools.MessageType;
  */
 public class StateComponent implements Component, Poolable  {
 	
-	/**
-	 * 状态
-	 * 数字是方向，按照小键盘数字方位
-	 * 
-	 * @author D
-	 * @date 2016年9月16日 下午5:24:09
-	 */
-	public static enum States implements State<Entity>{
-		
-		/**
-		 * 空闲 
-		 * 
-		 * @author D
-		 * @date 2016年10月16日 下午7:59:59
-		 */
-		idle(0){
-			@Override
-			public void update(Entity entity) {
-				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-				if(combatComponent != null){
-					StateComponent stateComponent = MapperTools.stateCM.get(entity);
-					if(combatComponent.IsDistanceTarget()){
-						stateComponent.entityState.changeState(States.attack);
-					}
-					else if(combatComponent.target != null)
-						stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
-				}
-			}
-		}, 
-		
-		/**
-		 * 移动
-		 * 
-		 * @author D
-		 * @date 2016年10月16日 下午7:59:52
-		 */
-		run(1){
-			@Override
-			public void update(Entity entity) {
-				CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
-				if(characterComponent != null){
-					AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
-					StateComponent stateComponent = MapperTools.stateCM.get(entity);
-					
-					// 移动精灵的动态刚体。方向乘以速度
-					characterComponent.dynamicBody.setLinearVelocity(stateComponent.moveOrientationVector.nor().scl(attributesComponent.moveSpeed));
-				}
-			}
-			
-			@Override
-			public void exit(Entity entity) {
-				CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
-				if(characterComponent != null)
-					characterComponent.dynamicBody.setLinearVelocity(Vector2.Zero);
-			}
-		},
-
-		/**
-		 * 攻击 
-		 * 
-		 * @author D
-		 * @date 2016年10月16日 下午7:59:44
-		 */
-		attack(2){
-			@Override
-			public void update(Entity entity) {
-				
-				AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
-				if(animationComponent.stateTime == 0){ // 动画播放结束才转身切换目标
-					
-					StateComponent stateComponent = MapperTools.stateCM.get(entity);
-					CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-					
-					if(combatComponent == null || combatComponent.seekTarget() != 2)
-						stateComponent.entityState.changeState(States.idle);
-					else if(combatComponent.target != null)
-						stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
-				}
-			}
-			
-			@Override
-			public void exit(Entity entity) {
-				
-				// TODO 不能清
-				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-				combatComponent.attackerDamage.clear(); // 清除被攻击记录
-			}
-		},
-		
-		/**
-		 * 玩完 
-		 * 
-		 * @author D
-		 * @date 2016年10月16日 下午7:59:34
-		 */
-		death(3){
-			@Override
-			public void enter(Entity entity) {
-				
-				// TODO 结算修改成combatComponent.attackerDamage
-				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-				if(combatComponent != null)
-					MsgManager.instance.sendMessage(entity, combatComponent.target, MessageType.MSG_DEATH, null, false);// 发送角色销毁消息
-				
-				GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
-			}
-		},
-		
-		/**
-		 * 全局，每个状态之前都执行
-		 * 
-		 * @author D
-		 * @date 2016年10月16日 下午7:58:59
-		 */
-		global(100){
-			@Override
-			public void update(Entity entity) {
-				
-				if(entity.flags == 0)
-					return;
-				
-				AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
-				if(attributesComponent.curVit <= 0 && entity != GlobalInline.instance.get("hero"))
-					MapperTools.stateCM.get(entity).entityState.changeState(States.death);
-			}
-		};
-		
-		public int value;
-		
-		private States(int value) {
-			this.value = value;
-		}
-
-		@Override
-		public void enter(Entity entity) {
-		}
-
-		@Override
-		public void update(Entity entity) {
-		}
-
-		@Override
-		public void exit(Entity entity) {
-		}
-
-		@Override
-		public boolean onMessage(Entity entity, Telegram telegram) {
-			return false;
-		}
-	}
+//	/**
+//	 * 状态
+//	 * 数字是方向，按照小键盘数字方位
+//	 * 
+//	 * @author D
+//	 * @date 2016年9月16日 下午5:24:09
+//	 */
+//	public static enum States implements State<Entity>{
+//		
+//		/**
+//		 * 空闲 
+//		 * 
+//		 * @author D
+//		 * @date 2016年10月16日 下午7:59:59
+//		 */
+//		idle(0){
+//			@Override
+//			public void update(Entity entity) {
+//				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+//				if(combatComponent != null){
+//					StateComponent stateComponent = MapperTools.stateCM.get(entity);
+//					if(combatComponent.IsDistanceTarget()){
+//						stateComponent.entityState.changeState(States.attack);
+//					}
+//					else if(combatComponent.target != null)
+//						stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
+//				}
+//			}
+//		}, 
+//		
+//		/**
+//		 * 移动
+//		 * 
+//		 * @author D
+//		 * @date 2016年10月16日 下午7:59:52
+//		 */
+//		run(1){
+//			@Override
+//			public void update(Entity entity) {
+//				CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
+//				if(characterComponent != null){
+//					AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
+//					StateComponent stateComponent = MapperTools.stateCM.get(entity);
+//					
+//					// 移动精灵的动态刚体。方向乘以速度
+//					characterComponent.dynamicBody.setLinearVelocity(stateComponent.moveOrientationVector.nor().scl(attributesComponent.moveSpeed));
+//				}
+//			}
+//			
+//			@Override
+//			public void exit(Entity entity) {
+//				CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
+//				if(characterComponent != null)
+//					characterComponent.dynamicBody.setLinearVelocity(Vector2.Zero);
+//			}
+//		},
+//
+//		/**
+//		 * 攻击 
+//		 * 
+//		 * @author D
+//		 * @date 2016年10月16日 下午7:59:44
+//		 */
+//		attack(2){
+//			@Override
+//			public void update(Entity entity) {
+//				
+//				AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
+//				if(animationComponent.stateTime == 0){ // 动画播放结束才转身切换目标
+//					
+//					StateComponent stateComponent = MapperTools.stateCM.get(entity);
+//					CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+//					
+//					if(combatComponent == null || combatComponent.seekTarget() != 2)
+//						stateComponent.entityState.changeState(States.idle);
+//					else if(combatComponent.target != null)
+//						stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
+//				}
+//			}
+//			
+//			@Override
+//			public void exit(Entity entity) {
+//				
+//				// TODO 不能清
+//				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+//				combatComponent.attackerDamage.clear(); // 清除被攻击记录
+//			}
+//		},
+//		
+//		/**
+//		 * 玩完 
+//		 * 
+//		 * @author D
+//		 * @date 2016年10月16日 下午7:59:34
+//		 */
+//		death(3){
+//			@Override
+//			public void enter(Entity entity) {
+//				
+//				// TODO 结算修改成combatComponent.attackerDamage
+//				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+//				if(combatComponent != null)
+//					MsgManager.instance.sendMessage(entity, combatComponent.target, MessageType.MSG_DEATH, null, false);// 发送角色销毁消息
+//				
+//				GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
+//			}
+//		},
+//		
+//		/**
+//		 * 全局，每个状态之前都执行
+//		 * 
+//		 * @author D
+//		 * @date 2016年10月16日 下午7:58:59
+//		 */
+//		global(100){
+//			@Override
+//			public void update(Entity entity) {
+//				
+//				if(entity.flags == 0)
+//					return;
+//				
+//				AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
+//				if(attributesComponent.curVit <= 0 && entity != GlobalInline.instance.get("hero"))
+//					MapperTools.stateCM.get(entity).entityState.changeState(States.death);
+//			}
+//		};
+//		
+//		public int value;
+//		
+//		private States(int value) {
+//			this.value = value;
+//		}
+//
+//		@Override
+//		public void enter(Entity entity) {
+//		}
+//
+//		@Override
+//		public void update(Entity entity) {
+//		}
+//
+//		@Override
+//		public void exit(Entity entity) {
+//		}
+//
+//		@Override
+//		public boolean onMessage(Entity entity, Telegram telegram) {
+//			return false;
+//		}
+//	}
 	
 	/**
 	 * 方位按小键盘数字, 5是中心0,0。
@@ -278,7 +270,7 @@ public class StateComponent implements Component, Poolable  {
 	/**
 	 * 状态机
 	 */
-	public final StateMachine<Entity, States> entityState;
+	public final DefaultStateMachine<Entity, CharacterState> entityState;
 	
 	/**
 	 * 人物方向, 只有8个
@@ -292,7 +284,7 @@ public class StateComponent implements Component, Poolable  {
 	public final Vector2 moveOrientationVector = new Vector2(Orientation.d2.vector);
 	
 	public StateComponent() {
-		entityState = new DefaultStateMachine<Entity, StateComponent.States>(null, States.idle, States.global); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类
+		entityState = new DefaultStateMachine<Entity, CharacterState>(null, CharacterState.idle, CharacterState.global); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类
 		orientation = Orientation.d2;
 	}
 	
@@ -326,7 +318,7 @@ public class StateComponent implements Component, Poolable  {
 	@Override
 	public void reset() {
 		entity = null;
-		entityState.setInitialState(States.idle);
+		entityState.setInitialState(CharacterState.idle);
 		orientation = Orientation.d2;
 	}
 }
