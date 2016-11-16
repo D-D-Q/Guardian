@@ -4,7 +4,6 @@ import com.game.core.component.CombatComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.script.EntityScript;
 import com.guardian.game.components.StateComponent;
-import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -24,14 +23,6 @@ public class MonsterScript extends EntityScript {
 		
 		if(combatComponent.target == null){
 			pathfindingComponent.position.set(1040, 480);
-			pathfindingComponent.isPathfinding = true;
-		}
-		else if(combatComponent.IsDistanceTarget()){
-			pathfindingComponent.isPathfinding = false;
-			stateComponent.entityState.changeState(States.attack);
-		}
-		else if(combatComponent.isCampTarget()){
-			pathfindingComponent.position.set(MapperTools.transformCM.get(combatComponent.target).position);
 			pathfindingComponent.isPathfinding = true;
 		}
 	}

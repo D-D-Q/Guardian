@@ -7,9 +7,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.GlobalInline;
 import com.game.core.system.PhysicsSystem;
+import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.Orientation;
-import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -62,7 +62,12 @@ public class CharacterComponent  implements Component, Poolable {
 			stateComponent.orientation = Orientation.getOrientation(vector2);
 			stateComponent.moveOrientationVector.set(vector2.nor()); // 保留方向
 //			stateComponent.moveOrientationVector.set(stateComponent.orientation.vector);
-			stateComponent.entityState.changeState(States.run);
+//			stateComponent.entityState.changeState(States.run);
+			
+			AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
+			
+			// 移动精灵的动态刚体。方向乘以速度
+			dynamicBody.setLinearVelocity(stateComponent.moveOrientationVector.nor().scl(attributesComponent.moveSpeed));
 		}
 	}
 	
@@ -86,12 +91,7 @@ public class CharacterComponent  implements Component, Poolable {
 	 * @param vector2 速度和方向
 	 */
 	public void stopMove(){
-		
-		// 设置状态
-		StateComponent stateComponent = MapperTools.stateCM.get(entity);
-		if(stateComponent != null){
-			stateComponent.entityState.changeState(States.idle);
-		}
+		dynamicBody.setLinearVelocity(Vector2.Zero);
 	}
 
 	/** 
