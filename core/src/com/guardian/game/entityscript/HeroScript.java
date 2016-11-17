@@ -41,53 +41,11 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public boolean keyDown (int keycode) {
 		
-//		float x = 0, y = 0;
-//		
-//		if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
-//			y = 0;
-//		else if(Gdx.input.isKeyPressed(Keys.W))
-//			y = 1;
-//		else if(Gdx.input.isKeyPressed(Keys.S))
-//			y = -1;
-//		
-//		if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
-//			x = 0;
-//		else if(Gdx.input.isKeyPressed(Keys.A))
-//			x = -1;
-//		else if(Gdx.input.isKeyPressed(Keys.D))
-//			x = 1;
-//		
-//		StateComponent stateComponent = MapperTools.stateCM.get(entity);
-//		stateComponent.orientation = Orientation.getOrientation(new Vector2(x, y));
-		
 		return true;
 	}
 	
 	@Override
 	public boolean keyUp(int keycode) {
-		
-//		float x = 0, y = 0;
-//		
-//		if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
-//			y = 0;
-//		else if(Gdx.input.isKeyPressed(Keys.W))
-//			y = 1;
-//		else if(Gdx.input.isKeyPressed(Keys.S))
-//			y = -1;
-//		
-//		if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
-//			x = 0;
-//		else if(Gdx.input.isKeyPressed(Keys.A))
-//			x = -1;
-//		else if(Gdx.input.isKeyPressed(Keys.D))
-//			x = 1;
-//		
-//		if(x == 0 && y == 0)
-//			MapperTools.characterCM.get(entity).stopMove();
-//		else{
-//			StateComponent stateComponent = MapperTools.stateCM.get(entity);
-//			stateComponent.orientation = Orientation.getOrientation(new Vector2(x, y));
-//		}
 		
 		return true;
 	}

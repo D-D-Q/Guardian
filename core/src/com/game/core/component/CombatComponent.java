@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.game.core.GlobalInline;
+import com.game.core.ai.StateAdapter;
 import com.game.core.system.PhysicsSystem;
 import com.guardian.game.tools.MapperTools;
 
@@ -82,6 +83,11 @@ public class CombatComponent implements Component, Poolable{
 	 * 8个方向的攻击帧
 	 */
 	public TextureRegion[] attackTextureRegion = new TextureRegion[8];
+	
+	/**
+	 * 战斗的状态
+	 */
+	public StateAdapter combatState;
 	
 	/**
 	 * 当前目标是否在攻击距离之内
@@ -267,7 +273,8 @@ public class CombatComponent implements Component, Poolable{
 		distanceTargets.clear();
 		target = null;
 		isSendAttackMessage = false;
-		for(TextureRegion textureRegion: attackTextureRegion)
+		for(TextureRegion textureRegion : attackTextureRegion){
 			textureRegion = null;
+		}
 	}
 }

@@ -10,7 +10,6 @@ import com.game.core.component.CombatComponent;
 import com.game.core.component.SkillsComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.manager.MsgManager;
-import com.guardian.game.ai.CharacterState;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.FamilyTools;
@@ -35,11 +34,12 @@ public class CombatSystem extends IteratingSystem  {
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		
+		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+		
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
-		if(!stateComponent.entityState.isInState(CharacterState.combat)) // TODO 不是战斗状态。最好能角色进入战斗状态才进入这个系统的entities里
+		if(!stateComponent.entityState.isInState(combatComponent.combatState)) // TODO 不是战斗状态。最好能角色进入战斗状态才进入这个系统的entities里
 			return;
 		
-		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
 		TextureComponent textureComponent = MapperTools.textureCM.get(entity);
 		if(textureComponent.textureRegion != combatComponent.attackTextureRegion[stateComponent.orientation.value]){ // 不是攻击帧
 			combatComponent.isSendAttackMessage = false;

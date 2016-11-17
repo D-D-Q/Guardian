@@ -102,6 +102,7 @@ public class EntityDao {
 			for(Orientation direction : Orientation.values()){
 				combatComponent.attackTextureRegion[direction.value] = animations[direction.value].getKeyFrames()[template.attackFrameIndex]; // 攻击事件的关键帧
 			}
+			combatComponent.combatState = HeroState.combat;
 			combatComponent.ATKRange = template.ATKRange;
 			combatComponent.ATKDistance = template.ATKDistance;
 			combatComponent.campBits = template.campBits;
@@ -214,6 +215,7 @@ public class EntityDao {
 			for(Orientation direction : Orientation.values()){
 				combatComponent.attackTextureRegion[direction.value] = animations[direction.value].getKeyFrames()[template.attackFrameIndex]; // 攻击事件的关键帧
 			}
+			combatComponent.combatState = CharacterState.combat;
 			combatComponent.ATKRange = template.ATKRange;
 			combatComponent.ATKDistance = template.ATKDistance;
 			combatComponent.campBits = template.campBits;
