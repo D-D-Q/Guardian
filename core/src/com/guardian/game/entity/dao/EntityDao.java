@@ -3,6 +3,7 @@ package com.guardian.game.entity.dao;
 import java.lang.reflect.Constructor;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
@@ -20,10 +21,12 @@ import com.game.core.component.TextureComponent;
 import com.game.core.component.TransformComponent;
 import com.game.core.manager.AshleyManager;
 import com.game.core.script.EntityScript;
+import com.guardian.game.ai.CharacterState;
+import com.guardian.game.ai.HeroState;
+import com.guardian.game.animation.CharacterAnimation;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.components.StateComponent.Orientation;
-import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.data.template.CharactersTemplate;
 import com.guardian.game.skills.NormalAttack;
 import com.guardian.game.util.AtlasUtil;
@@ -50,6 +53,7 @@ public class EntityDao {
 		entity.flags = 1; // 设置成有效
 		
 		StateComponent stateComponent = new StateComponent();
+		stateComponent.entityState = new DefaultStateMachine<>(null, null, HeroState.global); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类。
 		stateComponent.entity = entity;
 		entity.add(stateComponent);
 		
@@ -61,12 +65,12 @@ public class EntityDao {
 		AnimationComponent animationComponent = new AnimationComponent();
 		Array<Sprite> frames = Assets.instance.getFrames(template.fileName); // 所有动画帧
 		int index = 0;
-		animationComponent.addAnimation(States.idle, AtlasUtil.stateAnimation(frames, index, template.idleFrames));
+		animationComponent.addAnimation(CharacterAnimation.idle, AtlasUtil.stateAnimation(frames, index, template.idleFrames));
 		index += 5 * template.idleFrames;
-		animationComponent.addAnimation(States.run, AtlasUtil.stateAnimation(frames, index, template.runFrames));
+		animationComponent.addAnimation(CharacterAnimation.run, AtlasUtil.stateAnimation(frames, index, template.runFrames));
 		index += 5 * template.runFrames;
 		Animation[] animations = AtlasUtil.stateAnimation(frames, index, template.attackFrames);
-		animationComponent.addAnimation(States.attack, animations);
+		animationComponent.addAnimation(CharacterAnimation.attack, animations);
 		animationComponent.entity = entity;
 		entity.add(animationComponent);
 		
@@ -161,6 +165,7 @@ public class EntityDao {
 		entity.flags = 1; // 设置成有效
 		
 		StateComponent stateComponent = ashleyManager.engine.createComponent(StateComponent.class);
+		stateComponent.entityState = new DefaultStateMachine<>(null, null, CharacterState.global); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类。
 		stateComponent.entity = entity;
 		entity.add(stateComponent);
 		
@@ -172,12 +177,12 @@ public class EntityDao {
 		AnimationComponent animationComponent = ashleyManager.engine.createComponent(AnimationComponent.class);
 		Array<Sprite> frames = Assets.instance.getFrames(template.fileName); // 所有动画帧
 		int index = 0;
-		animationComponent.addAnimation(States.idle, AtlasUtil.stateAnimation(frames, index, template.idleFrames));
+		animationComponent.addAnimation(CharacterAnimation.idle, AtlasUtil.stateAnimation(frames, index, template.idleFrames));
 		index += 5 * template.idleFrames;
-		animationComponent.addAnimation(States.run, AtlasUtil.stateAnimation(frames, index, template.runFrames));
+		animationComponent.addAnimation(CharacterAnimation.run, AtlasUtil.stateAnimation(frames, index, template.runFrames));
 		index += 5 * template.runFrames;
 		Animation[] animations = AtlasUtil.stateAnimation(frames, index, template.attackFrames);
-		animationComponent.addAnimation(States.attack, animations);
+		animationComponent.addAnimation(CharacterAnimation.attack, animations);
 		animationComponent.entity = entity;
 		entity.add(animationComponent);
 		

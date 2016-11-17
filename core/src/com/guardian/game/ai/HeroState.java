@@ -4,18 +4,17 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.msg.Telegram;
-import com.game.core.GlobalInline;
+import com.badlogic.gdx.math.Vector2;
 import com.game.core.ai.StateAdapter;
 import com.game.core.component.AnimationComponent;
 import com.game.core.component.CharacterComponent;
 import com.game.core.component.CombatComponent;
-import com.game.core.component.PathfindingComponent;
-import com.game.core.manager.MsgManager;
 import com.guardian.game.animation.CharacterAnimation;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
+import com.guardian.game.components.StateComponent.Orientation;
 import com.guardian.game.tools.MapperTools;
-import com.guardian.game.tools.MessageType;
+import com.guardian.game.util.MoveUtil;
 
 /**
  * 分层有限状态机(HFSM), 角色使用
@@ -23,7 +22,7 @@ import com.guardian.game.tools.MessageType;
  * @author D
  * @date 2016年11月16日
  */
-public enum CharacterState implements StateAdapter{
+public enum HeroState implements StateAdapter{
 	
 	/**
 	 * 空闲 
@@ -63,12 +62,10 @@ public enum CharacterState implements StateAdapter{
 			if(entity.flags == 0) // TODO 被回收的entity
 				return;
 			
+			// 初始状态。 gdx-ai状态机不调用初始状态的enter方法，所以在创建状态机时初始状态传null
 			StateComponent stateComponent = MapperTools.stateCM.get(entity);
-			
-			// 初始状态
 			if(stateComponent.entityState.getCurrentState() == null){
-				stateComponent.entityState.changeState(CharacterState.idle);
-				return;
+				stateComponent.entityState.changeState(HeroState.idle);
 			}
 		}
 	};
@@ -83,7 +80,7 @@ public enum CharacterState implements StateAdapter{
 	 */
 	public final StateAdapter initialState;
 	
-	private CharacterState() {
+	private HeroState() {
 		subState = null;
 		initialState = null;
 	}
@@ -92,7 +89,7 @@ public enum CharacterState implements StateAdapter{
 	 * @param initialState 子状态的初始状态
 	 * @param globalState 子状态的全局状态
 	 */
-	private CharacterState(StateAdapter initialState, StateAdapter globalState) {
+	private HeroState(StateAdapter initialState, StateAdapter globalState) {
 		subState = new DefaultStateMachine<>(null, initialState, globalState);
 		this.initialState = initialState;
 	}
@@ -120,7 +117,7 @@ public enum CharacterState implements StateAdapter{
 	public boolean onMessage(Entity entity, Telegram telegram) {
 		return false;
 	}
-
+	
 	@Override
 	public DefaultStateMachine<Entity, StateAdapter> getSubState() {
 		return subState;
@@ -146,16 +143,6 @@ public enum CharacterState implements StateAdapter{
 				AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
 				animationComponent.curAnimation = CharacterAnimation.idle;
 			}
-			
-			@Override
-			public void update(Entity entity) {
-				StateComponent stateComponent = MapperTools.stateCM.get(entity);
-				
-				PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
-				if(pathfindingComponent != null && !pathfindingComponent.position.isZero()){
-					stateComponent.entityState.getCurrentState().getSubState().changeState(CharacterState.IdleState.run);
-				}
-			}
 		}, 
 		
 		/**
@@ -173,27 +160,14 @@ public enum CharacterState implements StateAdapter{
 			
 			@Override
 			public void update(Entity entity) {
-				StateComponent stateComponent = MapperTools.stateCM.get(entity);
-				
-				PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
-				if(pathfindingComponent != null && !pathfindingComponent.position.isZero()){
-					pathfindingComponent.isPathfinding = true;
-				}
-				else{
-					stateComponent.entityState.getCurrentState().getSubState().changeState(CharacterState.IdleState.idle);
-				}
+				CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
+				characterComponent.move();
 			}
 			
 			@Override
 			public void exit(Entity entity) {
-				PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
-				if(pathfindingComponent != null && !pathfindingComponent.position.isZero()){
-					pathfindingComponent.isPathfinding = false;
-				}
-				
 				CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
-				if(characterComponent != null)
-					characterComponent.stopMove();
+				characterComponent.stopMove();
 			}
 		},
 
@@ -209,11 +183,21 @@ public enum CharacterState implements StateAdapter{
 
 				StateComponent stateComponent = MapperTools.stateCM.get(entity);
 				
-				// 有目标就切合战斗状态
-				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-				if(combatComponent != null && combatComponent.target != null){
-					stateComponent.entityState.changeState(CharacterState.combat);
-					return;
+				Vector2 move = MoveUtil.getMove();
+				if(move.isZero()){
+					
+					stateComponent.entityState.getCurrentState().getSubState().changeState(HeroState.IdleState.idle);
+					
+					// 有目标就切合战斗状态
+					CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+					if(combatComponent != null && combatComponent.target != null){
+						stateComponent.entityState.changeState(HeroState.combat);
+						return;
+					}
+				}
+				else{
+					stateComponent.orientation = Orientation.getOrientation(move);
+					stateComponent.entityState.getCurrentState().getSubState().changeState(HeroState.IdleState.run);
 				}
 			}
 		};
@@ -229,7 +213,7 @@ public enum CharacterState implements StateAdapter{
 		@Override
 		public void exit(Entity entity) {
 		}
-		
+
 		@Override
 		public boolean onMessage(Entity entity, Telegram telegram) {
 			return false;
@@ -270,7 +254,7 @@ public enum CharacterState implements StateAdapter{
 				StateComponent stateComponent = MapperTools.stateCM.get(entity);
 				
 				if(deltaTime >= 3){ // 持续时间3秒不攻击， 退出战斗
-					stateComponent.entityState.changeState(CharacterState.idle);
+					stateComponent.entityState.changeState(HeroState.idle);
 					return ;
 				}
 				deltaTime += Gdx.graphics.getDeltaTime();
@@ -280,15 +264,15 @@ public enum CharacterState implements StateAdapter{
 					if(combatComponent.IsDistanceTarget()){ // 攻击目标
 						stateComponent.entityState.getCurrentState().getSubState().changeState(CombatState.attack);
 					}
-					else if(combatComponent.isCampTarget()){ // 移动到目标
-						stateComponent.entityState.getCurrentState().getSubState().changeState(CombatState.run);
+					else if(combatComponent.target != null){
+						stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
 					}
 				}
 			}
 		}, 
 		
 		/**
-		 * 寻路移动
+		 * 移动
 		 * 
 		 * @author D
 		 * @date 2016年10月16日 下午7:59:52
@@ -303,29 +287,11 @@ public enum CharacterState implements StateAdapter{
 			
 			@Override
 			public void update(Entity entity) {
-				StateComponent stateComponent = MapperTools.stateCM.get(entity);
-				
-				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-				if(combatComponent != null){
-					if(combatComponent.IsDistanceTarget()){ // 攻击目标
-						stateComponent.entityState.getCurrentState().getSubState().changeState(CombatState.attack);
-					}
-					else if(combatComponent.isCampTarget()){ // 寻路
-						PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
-						if(pathfindingComponent != null){
-							pathfindingComponent.position.set(MapperTools.transformCM.get(combatComponent.target).position);
-							pathfindingComponent.isPathfinding = true;
-						}
-					}
-				}
+				MapperTools.characterCM.get(entity).move();
 			}
 			
 			@Override
 			public void exit(Entity entity) {
-				PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
-				if(pathfindingComponent != null)
-					pathfindingComponent.isPathfinding = false;
-				
 				CharacterComponent characterComponent = MapperTools.characterCM.get(entity);
 				if(characterComponent != null)
 					characterComponent.stopMove();
@@ -354,10 +320,9 @@ public enum CharacterState implements StateAdapter{
 					StateComponent stateComponent = MapperTools.stateCM.get(entity);
 					CombatComponent combatComponent = MapperTools.combatCM.get(entity);
 					
-					if(combatComponent == null || combatComponent.seekTarget() != 2)
+					if(combatComponent == null || combatComponent.seekTarget() != 2){
 						stateComponent.entityState.getCurrentState().getSubState().changeState(CombatState.idle);
-					else if(combatComponent.target != null)
-						stateComponent.lookAt(MapperTools.transformCM.get(combatComponent.target).position);
+					}
 				}
 			}
 		},
@@ -372,14 +337,7 @@ public enum CharacterState implements StateAdapter{
 			@Override
 			public void enter(Entity entity) {
 				
-				// 给所有攻击过的实体结算
-				CombatComponent combatComponent = MapperTools.combatCM.get(entity);
-				if(combatComponent != null){
-					for(Entity attacker : combatComponent.attackerDamage.keys())
-						MsgManager.instance.sendMessage(entity, attacker, MessageType.MSG_DEATH, null, false);// 发送角色销毁消息
-				}
-				
-				GlobalInline.instance.getAshleyManager().engine.removeEntity(entity);
+				// TODO 游戏结束
 			}
 		},
 		
@@ -392,11 +350,21 @@ public enum CharacterState implements StateAdapter{
 		global(){
 			@Override
 			public void update(Entity entity) {
+				
 				StateComponent stateComponent = MapperTools.stateCM.get(entity);
 				
 				AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
-				if(attributesComponent.curVit <= 0){
+				if(attributesComponent.curVit <= 0){ 
 					stateComponent.entityState.getCurrentState().getSubState().changeState(CombatState.death);
+				}
+				
+				Vector2 move = MoveUtil.getMove();
+				if(move.isZero()){
+					stateComponent.entityState.getCurrentState().getSubState().changeState(HeroState.CombatState.idle);
+				}
+				else{
+					stateComponent.orientation = Orientation.getOrientation(move);
+					stateComponent.entityState.getCurrentState().getSubState().changeState(HeroState.CombatState.run);
 				}
 			}
 		};

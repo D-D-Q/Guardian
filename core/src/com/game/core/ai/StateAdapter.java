@@ -1,10 +1,11 @@
-package com.guardian.game.ai;
+package com.game.core.ai;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.State;
 
 /**
- * 不同状态实现类的适配
+ * 不同状态实现类的适配, 用于分层状态的接口
  * State接口受DefaultStateMachine的泛型要求影响，不能用作DefaultStateMachine的泛型适配多种状态实现类
  * 
  * @author D
@@ -12,4 +13,10 @@ import com.badlogic.gdx.ai.fsm.State;
  */
 public interface StateAdapter extends State<Entity> {
 
+	/**
+	 * 获得子状态机
+	 * 
+	 * @return
+	 */
+	public DefaultStateMachine<Entity, StateAdapter> getSubState();
 }

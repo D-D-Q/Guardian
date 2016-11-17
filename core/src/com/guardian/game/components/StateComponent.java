@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.guardian.game.ai.CharacterState;
+import com.game.core.ai.StateAdapter;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -269,8 +269,9 @@ public class StateComponent implements Component, Poolable  {
 	
 	/**
 	 * 状态机
+	 * gdx-ai状态机不调用初始状态的enter方法，所以在创建状态机时初始状态传null
 	 */
-	public final DefaultStateMachine<Entity, CharacterState> entityState;
+	public DefaultStateMachine<Entity, StateAdapter> entityState;
 	
 	/**
 	 * 人物方向, 只有8个
@@ -284,7 +285,6 @@ public class StateComponent implements Component, Poolable  {
 	public final Vector2 moveOrientationVector = new Vector2(Orientation.d2.vector);
 	
 	public StateComponent() {
-		entityState = new DefaultStateMachine<Entity, CharacterState>(null, CharacterState.idle, CharacterState.global); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类
 		orientation = Orientation.d2;
 	}
 	
@@ -318,7 +318,7 @@ public class StateComponent implements Component, Poolable  {
 	@Override
 	public void reset() {
 		entity = null;
-		entityState.setInitialState(CharacterState.idle);
+		entityState = null;
 		orientation = Orientation.d2;
 	}
 }

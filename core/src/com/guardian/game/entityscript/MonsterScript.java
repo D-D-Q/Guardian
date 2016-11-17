@@ -3,7 +3,6 @@ package com.guardian.game.entityscript;
 import com.game.core.component.CombatComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.script.EntityScript;
-import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -17,7 +16,6 @@ public class MonsterScript extends EntityScript {
 	@Override
 	public void update(float deltaTime) {
 		
-		StateComponent stateComponent = MapperTools.stateCM.get(entity);
 		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
 		PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
 		

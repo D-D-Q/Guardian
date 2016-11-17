@@ -4,11 +4,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.game.core.ai.StateAdapter;
 import com.game.core.component.AnimationComponent;
 import com.game.core.component.TextureComponent;
+import com.guardian.game.ai.CharacterState;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
-import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.tools.FamilyTools;
 import com.guardian.game.tools.MapperTools;
 
@@ -35,14 +36,15 @@ public class AnimationSystem extends IteratingSystem {
 		AnimationComponent animationComponent = MapperTools.animationCM.get(entity);
 		
 		// 根据状态获得动画
-		Animation[] animations = animationComponent.animations.get(stateComponent.entityState.getCurrentState());
+		Animation[] animations = animationComponent.animations.get(animationComponent.curAnimation);
 		if(animations == null || animations.length < stateComponent.orientation.value)
 			return;
 		
 		// 速度设置(修改每帧时间)
 		AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
 		if(attributesComponent != null){
-			if(stateComponent.entityState.getCurrentState() == States.attack){
+			StateAdapter currentState = stateComponent.entityState.getCurrentState();
+			if(currentState.getSubState().isInState(CharacterState.CombatState.attack)){ // 攻击中
 				animations[stateComponent.orientation.value].setFrameDuration(1/attributesComponent.ASPD/animations[stateComponent.orientation.value].getKeyFrames().length);
 			}
 		}

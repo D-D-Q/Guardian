@@ -1,10 +1,7 @@
 package com.guardian.game.entityscript;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector2;
 import com.game.core.script.EntityScript;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.tools.MapperTools;
@@ -44,23 +41,24 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public boolean keyDown (int keycode) {
 		
-		float x = 0, y = 0;
-		
-		if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
-			y = 0;
-		else if(Gdx.input.isKeyPressed(Keys.W))
-			y = 1;
-		else if(Gdx.input.isKeyPressed(Keys.S))
-			y = -1;
-		
-		if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
-			x = 0;
-		else if(Gdx.input.isKeyPressed(Keys.A))
-			x = -1;
-		else if(Gdx.input.isKeyPressed(Keys.D))
-			x = 1;
-		
-		MapperTools.characterCM.get(entity).move(new Vector2(x, y).nor());
+//		float x = 0, y = 0;
+//		
+//		if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
+//			y = 0;
+//		else if(Gdx.input.isKeyPressed(Keys.W))
+//			y = 1;
+//		else if(Gdx.input.isKeyPressed(Keys.S))
+//			y = -1;
+//		
+//		if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
+//			x = 0;
+//		else if(Gdx.input.isKeyPressed(Keys.A))
+//			x = -1;
+//		else if(Gdx.input.isKeyPressed(Keys.D))
+//			x = 1;
+//		
+//		StateComponent stateComponent = MapperTools.stateCM.get(entity);
+//		stateComponent.orientation = Orientation.getOrientation(new Vector2(x, y));
 		
 		return true;
 	}
@@ -68,26 +66,28 @@ public class HeroScript extends EntityScript implements InputProcessor{
 	@Override
 	public boolean keyUp(int keycode) {
 		
-		float x = 0, y = 0;
-		
-		if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
-			y = 0;
-		else if(Gdx.input.isKeyPressed(Keys.W))
-			y = 1;
-		else if(Gdx.input.isKeyPressed(Keys.S))
-			y = -1;
-		
-		if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
-			x = 0;
-		else if(Gdx.input.isKeyPressed(Keys.A))
-			x = -1;
-		else if(Gdx.input.isKeyPressed(Keys.D))
-			x = 1;
-		
-		if(x == 0 && y == 0)
-			MapperTools.characterCM.get(entity).stopMove();
-		else
-			MapperTools.characterCM.get(entity).move(new Vector2(x, y).nor());
+//		float x = 0, y = 0;
+//		
+//		if(Gdx.input.isKeyPressed(Keys.W) && Gdx.input.isKeyPressed(Keys.S))
+//			y = 0;
+//		else if(Gdx.input.isKeyPressed(Keys.W))
+//			y = 1;
+//		else if(Gdx.input.isKeyPressed(Keys.S))
+//			y = -1;
+//		
+//		if(Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D))
+//			x = 0;
+//		else if(Gdx.input.isKeyPressed(Keys.A))
+//			x = -1;
+//		else if(Gdx.input.isKeyPressed(Keys.D))
+//			x = 1;
+//		
+//		if(x == 0 && y == 0)
+//			MapperTools.characterCM.get(entity).stopMove();
+//		else{
+//			StateComponent stateComponent = MapperTools.stateCM.get(entity);
+//			stateComponent.orientation = Orientation.getOrientation(new Vector2(x, y));
+//		}
 		
 		return true;
 	}

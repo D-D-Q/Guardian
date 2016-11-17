@@ -9,7 +9,6 @@ import com.game.core.component.CharacterComponent;
 import com.game.core.component.ScriptComponent;
 import com.game.core.system.PhysicsSystem;
 import com.guardian.game.components.StateComponent;
-import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.entity.dao.EntityDao;
 import com.guardian.game.tools.MapperTools;
 
@@ -146,7 +145,7 @@ public class AshleyManager{
 			StateComponent stateComponent = MapperTools.stateCM.get(entity);
 			if(stateComponent != null){
 				if(stateComponent.entityState instanceof DefaultStateMachine)
-					((DefaultStateMachine<Entity, States>)stateComponent.entityState).setOwner(entity);
+					stateComponent.entityState.setOwner(entity);
 			}
 			
 			// 消息组件添加监听

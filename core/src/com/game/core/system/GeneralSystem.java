@@ -21,7 +21,8 @@ public class GeneralSystem extends IteratingSystem {
 			scriptComponent.script.update(deltaTime);
 		
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
-		if(stateComponent != null)
+		if(stateComponent != null){
 			stateComponent.entityState.update();
+		}
 	}
 }

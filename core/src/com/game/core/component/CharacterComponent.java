@@ -51,6 +51,24 @@ public class CharacterComponent  implements Component, Poolable {
 	
 	/**
 	 * 移动角色
+	 * 向当前方向
+	 */
+	public void move(){
+		
+		// 设置方向和状态
+		StateComponent stateComponent = MapperTools.stateCM.get(entity);
+		if(stateComponent != null){
+			stateComponent.moveOrientationVector.set(stateComponent.orientation.vector);
+			
+			AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
+			
+			// 移动精灵的动态刚体。方向乘以速度
+			dynamicBody.setLinearVelocity(stateComponent.moveOrientationVector.nor().scl(attributesComponent.moveSpeed));
+		}
+	}
+	
+	/**
+	 * 移动角色
 	 * 
 	 * @param vector2 方向
 	 */

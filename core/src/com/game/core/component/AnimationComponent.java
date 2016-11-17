@@ -12,8 +12,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.game.core.AnimationKey;
 import com.guardian.game.GAME;
-import com.guardian.game.components.StateComponent.States;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -29,7 +29,9 @@ public class AnimationComponent implements Component, Poolable {
 	/**
 	 * 根据状态和方向存储的动画数组
 	 */
-	public ObjectMap<States, Animation[]> animations;
+	public ObjectMap<AnimationKey, Animation[]> animations;
+	
+	public AnimationKey curAnimation;
 	
 	public Array<Label> subtitle;
 	
@@ -50,8 +52,8 @@ public class AnimationComponent implements Component, Poolable {
 	 * @param animations
 	 * @return
 	 */
-	public AnimationComponent addAnimation(States state, Animation[] animations){
-		this.animations.put(state, animations);
+	public AnimationComponent addAnimation(AnimationKey animationKey, Animation[] animations){
+		this.animations.put(animationKey, animations);
         return this;
 	}
 	
