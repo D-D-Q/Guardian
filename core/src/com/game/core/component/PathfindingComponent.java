@@ -142,13 +142,11 @@ public class PathfindingComponent implements QueryCallback, RayCastCallback, Com
 //				steeringOutput.linear.add(stateComponent.moveOrientationVector); // 不走相反的方向
 //			}
 			
-			stateComponent.lookAt(position);
+//			stateComponent.lookAt(position);
+//			
+//			characterComponent.move(steeringOutput.linear.nor());
 			
-			characterComponent.move(steeringOutput.linear.nor());
-		}
-		else{
-			position.setZero();
-			characterComponent.stopMove();
+			stateComponent.look(steeringOutput.linear); // 朝向当前要移动方向
 		}
 	}
 

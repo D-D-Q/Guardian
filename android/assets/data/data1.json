@@ -9,7 +9,6 @@
 	spriteHeight: 66,
 	spriteWidth: 60,
 	characterRadius: 30,
-	ATKRange: 70,
 	ATKDistance: 3,
 	campBits: 2,
 	campMaskBits: 1,

@@ -3,6 +3,7 @@ package com.guardian.game.entityscript;
 import com.game.core.component.CombatComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.script.EntityScript;
+import com.guardian.game.GAME;
 import com.guardian.game.tools.MapperTools;
 
 /**
@@ -20,7 +21,7 @@ public class MonsterScript extends EntityScript {
 		PathfindingComponent pathfindingComponent = MapperTools.pathfindingCM.get(entity);
 		
 		if(combatComponent.target == null){
-			pathfindingComponent.position.set(1040, 480);
+			pathfindingComponent.position.set(GAME.position);
 			pathfindingComponent.isPathfinding = true;
 		}
 	}

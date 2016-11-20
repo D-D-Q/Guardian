@@ -58,12 +58,11 @@ public class CharacterComponent  implements Component, Poolable {
 		// 设置方向和状态
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
 		if(stateComponent != null){
-			stateComponent.moveOrientationVector.set(stateComponent.orientation.vector);
 			
 			AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
 			
 			// 移动精灵的动态刚体。方向乘以速度
-			dynamicBody.setLinearVelocity(stateComponent.moveOrientationVector.nor().scl(attributesComponent.moveSpeed));
+			dynamicBody.setLinearVelocity(stateComponent.getMoveOrientationVector().nor().scl(attributesComponent.moveSpeed));
 		}
 	}
 	
@@ -78,14 +77,14 @@ public class CharacterComponent  implements Component, Poolable {
 		StateComponent stateComponent = MapperTools.stateCM.get(entity);
 		if(stateComponent != null){
 			stateComponent.orientation = Orientation.getOrientation(vector2);
-			stateComponent.moveOrientationVector.set(vector2.nor()); // 保留方向
+//			stateComponent.moveOrientationVector.set(vector2.nor()); // 保留方向
 //			stateComponent.moveOrientationVector.set(stateComponent.orientation.vector);
 //			stateComponent.entityState.changeState(States.run);
 			
 			AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
 			
 			// 移动精灵的动态刚体。方向乘以速度
-			dynamicBody.setLinearVelocity(stateComponent.moveOrientationVector.nor().scl(attributesComponent.moveSpeed));
+			dynamicBody.setLinearVelocity(stateComponent.getMoveOrientationVector().nor().scl(attributesComponent.moveSpeed));
 		}
 	}
 	

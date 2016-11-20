@@ -85,7 +85,7 @@ public class CombatComponent implements Component, Poolable{
 	public TextureRegion[] attackTextureRegion = new TextureRegion[8];
 	
 	/**
-	 * 战斗的状态
+	 * 攻击动作的状态
 	 */
 	public StateAdapter combatState;
 	
@@ -148,7 +148,7 @@ public class CombatComponent implements Component, Poolable{
 	}
 	
 	/**
-	 * 寻找目标
+	 * 寻找目标, 优先切换能攻击到的目标
 	 * @return 0:无寻找目标, 1:警戒范围内目标 , 2:能攻击的目标
 	 */
 	public int seekTarget(){
@@ -201,8 +201,8 @@ public class CombatComponent implements Component, Poolable{
 		
 		rangeTargets.add(target);
 		
-		if(this.target == null) // 设置为当前目标
-			this.target = target;
+//		if(this.target == null) // 设置为当前目标
+//			this.target = target;
 	}
 	
 	/**
@@ -218,8 +218,10 @@ public class CombatComponent implements Component, Poolable{
 		
 		rangeTargets.removeValue(target, true);
 		
-		if(this.target == target) // 设置新目标
-			this.target = distanceTargets.size == 0 ? (rangeTargets.size == 0 ? null : rangeTargets.first()) :	distanceTargets.first(); 
+		if(this.target == target){ // 设置新目标
+			this.target = null;
+//			this.target = distanceTargets.size == 0 ? (rangeTargets.size == 0 ? null : rangeTargets.first()) :	distanceTargets.first();
+		} 
 	}
 	
 	/**
@@ -235,8 +237,8 @@ public class CombatComponent implements Component, Poolable{
 		
 		distanceTargets.add(target);
 
-		if(this.target == null || !IsDistanceTarget()) // 更换攻击目标，谁直接能打到优先打谁，先不考虑追击
-			this.target = target;
+//		if(this.target == null || !IsDistanceTarget()) // 更换攻击目标，谁直接能打到优先打谁，先不考虑追击
+//			this.target = target;
 	}
 	
 	/**
@@ -253,9 +255,9 @@ public class CombatComponent implements Component, Poolable{
 		distanceTargets.removeValue(target, true);
 		
 		// 设置新目标
-		if(this.target == target){
-			this.target = distanceTargets.size == 0 ? null : distanceTargets.first(); 
-		}
+//		if(this.target == target){
+//			this.target = distanceTargets.size == 0 ? null : distanceTargets.first(); 
+//		}
 	}
 	
 	@Override

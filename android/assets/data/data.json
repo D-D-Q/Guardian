@@ -9,7 +9,6 @@
 	spriteHeight: 64,
 	spriteWidth: 36,
 	characterRadius: 18,
-	ATKRange: 70,
 	ATKDistance: 3,
 	campBits: 1,
 	name: 英雄,

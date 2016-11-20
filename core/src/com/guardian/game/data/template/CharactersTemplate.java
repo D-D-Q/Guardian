@@ -64,7 +64,7 @@ public class CharactersTemplate{
 	 * 精灵攻击范围
 	 * CombatComponent
 	 */
-	public float ATKRange = 0;
+	public float ATKRange = 300;
 
 	/**
 	 * 精灵攻击距离

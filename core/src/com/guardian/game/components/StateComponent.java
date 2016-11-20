@@ -279,10 +279,10 @@ public class StateComponent implements Component, Poolable  {
 	public Orientation orientation;
 	
 	/**
-	 * 人物移动方向, 不限制
+	 * 人物移动方向
 	 * 如果这个值限制成Orientation.vector的取值，就是只能8方向行走
 	 */
-	public final Vector2 moveOrientationVector = new Vector2(Orientation.d2.vector);
+	private final Vector2 moveOrientationVector = new Vector2(Orientation.d2.vector);
 	
 	public StateComponent() {
 		orientation = Orientation.d2;
@@ -311,6 +311,10 @@ public class StateComponent implements Component, Poolable  {
 		}
 	}
 	
+	public Vector2 getMoveOrientationVector() {
+		return new Vector2(orientation.vector);// TODO 限制方向
+	}
+
 	/* 
 	 * 对象池回收组件调用
 	 * @see com.badlogic.gdx.utils.Pool.Poolable#reset()

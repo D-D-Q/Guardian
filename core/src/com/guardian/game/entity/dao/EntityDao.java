@@ -3,13 +3,13 @@ package com.guardian.game.entity.dao;
 import java.lang.reflect.Constructor;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.game.core.Assets;
 import com.game.core.GlobalInline;
+import com.game.core.ai.HierarchicalStateMachines;
 import com.game.core.component.AnimationComponent;
 import com.game.core.component.CharacterComponent;
 import com.game.core.component.CollisionComponent;
@@ -47,13 +47,13 @@ public class EntityDao {
 	 * @param template
 	 * @return
 	 */
-	public Entity createHeroEntity(CharactersTemplate template, int positionX, int positionY){
+	public Entity createHeroEntity(CharactersTemplate template, float positionX, float positionY){
 		
 		Entity entity = new Entity();
 		entity.flags = 1; // 设置成有效
 		
 		StateComponent stateComponent = new StateComponent();
-		stateComponent.entityState = new DefaultStateMachine<>(null, null, HeroState.global); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类。
+		stateComponent.entityState = new HierarchicalStateMachines(HeroState.idle); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类。
 		stateComponent.entity = entity;
 		entity.add(stateComponent);
 		
@@ -102,7 +102,7 @@ public class EntityDao {
 			for(Orientation direction : Orientation.values()){
 				combatComponent.attackTextureRegion[direction.value] = animations[direction.value].getKeyFrames()[template.attackFrameIndex]; // 攻击事件的关键帧
 			}
-			combatComponent.combatState = HeroState.combat;
+			combatComponent.combatState = HeroState.combat_attack;
 			combatComponent.ATKRange = template.ATKRange;
 			combatComponent.ATKDistance = template.ATKDistance;
 			combatComponent.campBits = template.campBits;
@@ -158,7 +158,7 @@ public class EntityDao {
 	 * @param template
 	 * @return
 	 */
-	public Entity createCharactersEntity(CharactersTemplate template, int positionX, int positionY){
+	public Entity createCharactersEntity(CharactersTemplate template, float positionX, float positionY){
 		
 		AshleyManager ashleyManager = GlobalInline.instance.getAshleyManager();
 		
@@ -166,7 +166,7 @@ public class EntityDao {
 		entity.flags = 1; // 设置成有效
 		
 		StateComponent stateComponent = ashleyManager.engine.createComponent(StateComponent.class);
-		stateComponent.entityState = new DefaultStateMachine<>(null, null, CharacterState.global); // 第一个参数(owner)在该组件添加到实体的时候赋值, 查看EntityManager类。
+		stateComponent.entityState = new HierarchicalStateMachines(CharacterState.idle);
 		stateComponent.entity = entity;
 		entity.add(stateComponent);
 		
@@ -215,7 +215,7 @@ public class EntityDao {
 			for(Orientation direction : Orientation.values()){
 				combatComponent.attackTextureRegion[direction.value] = animations[direction.value].getKeyFrames()[template.attackFrameIndex]; // 攻击事件的关键帧
 			}
-			combatComponent.combatState = CharacterState.combat;
+			combatComponent.combatState = CharacterState.combat_attack;
 			combatComponent.ATKRange = template.ATKRange;
 			combatComponent.ATKDistance = template.ATKDistance;
 			combatComponent.campBits = template.campBits;

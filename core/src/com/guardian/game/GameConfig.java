@@ -27,7 +27,7 @@ public class GameConfig {
 	/**
 	 * 游戏速度
 	 */
-	public final static float gameSpeed = 2;
+	public final static float gameSpeed = 1;
 	
 	/**
 	 * UI的debug模式
@@ -37,7 +37,7 @@ public class GameConfig {
 	/**
 	 * 物理引擎的debug模式
 	 */
-	public final static boolean physicsdebug = true;
+	public final static boolean physicsdebug = false;
 	
 	/**
 	 * fps

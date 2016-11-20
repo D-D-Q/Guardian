@@ -107,7 +107,7 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 		GlobalInline.instance.put("map", mapComponent);
 		
 		// 英雄
-		Entity hero = ashleyManager.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), 1040, 480); // 创建英雄
+		Entity hero = ashleyManager.entityDao.createHeroEntity(Assets.instance.get(GameScreenAssets.data1, CharactersTemplate.class), GAME.position.x, GAME.position.y); // 创建英雄
 		ashleyManager.engine.addEntity(hero);
 		MapperTools.stateCM.get(hero).orientation = Orientation.d8;
 		GlobalInline.instance.put("hero", hero);
@@ -167,7 +167,8 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 		
 		xiuLianScreen = ScreenProxy.instance.createScreen(GameScreenSub1.class);
 		
-		GAME.gameViewport.getCamera().position.set(1040, 480, 0); // 初始化相机位置, 该位置会在屏幕中心  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
+		// 初始化相机位置, 该位置会在屏幕中心
+		GAME.gameViewport.getCamera().position.set(GAME.position.x, GAME.position.y, 0);  // 相机锚点是中心, 如果相机位置是0,0 那么虚拟世界坐标原点(0,0)拍摄的画面就是屏幕中间了
 	}
 	
 	/**
@@ -253,8 +254,8 @@ public class GameScreen extends ScreenAdapter implements Telegraph {
 			Entity hero = GlobalInline.instance.getGlobal("hero");
 			GlobalInline.instance.put("hero", hero);
 
-			MapperTools.transformCM.get(hero).position.set(1040, 480);
-			GAME.gameViewport.getCamera().position.set(1040, 480, 0);
+			MapperTools.transformCM.get(hero).position.set(GAME.position);
+			GAME.gameViewport.getCamera().position.set(GAME.position, 0);
 			ashleyManager.addCopy(hero);
 
 			ashleyManager.engine.getSystem(RenderingSystem.class).setProcessing(true);

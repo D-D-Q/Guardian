@@ -2,6 +2,7 @@ package com.guardian.game;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -30,21 +31,6 @@ public class GAME {
 	 * UI相机组件 
 	 */
 	public static Viewport UIViewport;
-
-	/**
-	 * 英雄
-	 */
-//	public static Entity hero;
-
-	/**
-	 * 装备系统
-	 */
-	public static EquippedSystem equippedSystem;
-	
-	/**
-	 * 物品系统 
-	 */
-	public static ItemsSystem itemsSystem;
 	
 	/**
 	 * 国际化
@@ -55,5 +41,23 @@ public class GAME {
 	 * 当前UI皮肤
 	 */
 	public static Skin skin;
+
+	/**
+	 * 英雄
+	 */
+//	public static Entity hero;
+	
+	public final static Vector2 position = new Vector2(1040, 480);
+
+	/**
+	 * 装备系统
+	 */
+	public static EquippedSystem equippedSystem;
+	
+	/**
+	 * 物品系统 
+	 */
+	public static ItemsSystem itemsSystem;
+
 	
 }

@@ -4,10 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.game.core.ai.StateAdapter;
 import com.game.core.component.AnimationComponent;
+import com.game.core.component.CombatComponent;
 import com.game.core.component.TextureComponent;
 import com.guardian.game.ai.CharacterState;
+import com.guardian.game.ai.HeroState;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.FamilyTools;
@@ -42,9 +43,9 @@ public class AnimationSystem extends IteratingSystem {
 		
 		// 速度设置(修改每帧时间)
 		AttributesComponent attributesComponent = MapperTools.attributesCM.get(entity);
-		if(attributesComponent != null){
-			StateAdapter currentState = stateComponent.entityState.getCurrentState();
-			if(currentState.getSubState().isInState(CharacterState.CombatState.attack)){ // 攻击中
+		CombatComponent combatComponent = MapperTools.combatCM.get(entity);
+		if(attributesComponent != null && combatComponent != null){
+			if(stateComponent.entityState.isInState(combatComponent.combatState)){ // 攻击动作
 				animations[stateComponent.orientation.value].setFrameDuration(1/attributesComponent.ASPD/animations[stateComponent.orientation.value].getKeyFrames().length);
 			}
 		}

@@ -79,6 +79,7 @@ public class Monstersystem extends EntitySystem {
 		
 		monsterConfig = new MonsterConfig[]{
 				new MonsterConfig("data/data1.json", 0), // 寒冰卫士
+//				new MonsterConfig("data/data1.json", 1, 0b010, ""), // 寒冰卫士
 				new MonsterConfig("data/data2.json"),
 				new MonsterConfig("data/data3.json"), // 猴子
 				new MonsterConfig("data/data4.json"),
@@ -119,6 +120,7 @@ public class Monstersystem extends EntitySystem {
 		accumulator += deltaTime;
 
 		if(curTimes == 0){
+			// TODO 改成消息
 			GameUI.instance.next_time.setText(String.format("%02d", (int)(interval - accumulator)));
 		}
 		
