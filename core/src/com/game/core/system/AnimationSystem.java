@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.game.core.component.AnimationComponent;
 import com.game.core.component.CombatComponent;
 import com.game.core.component.TextureComponent;
-import com.guardian.game.ai.CharacterState;
-import com.guardian.game.ai.HeroState;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.FamilyTools;
