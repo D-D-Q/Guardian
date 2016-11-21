@@ -3,7 +3,7 @@ package com.guardian.game.ui.event;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.game.core.GlobalInline;
+import com.game.core.support.GlobalInline;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.tools.AttributesEnum;
 import com.guardian.game.tools.MapperTools;

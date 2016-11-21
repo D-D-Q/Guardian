@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.GlobalInline;
+import com.game.core.support.GlobalInline;
 import com.game.core.system.PhysicsSystem;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;

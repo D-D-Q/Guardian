@@ -1,4 +1,4 @@
-package com.game.core;
+package com.game.core.skill;
 
 import com.badlogic.ashley.core.Entity;
 

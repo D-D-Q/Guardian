@@ -5,8 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.Skill;
-import com.game.core.Skill.EffectType;
+import com.game.core.skill.Skill;
+import com.game.core.skill.Skill.EffectType;
 
 /**
  * 技能组件

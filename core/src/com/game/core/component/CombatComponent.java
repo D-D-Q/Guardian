@@ -8,8 +8,8 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.GlobalInline;
 import com.game.core.ai.StateAdapter;
+import com.game.core.support.GlobalInline;
 import com.game.core.system.PhysicsSystem;
 import com.guardian.game.tools.MapperTools;
 

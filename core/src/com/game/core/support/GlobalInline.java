@@ -1,4 +1,4 @@
-package com.game.core;
+package com.game.core.support;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;

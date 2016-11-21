@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.game.core.GlobalInline;
+import com.game.core.support.GlobalInline;
 import com.guardian.game.GameConfig;
 import com.guardian.game.assets.GameScreenAssets;
 import com.guardian.game.components.AttributesComponent;

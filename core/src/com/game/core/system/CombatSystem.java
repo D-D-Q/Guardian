@@ -2,14 +2,14 @@ package com.game.core.system;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.game.core.Skill;
-import com.game.core.Skill.EffectType;
-import com.game.core.Skill.SkillType;
 import com.game.core.component.AnimationComponent;
 import com.game.core.component.CombatComponent;
 import com.game.core.component.SkillsComponent;
 import com.game.core.component.TextureComponent;
 import com.game.core.manager.MsgManager;
+import com.game.core.skill.Skill;
+import com.game.core.skill.Skill.EffectType;
+import com.game.core.skill.Skill.SkillType;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.FamilyTools;

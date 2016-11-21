@@ -2,7 +2,7 @@ package com.guardian.game.skills;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
-import com.game.core.Skill;
+import com.game.core.skill.Skill;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.tools.MapperTools;
 

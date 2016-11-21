@@ -17,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.game.core.GlobalInline;
+import com.game.core.support.GlobalInline;
 import com.game.core.system.PhysicsSystem;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.MapperTools;

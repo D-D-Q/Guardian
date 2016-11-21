@@ -2,7 +2,6 @@ package com.guardian.game.ai;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.msg.Telegram;
-import com.game.core.GlobalInline;
 import com.game.core.ai.StateAdapter;
 import com.game.core.component.AnimationComponent;
 import com.game.core.component.CharacterComponent;
@@ -10,6 +9,7 @@ import com.game.core.component.CombatComponent;
 import com.game.core.component.PathfindingComponent;
 import com.game.core.component.TransformComponent;
 import com.game.core.manager.MsgManager;
+import com.game.core.support.GlobalInline;
 import com.guardian.game.GAME;
 import com.guardian.game.animation.CharacterAnimation;
 import com.guardian.game.components.AttributesComponent;
