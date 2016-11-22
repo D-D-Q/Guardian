@@ -91,25 +91,33 @@ public abstract class Skill implements Comparable<Skill>{
 	 * @author D
 	 * @date 2016年11月3日
 	 */
-	public enum SkillType{
+	public enum EffectType{
 		
 		/**
 		 * 攻击类
+		 * 例如增加伤害
 		 */
 		attack, 
 		
 		/**
 		 * 防御类
+		 * 例如抵消伤害
 		 */
-		defense
+		defense,
+		
+		/**
+		 * 增益类
+		 * 例如增加攻击力属性
+		 */
+		buff
 	}
 	
 	/**
-	 * 效果类型
+	 * 触发类型
 	 * @author D
 	 * @date 2016年11月3日
 	 */
-	public enum EffectType{
+	public enum TriggerType{
 		
 		/**
 		 * 主动触发
@@ -117,13 +125,8 @@ public abstract class Skill implements Comparable<Skill>{
 		active,
 		
 		/**
-		 * 被动增益
-		 */
-		passiveBuff,
-		
-		/**
 		 * 被动触发
 		 */
-		passiveTrigger
+		passive
 	}
 }
