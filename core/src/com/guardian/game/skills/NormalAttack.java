@@ -17,7 +17,7 @@ public class NormalAttack extends Skill {
 	private static NormalAttack instance;
 	
 	private NormalAttack() {
-		super(SkillType.attack, EffectType.active);
+		super(EffectType.attack, TriggerType.active);
 	}
 
 	/**

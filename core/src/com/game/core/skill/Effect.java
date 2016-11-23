@@ -20,5 +20,7 @@ public interface Effect {
 		 * 暴击效果
 		 */
 		critical;
+		
+		//TODO 效果类型
 	}
 }

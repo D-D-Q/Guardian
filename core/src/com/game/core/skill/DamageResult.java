@@ -8,7 +8,7 @@ import com.game.core.AnimationKey;
 import com.badlogic.gdx.utils.Pools;
 
 /**
- * 伤害计算结果
+ * 技能执行结果
  * 
  * @author D
  * @date 2016年11月21日

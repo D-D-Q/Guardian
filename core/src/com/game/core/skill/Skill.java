@@ -19,25 +19,25 @@ public abstract class Skill implements Comparable<Skill>{
 	/**
 	 * 技能类型
 	 */
-	public SkillType skillType;
+	public EffectType effectType;
 	
 	/**
 	 * 效果类型
 	 */
-	public EffectType effectType;
+	public TriggerType triggerType;
 	
 	/**
 	 * 优先级, 默认100 以大优先
 	 */
 	public int priority;
 	
-	public Skill(SkillType skillType, EffectType effectType) {
-		this(skillType, effectType, 100);
+	public Skill(EffectType effectType, TriggerType triggerType) {
+		this(effectType, triggerType, 100);
 	}
 	
-	public Skill(SkillType skillType, EffectType effectType, int priority) {
-		this.skillType = skillType;
+	public Skill(EffectType effectType, TriggerType triggerType, int priority) {
 		this.effectType = effectType;
+		this.triggerType = triggerType;
 		this.priority = priority;
 	}
 	
@@ -52,7 +52,7 @@ public abstract class Skill implements Comparable<Skill>{
 	 * @param entity 技能拥有者
 	 * @param target 目标
 	 */
-	public void befor(Entity entity, Entity target){}
+//	public void befor(Entity entity, Entity target){}
 	
 	/**
 	 * 执行技能
@@ -70,7 +70,7 @@ public abstract class Skill implements Comparable<Skill>{
 	 * @param entity 技能拥有者
 	 * @param target 目标
 	 */
-	public void after(Entity entity, Entity target){}
+//	public void after(Entity entity, Entity target){}
 	
 	/**
 	 * 移出技能

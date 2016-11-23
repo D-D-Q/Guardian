@@ -9,7 +9,7 @@ import com.game.core.component.TextureComponent;
 import com.game.core.manager.MsgManager;
 import com.game.core.skill.Skill;
 import com.game.core.skill.Skill.EffectType;
-import com.game.core.skill.Skill.SkillType;
+import com.game.core.skill.Skill.TriggerType;
 import com.guardian.game.components.AttributesComponent;
 import com.guardian.game.components.StateComponent;
 import com.guardian.game.tools.FamilyTools;
@@ -55,32 +55,18 @@ public class CombatSystem extends IteratingSystem  {
 			return;
 			
 		// 攻击方技能
-		skillsComponent.curSkill.befor(entity, combatComponent.target);
-		for(Skill skill : skillsComponent.getSkillsPipeline(EffectType.passiveTrigger)){
-			if(skill.skillType == SkillType.attack){
-				skill.befor(entity, combatComponent.target);
-			}
-		}
-		
 		float damage = skillsComponent.curSkill.execute(entity, combatComponent.target, 0); // 伤害
-		for(Skill skill : skillsComponent.getSkillsPipeline(EffectType.passiveTrigger)){
-			if(skill.skillType == SkillType.attack){
+		for(Skill skill : skillsComponent.getSkillsPipeline(EffectType.attack)){
+			if(skill.triggerType == TriggerType.passive){
 				damage = skill.execute(entity, combatComponent.target, damage);
-			}
-		}
-		
-		skillsComponent.curSkill.after(entity, combatComponent.target);
-		for(Skill skill : skillsComponent.getSkillsPipeline(EffectType.passiveTrigger)){
-			if(skill.skillType == SkillType.attack){
-				skill.after(entity, combatComponent.target);
 			}
 		}
 		
 		// 防御方技能
 		SkillsComponent targetSkillsComponent = MapperTools.skillsCM.get(combatComponent.target);
 		if(targetSkillsComponent != null){
-			for(Skill targetSkill : targetSkillsComponent.getSkillsPipeline(EffectType.passiveTrigger)){
-				if(targetSkill.skillType == SkillType.defense){
+			for(Skill targetSkill : targetSkillsComponent.getSkillsPipeline(EffectType.defense)){
+				if(targetSkill.triggerType == TriggerType.passive){
 					damage = targetSkill.execute(combatComponent.target, entity, damage);
 				}
 			}

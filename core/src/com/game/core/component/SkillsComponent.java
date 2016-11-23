@@ -19,9 +19,12 @@ public class SkillsComponent implements Component, Poolable {
 	public Entity entity;
 	
 	public Skill curSkill;
+	
+	// TODO 保存所学技能
 
 	/**
-	 * 技能执行链
+	 * 被动技能执行链
+	 * 只保存攻击类被动,和防御类被动
 	 */
 	private ObjectMap<EffectType, Array<Skill>> skillsPipelines;
 	
